@@ -4,8 +4,9 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 // import CategoryRegistration from './pages/categoryRegistration';
 import ThemeToggle from './components/ThemeToggle';
+import Navbar from './components/Navbar';
 import './App.css';
-import InstrallationRegistration from './pages/InstrallationRegistration';
+import Home from './pages/home';
 
 
 function App() {
@@ -13,19 +14,11 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
       <Router>
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200 flex">
-          {/* <Sidebar /> */}
+        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200 flex flex-col">
+          <Navbar />
           <div className="flex-1 overflow-auto">
             <Routes>
-              {/* <Route path="/members" element={<MemberDatabase />} /> */}
-              {/* <Route path="/category" element={<CategoryRegistration />} /> */}
-              {/* Add more routes as needed */}
-              {/* <Route path="/attendance" element={<AttendancePage />} />
-              <Route path="/scanqr" element={<ScanQRPage />} />
-              <Route path="/events" element={<Events />} /> */}
-              <Route path="/" element={<InstrallationRegistration />} />
-
-
+              <Route path="/" element={<Home />} />
             </Routes>
           </div>
           <ThemeToggle />

@@ -21,7 +21,6 @@ function App() {
               <Route path="/" element={<Home />} />
             </Routes>
           </div>
-          <ThemeToggle />
         </div>
       </Router>
       </ToastProvider>

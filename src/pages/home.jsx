@@ -232,11 +232,11 @@ const Home = () => {
                     whileHover={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                   >
-                    <motion.span 
-                      className="text-7xl"
+                    <motion.div
+                      className="w-full h-full relative overflow-hidden"
                       animate={{ 
                         y: [0, -5, 0],
-                        rotate: [0, 5, -5, 0],
+                        rotate: [0, 1, -1, 0],
                       }}
                       transition={{ 
                         duration: 8,
@@ -245,8 +245,16 @@ const Home = () => {
                         times: [0, 0.2, 0.4, 1]
                       }}
                     >
-                      👨‍💻
-                    </motion.span>
+                      <img 
+                        src="/profile.png" 
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '';
+                        }}
+                      />
+                    </motion.div>
                   </motion.div>
                 </div>
                 

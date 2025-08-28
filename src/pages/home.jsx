@@ -123,27 +123,75 @@ const Home = () => {
               className="flex flex-wrap gap-5 pt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
+              transition={{ 
+                delay: 0.5, 
+                staggerChildren: 0.1,
+                when: "beforeChildren"
+              }}
             >
-              <Button 
-                primary 
-                onClick={() => window.location.href = '#work'}
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
               >
-                View My Work
-                <svg className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </Button>
+                <Button 
+                  primary 
+                  onClick={() => window.location.href = '#work'}
+                  className="group relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center">
+                    View My Work
+                    <motion.span 
+                      className="ml-3"
+                      animate={{
+                        x: [0, 4, 0],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </motion.span>
+                  </span>
+                  <span className="absolute inset-0 bg-white/10 group-hover:bg-white/20 transition-colors duration-300"></span>
+                </Button>
+              </motion.div>
               
-              <Button 
-                secondary
-                onClick={() => window.open('/cv.pdf', '_blank')}
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
               >
-                Download CV
-                <svg className="w-5 h-5 ml-3 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-              </Button>
+                <Button 
+                  secondary
+                  onClick={() => window.open('/cv.pdf', '_blank')}
+                  className="group relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center">
+                    Download CV
+                    <motion.span 
+                      className="ml-3"
+                      animate={{
+                        y: [0, 2, 0],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </motion.span>
+                  </span>
+                  <span className="absolute inset-0 bg-black/5 group-hover:bg-black/10 dark:bg-white/5 dark:group-hover:bg-white/10 transition-colors duration-300"></span>
+                </Button>
+              </motion.div>
             </motion.div>
             
             <style jsx global>{`

@@ -359,18 +359,18 @@ const Home = () => {
               {/* Orbiting tech badges with 3D effect */}
               <div className="absolute -inset-10 -z-10 flex items-center justify-center scale-110">
                 {[
-                  { name: 'React', icon: '⚛️' },
-                  { name: 'Node', icon: '⬢' },
-                  { name: 'Express', icon: '🚀' },
-                  { name: 'MongoDB', icon: '🍃' },
-                  { name: 'Firebase', icon: '🔥' },
-                  { name: 'CSS', icon: '🎨' },
-                  { name: 'HTML', icon: '🌐' },
-                  { name: 'JS', icon: 'JS' },
-                  { name: 'Redux', icon: '🔄' },
-                  { name: 'Git', icon: '🐙' },
-                  { name: 'REST', icon: '🔌' },
-                  { name: 'JWT', icon: '🔑' }
+                  { name: 'React', icon: 'react' },
+                  { name: 'Node', icon: 'nodejs' },
+                  { name: 'Express', icon: 'express' },
+                  { name: 'MongoDB', icon: 'mongodb' },
+                  { name: 'Firebase', icon: 'firebase' },
+                  { name: 'CSS', icon: 'css3' },
+                  { name: 'HTML', icon: 'html5' },
+                  { name: 'JavaScript', icon: 'javascript' },
+                  { name: 'Redux', icon: 'redux' },
+                  { name: 'Git', icon: 'git' },
+                  { name: 'REST', icon: 'rest' },
+                  { name: 'JWT', icon: 'jwt' }
                 ].map((tech, i, arr) => {
                   const angle = (i * (360 / arr.length)) * (Math.PI / 180);
                   const baseRadius = 16; // Increased base radius
@@ -584,21 +584,14 @@ const Home = () => {
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                transition={{ duration: 0.6 }}
                 className="space-y-6"
               >
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
-                  About <span className="text-indigo-600">Me</span>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+                  About <span className="text-indigo-600 dark:text-indigo-400">Me</span>
                 </h2>
-                
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Final year undergraduate student majoring in Information Technology
- with a strong foundation in user interface (UI) and user experience (UX)
- design. Proficient in design principles, wireframing, prototyping, and
- user research. Seeking opportunities to apply creative skills and
- contribute to designing intuitive and engaging digital experiences. Eager
- to leverage academic knowledge and hands-on experience to
- contribute to innovative design projects and enhance user satisfaction.
+                <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                  A passionate UI/UX Designer with a strong foundation in user interface (UI) and user experience (UX) design. Proficient in design principles, wireframing, prototyping, and user research. Seeking opportunities to apply creative skills and contribute to designing intuitive and engaging digital experiences. Eager to leverage academic knowledge and hands-on experience to contribute to innovative design projects and enhance user satisfaction.
                 </p>
                 
                 <div className="space-y-4">
@@ -731,7 +724,7 @@ const Home = () => {
               {[
                 {
                   degree: "BSc (Hons) in Information Technology",
-                  institution: "University of Moratuwa",
+                  institution: "Sri Lanka Institute of Information Technology",
                   period: "2021 - Present",
                   description: "Specializing in Software Engineering and Web Development with hands-on experience in modern technologies.",
                   skills: ["Web Development", "Software Engineering", "Database Systems", "UI/UX Design"],
@@ -745,10 +738,10 @@ const Home = () => {
                 },
                 {
                   degree: "G.C.E Advanced Level (A/L)",
-                  institution: "Gampaha Bandaranayake College",
-                  period: "2018 - 2020",
+                  institution: "Thakshila College Gampaha",
+                  period: "2017 - 2019",
                   description: "Physical Science Stream with strong analytical and problem-solving skills development.",
-                  skills: ["Combined Mathematics", "Physics", "Chemistry", "3A Passes"],
+                  skills: ["Combined Mathematics", "Physics", "Chemistry"],
                   icon: (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -801,16 +794,65 @@ const Home = () => {
         </section>
 
         {/* Skills/Technologies */}
-        <section className="py-16 bg-white dark:bg-gray-900">
+        <section className="py-16     backdrop-blur-sm relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
-                My <span className="text-blue-600 dark:text-blue-400">Skills</span>
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400 text-lg">
+            <motion.div 
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ 
+                opacity: 1, 
+                y: 0,
+                transition: { 
+                  duration: 0.8,
+                  ease: [0.16, 1, 0.3, 1] 
+                }
+              }}
+              viewport={{ once: true, margin: "-50px" }}
+            >
+              <motion.h2 
+                className="text-4xl font-bold text-gray-900 dark:text-white mb-3"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ 
+                  opacity: 1, 
+                  y: 0,
+                  transition: { 
+                    delay: 0.2,
+                    duration: 0.6
+                  }
+                }}
+                viewport={{ once: true }}
+              >
+                My <motion.span 
+                  className="text-blue-600 dark:text-blue-400 inline-block"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ 
+                    opacity: 1, 
+                    scale: 1,
+                    transition: { 
+                      delay: 0.3,
+                      type: 'spring',
+                      stiffness: 300
+                    }
+                  }}
+                  viewport={{ once: true }}
+                >Skills</motion.span>
+              </motion.h2>
+              <motion.p 
+                className="text-gray-500 dark:text-gray-400 text-lg"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ 
+                  opacity: 1, 
+                  y: 0,
+                  transition: { 
+                    delay: 0.4,
+                    duration: 0.6
+                  }
+                }}
+                viewport={{ once: true }}
+              >
                 Here are my skills and expertise
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {[
@@ -898,10 +940,34 @@ const Home = () => {
                   icon: 'Figma',
                   color: 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400',
                 },
+                { 
+                  name: 'React Native', 
+                  category: 'Mobile', 
+                  icon: 'react',
+                  color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+                },
+                { 
+                  name: 'TypeScript', 
+                  category: 'Language', 
+                  icon: 'typescript',
+                  color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+                },
+                { 
+                  name: 'Laravel', 
+                  category: 'Backend', 
+                  icon: 'laravel',
+                  color: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',
+                },
+                { 
+                  name: 'Firebase', 
+                  category: 'Backend', 
+                  icon: 'firebase',
+                  color: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
+                },
               ].map((skill, index) => (
                 <motion.div 
                   key={index}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col items-center text-center"
+                  className="bg-white/80 dark:bg-gray-800/80 rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col items-center text-center backdrop-blur-sm"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

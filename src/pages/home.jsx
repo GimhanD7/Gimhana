@@ -200,150 +200,356 @@ const Home = () => {
 
           {/* Right Column - Profile Image */}
           <motion.div 
-            className="relative"
+            className="relative w-full max-w-md mx-auto perspective-1000"
             initial={{ opacity: 0, scale: 0.9, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
           >
+            {/* 3D Tilt Effect Container */}
             <motion.div 
-              className="relative z-10 bg-white/40 dark:bg-gray-800/40 backdrop-blur-lg rounded-3xl p-1.5 shadow-2xl transform transition-all duration-700 group hover:shadow-purple-500/20 hover:-translate-y-2"
-              whileHover={{ 
-                scale: 1.02,
-                boxShadow: '0 25px 50px -12px rgba(124, 58, 237, 0.25)'
+              className="relative z-10 group"
+              whileHover="hover"
+              variants={{
+                hover: {
+                  scale: 1.02,
+                  transition: { duration: 0.3 }
+                }
               }}
             >
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Animated gradient border with 3D effect */}
+              <motion.div 
+                className="absolute inset-0 rounded-full p-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-all duration-500"
+                variants={{
+                  hover: {
+                    opacity: 1,
+                    rotateX: 10,
+                    rotateY: 10,
+                    transition: { duration: 0.5 }
+                  }
+                }}
+              />
               
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 aspect-square border border-white/20">
-                {/* Animated background grid */}
-                <div className="absolute inset-0 opacity-10 dark:opacity-5">
-                  <div className="absolute inset-0 bg-[length:30px_30px] [mask-image:linear-gradient(0deg,transparent,white,transparent)]" 
+              {/* Transparent circle container */}
+              <motion.div 
+                className="relative rounded-full p-1 bg-transparent overflow-visible"
+                style={{
+                  border: '2px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 0 40px rgba(124, 58, 237, 0.2)',
+                  background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%)',
+                  backdropFilter: 'blur(10px)'
+                }}
+                variants={{
+                  hover: {
+                    rotateX: -5,
+                    rotateY: -5,
+                    transition: { 
+                      type: 'spring',
+                      stiffness: 300,
+                      damping: 20
+                    }
+                  }
+                }}
+              >
+                {/* Subtle circular grid */}
+                <div className="absolute inset-0 opacity-20 dark:opacity-10">
+                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                    <circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                    <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                  </svg>
+                </div>
+                
+                {/* Profile image with parallax effect */}
+                <motion.div 
+                  className="relative rounded-full overflow-hidden w-full aspect-square"
+                  whileHover={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                >
+                  <motion.div
+                    className="w-full h-full rounded-full overflow-hidden"
                     style={{
-                      backgroundImage: 'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)'
+                      background: 'transparent',
+                      border: '2px solid rgba(255, 255, 255, 0.1)',
+                      boxShadow: 'inset 0 0 40px rgba(124, 58, 237, 0.3)'
+                    }}
+                    animate={{ 
+                      scale: [1, 1.02, 1],
+                      rotate: [0, 1, -1, 0],
+                    }}
+                    transition={{ 
+                      duration: 12,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  >
+                    <img 
+                      src="/profile.png" 
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdC<KEY>';
+                      }}
+                    />
+                  </motion.div>
+                  
+                  {/* Animated gradient overlay */}
+                  <motion.div 
+                    className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.2), transparent 50%)',
+                      mixBlendMode: 'overlay'
+                    }}
+                    variants={{
+                      hover: {
+                        opacity: 1,
+                        transition: { duration: 0.5 }
+                      }
                     }}
                   />
-                </div>
+                </motion.div>
                 
-                {/* Profile image container */}
-                <div className="w-full h-full flex items-center justify-center p-6">
-                  <motion.div 
-                    className="w-full h-full bg-white/30 dark:bg-black/20 backdrop-blur-sm rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white/30 dark:border-white/10"
-                    whileHover={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                  >
+                {/* Floating particles - More visible and dynamic */}
+                {[...Array(12)].map((_, i) => {
+                  const size = Math.random() * 8 + 4;
+                  const color = `hsl(${Math.random() * 60 + 200}, 90%, 70%)`;
+                  const startX = 10 + Math.random() * 80; // Keep particles more centered
+                  const startY = 10 + Math.random() * 80;
+                  
+                  return (
                     <motion.div
-                      className="w-full h-full relative overflow-hidden"
-                      animate={{ 
-                        y: [0, -5, 0],
-                        rotate: [0, 1, -1, 0],
+                      key={`particle-${i}`}
+                      className="absolute rounded-full z-10"
+                      style={{
+                        width: `${size}px`,
+                        height: `${size}px`,
+                        background: color,
+                        boxShadow: `0 0 ${size}px ${size/2}px ${color}40`,
+                        top: `${startY}%`,
+                        left: `${startX}%`,
+                        opacity: 0,
+                        filter: 'blur(1.5px)'
                       }}
-                      transition={{ 
-                        duration: 8,
+                      animate={{
+                        y: [0, -40, 0],
+                        x: [0, (Math.random() - 0.5) * 60, 0],
+                        opacity: [0, 0.9, 0],
+                        scale: [0.3, 1.5, 0.3],
+                        boxShadow: [
+                          `0 0 ${size}px ${size/3}px ${color}40`,
+                          `0 0 ${size*2}px ${size}px ${color}80`,
+                          `0 0 ${size}px ${size/3}px ${color}40`
+                        ]
+                      }}
+                      transition={{
+                        duration: 6 + Math.random() * 8,
                         repeat: Infinity,
+                        repeatType: 'loop',
+                        delay: Math.random() * 3,
                         ease: 'easeInOut',
-                        times: [0, 0.2, 0.4, 1]
+                        times: [0, 0.5, 1]
+                      }}
+                    />
+                  );
+                })}
+              </motion.div>
+              
+              {/* Orbiting tech badges with 3D effect */}
+              <div className="absolute inset-0 -z-10 flex items-center justify-center scale-125">
+                {[
+                  { name: 'React', icon: '⚛️' },
+                  { name: 'Node', icon: '⬢' },
+                  { name: 'Express', icon: '🚀' },
+                  { name: 'MongoDB', icon: '🍃' },
+                  { name: 'Firebase', icon: '🔥' },
+                  { name: 'CSS', icon: '🎨' },
+                  { name: 'HTML', icon: '🌐' },
+                  { name: 'JavaScript', icon: 'JS' },
+                  { name: 'Redux', icon: '🔄' },
+                  { name: 'Git', icon: '🐙' },
+                  { name: 'REST API', icon: '🔌' },
+                  { name: 'JWT', icon: '🔑' }
+                ].map((tech, i, arr) => {
+                  const angle = (i * (360 / arr.length)) * (Math.PI / 180);
+                  const baseRadius = 14; // Increased base radius
+                  const radiusVariance = 3; // More dynamic movement
+                  const radius = baseRadius + (Math.sin(angle * 2) * radiusVariance);
+                  const x = Math.cos(angle) * radius;
+                  const y = Math.sin(angle) * radius;
+                  const z = Math.sin(angle * 2) * 20;
+                  
+                  const hue = (i * (360 / arr.length) + 200) % 360;
+                  const color = `hsl(${hue}, 80%, 60%)`;
+                  
+                  return (
+                    <motion.div
+                      key={tech}
+                      className="absolute"
+                      style={{
+                        x: `${x}rem`,
+                        y: `${y}rem`,
+                        zIndex: 100 + Math.round(z),
+                        scale: 1.2,
+                        transformStyle: 'preserve-3d',
+                        transform: 'translateZ(0)',
+                        willChange: 'transform, opacity'
+                      }}
+                      initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                      animate={{
+                        x: `${x}rem`,
+                        y: `${y}rem`,
+                        z: z,
+                        opacity: [0.9, 1, 0.9],
+                        scale: [0.9, 1.1, 0.9],
+                        rotateY: [0, 180, 360],
+                        rotateX: [0, 180, 360]
+                      }}
+                      transition={{
+                        x: {
+                          duration: 30 + Math.random() * 10,
+                          repeat: Infinity,
+                          ease: 'linear',
+                          repeatType: 'reverse'
+                        },
+                        y: {
+                          duration: 35 + Math.random() * 15,
+                          repeat: Infinity,
+                          ease: [0.4, 0, 0.2, 1],
+                          repeatType: 'reverse'
+                        },
+                        z: {
+                          duration: 20 + Math.random() * 10,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          repeatType: 'reverse'
+                        },
+                        rotateY: {
+                          duration: 40 + Math.random() * 20,
+                          repeat: Infinity,
+                          ease: 'linear'
+                        },
+                        rotateX: {
+                          duration: 30 + Math.random() * 20,
+                          repeat: Infinity,
+                          ease: 'linear',
+                          delay: Math.random() * 5
+                        },
+                        opacity: {
+                          duration: 5 + Math.random() * 3,
+                          repeat: Infinity,
+                          ease: 'easeInOut'
+                        },
+                        scale: {
+                          duration: 4 + Math.random() * 2,
+                          repeat: Infinity,
+                          ease: 'easeInOut'
+                        },
+                        default: {
+                          duration: 0.6,
+                          delay: 0.1 + (i * 0.05),
+                          type: 'spring',
+                          stiffness: 120,
+                          damping: 12
+                        }
+                      }}
+                      whileHover={{
+                        scale: 1.3,
+                        z: 50,
+                        filter: 'brightness(1.2)',
+                        transition: { 
+                          duration: 0.2,
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 10
+                        }
                       }}
                     >
-                      <img 
-                        src="/profile.png" 
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = '';
+                      <motion.div 
+                        className="glass-card p-1.5 rounded-2xl backdrop-blur-lg"
+                        style={{
+                          transform: 'translateZ(30px)',
+                          background: `linear-gradient(145deg, ${color}10, rgba(255,255,255,0.1))`,
+                          boxShadow: `0 8px 32px -8px ${color}20, 0 4px 8px -4px rgba(0, 0, 0, 0.1)`,
+                          border: '1px solid rgba(255, 255, 255, 0.2)'
                         }}
-                      />
+                        whileHover={{
+                          y: -5,
+                          scale: 1.05,
+                          boxShadow: `0 12px 24px -4px ${color}30, 0 6px 12px -4px rgba(0, 0, 0, 0.15)`,
+                          transition: { 
+                            duration: 0.3,
+                            type: 'spring',
+                            stiffness: 300,
+                            damping: 15
+                          }
+                        }}
+                      >
+                        <div className="px-4 py-3 bg-white/90 dark:bg-gray-800/90 rounded-xl flex items-center gap-3">
+                          <div 
+                            className="w-8 h-8 rounded-lg flex items-center justify-center text-lg"
+                            style={{
+                              background: `linear-gradient(135deg, ${color}15, ${color}30)`,
+                              color: color,
+                              border: `1px solid ${color}30`
+                            }}
+                          >
+                            {tech.icon}
+                          </div>
+                          <span className="font-medium text-sm text-gray-800 dark:text-gray-100">
+                            {tech.name}
+                          </span>
+                        </div>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                </div>
-                
-                {/* Animated floating elements */}
-                <motion.div 
-                  className="absolute -bottom-20 -right-20 w-40 h-40 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 group-hover:opacity-30 transition-all duration-1000"
-                  animate={{
-                    y: [0, -15, 0],
-                    x: [0, 10, 0],
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
-                  }}
-                />
-                
-                <motion.div 
-                  className="absolute -top-10 -left-10 w-32 h-32 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 group-hover:opacity-30 transition-all duration-1000"
-                  animate={{
-                    y: [0, 15, 0],
-                    x: [0, -10, 0],
-                  }}
-                  transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: 1
-                  }}
-                />
-              </div>
-              
-              {/* Floating elements outside card */}
-              <motion.div 
-                className="absolute -bottom-6 -left-6 w-32 h-32 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-5"
-                animate={{
-                  y: [0, -20, 0],
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 10, 0]
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 0.5
-                }}
-              />
-              
-              <motion.div 
-                className="absolute -top-8 -right-8 w-40 h-40 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-5"
-                animate={{
-                  y: [0, 20, 0],
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -15, 0]
-                }}
-                transition={{
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 1
-                }}
-              />
-              
-              {/* Tech stack badges with staggered animation */}
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {['React', 'Node', 'Next', 'TS'].map((tech, i) => (
-                  <motion.span 
-                    key={tech}
-                    className="px-3 py-1.5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md text-xs font-medium rounded-full shadow-lg border border-white/20 dark:border-gray-700"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      delay: 0.3 + (i * 0.1),
-                      type: 'spring',
-                      stiffness: 100,
-                      damping: 10
-                    }}
-                    whileHover={{
-                      y: -5,
-                      scale: 1.1,
-                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                      transition: { duration: 0.2 }
-                    }}
-                  >
-                    {tech}
-                  </motion.span>
-                ))}
+                  );
+                })}
               </div>
             </motion.div>
+            
+            {/* Animated background glow */}
+            <motion.div 
+              className="absolute -z-20 -inset-20 rounded-full bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 filter blur-3xl"
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.1, 0.15, 0.1],
+                rotate: [0, 5, 0]
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.5
+              }}
+            />
+            
+            {/* Floating micro-interactions */}
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={`dot-${i}`}
+                className="absolute rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                style={{
+                  width: `${Math.random() * 6 + 2}px`,
+                  height: `${Math.random() * 6 + 2}px`,
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  filter: 'blur(1px)'
+                }}
+                animate={{
+                  y: [0, -30, 0],
+                  x: [0, (Math.random() - 0.5) * 40, 0],
+                  opacity: [0, 0.7, 0],
+                  scale: [0.5, 1.2, 0.5]
+                }}
+                transition={{
+                  duration: 8 + Math.random() * 10,
+                  repeat: Infinity,
+                  delay: Math.random() * 5,
+                  ease: 'easeInOut'
+                }}
+              />
+            ))}
           </motion.div>
         </div>
 

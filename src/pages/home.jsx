@@ -1,6 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
 import Button from '../components/Button';
+import { useToast } from '../contexts/ToastContext';
+import emailjs from '@emailjs/browser';
 
 // Animation variants
 const container = {
@@ -25,7 +28,133 @@ const item = {
   }
 };
 
+const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-1">
+              <iframe 
+                src={artworkUrl}
+                className="w-full h-[70vh] border-0 rounded-lg"
+                title="Brand Artwork Showcase"
+                allowFullScreen
+                key={artworkUrl}
+              />
+            </div>
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+              aria-label="Close"
+            >
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const Home = () => {
+  const toast = useToast();
+  const [isArtworkOpen, setIsArtworkOpen] = useState(false);
+  const [artworkUrl, setArtworkUrl] = useState('');
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Initialize EmailJS with your public key
+  useEffect(() => {
+    emailjs.init('uEfOjnUp0V07aWPgO');
+  }, []);
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.showError('Please fill in all required fields');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.showError('Please enter a valid email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Import EmailJS
+      const emailjs = (await import('@emailjs/browser')).default;
+      
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_1k7k7ce', // Service ID
+        'template_6znvb0k', // Template ID
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject || 'New message from portfolio contact form',
+          message: formData.message,
+          to_email: 'gimhanadissanayake7@gmail.com' // Your email address
+        },
+        'uEfOjnUp0V07aWPgO' // Public key
+      );
+      
+      // Show success message
+      toast.showSuccess('Message sent successfully!');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.showError('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const features = [
     {
       icon: (
@@ -218,7 +347,7 @@ const Home = () => {
             >
               {/* Animated gradient border with 3D effect */}
               <motion.div 
-                className="absolute inset-0 rounded-full p-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-all duration-500"
+                className="absolute inset-0 rounded-full p-[2px] bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-all duration-500"
                 variants={{
                   hover: {
                     opacity: 1,
@@ -637,7 +766,7 @@ const Home = () => {
           
             <div className="text-center mb-16 overflow-hidden">
               <motion.h2 
-                className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4"
+                className="text-4xl font-bold text-gray-900 dark:text-white mb-4"
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 whileInView={{ 
                   opacity: 1, 
@@ -720,9 +849,9 @@ const Home = () => {
                   description: "Specializing in Software Engineering and Web Development with hands-on experience in modern technologies.",
                   skills: ["Web Development", "Software Engineering", "Database Systems", "UI/UX Design"],
                   icon: (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                      <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.01a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.01a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.01a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
                     </svg>
                   )
@@ -734,49 +863,45 @@ const Home = () => {
                   description: "Physical Science Stream with strong analytical and problem-solving skills development.",
                   skills: ["Combined Mathematics", "Physics", "Chemistry"],
                   icon: (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.486M7 17h.01" />
                     </svg>
                   )
                 }
               ].map((edu, index) => (
                 <motion.div
                   key={index}
-                  className="group relative rounded-2xl p-6 backdrop-blur-sm bg-white/70 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-400/10 dark:to-purple-500/10 group-hover:scale-110 transition-transform duration-500"></div>
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-500 text-indigo-600 dark:text-indigo-400">
+                      {edu.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">{edu.degree}</h3>
+                      <p className="text-indigo-600 dark:text-indigo-400 font-medium">{edu.institution}</p>
+                    </div>
+                  </div>
                   
-                  <div className="relative z-10">
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-600 dark:text-indigo-400">
-                        {edu.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{edu.degree}</h3>
-                        <p className="text-indigo-600 dark:text-indigo-400 font-medium">{edu.institution}</p>
-                      </div>
-                    </div>
-                    
-                    <span className="inline-block px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300 rounded-full mb-4">
-                      {edu.period}
-                    </span>
-                    
-                    <p className="text-gray-600 dark:text-gray-300 mb-5">{edu.description}</p>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {edu.skills.map((skill, i) => (
-                        <span 
-                          key={i}
-                          className="px-3 py-1 text-xs font-medium bg-white dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-full border border-gray-200 dark:border-gray-600"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+                  <span className="inline-block px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300 rounded-full mb-4">
+                    {edu.period}
+                  </span>
+                  
+                  <p className="text-gray-600 dark:text-gray-300 mb-5">{edu.description}</p>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {edu.skills.map((skill, i) => (
+                      <span 
+                        key={i}
+                        className="px-3 py-1 text-xs font-medium bg-white dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-full border border-gray-200 dark:border-gray-600"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
                 </motion.div>
               ))}
@@ -1002,35 +1127,7 @@ const Home = () => {
           </div>
         </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <motion.div 
-          className="grid md:grid-cols-3 gap-8"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          variants={container}
-        >
-          {features.map((feature, index) => (
-            <motion.div 
-              key={index}
-              className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-              variants={item}
-              whileHover={{ y: -5 }}
-            >
-              <div className="w-14 h-14 bg-indigo-50 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-6">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {feature.description}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
+      
 
       {/* Work Experience Section */}
       <section className="relative py-20 overflow-hidden">
@@ -1045,43 +1142,43 @@ const Home = () => {
             className="text-center mb-20"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 mb-4">
               <span className="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></span>
               <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">EXPERIENCE</span>
             </div>
-            <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300">
-              Professional Journey
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Professional <span className="text-indigo-600 dark:text-indigo-400">Journey</span>
             </h2>
-            <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               A timeline of my professional growth and key contributions
             </p>
           </motion.div>
 
-          <div className="relative max-w-4xl mx-auto">
-            {/* Vertical line */}
-            <div className="absolute left-1/2 w-0.5 h-full bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
+            {/* Vertical line - Hidden on mobile, visible on md+ */}
+            <div className="hidden md:block absolute left-1/2 w-0.5 h-full bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
             
-            <div className="space-y-16">
+            <div className="space-y-12 md:space-y-16">
               {/* JCEY Tea Factory */}
               <motion.div 
-                className="relative group"
-                initial={{ opacity: 0, x: -50 }}
+                className="relative group pl-8 md:pl-0"
+                initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
-                <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 z-10">
+                <div className="absolute -left-1 md:-left-4 top-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 z-10">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
-                <div className="ml-12">
-                  <div className="absolute -left-1 top-0 w-0.5 h-full bg-gradient-to-b from-indigo-500/30 to-transparent"></div>
+                <div className="ml-8 md:ml-12">
+                  <div className="hidden md:block absolute -left-1 top-0 w-0.5 h-full bg-gradient-to-b from-indigo-500/30 to-transparent"></div>
                   <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-xl shadow-indigo-500/5 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 group-hover:-translate-y-1">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-3">
                       <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
                         Art Work Designer
                       </h3>
@@ -1099,7 +1196,7 @@ const Home = () => {
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
                       Leading the design of visually stunning tea packaging and marketing materials, collaborating with the Artwork development team to create compelling brand experiences that resonate with customers.
                     </p>
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    <div className="flex flex-wrap gap-2">
                       <span className="px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">
                         Packaging Design
                       </span>
@@ -1110,17 +1207,56 @@ const Home = () => {
                         Print Production
                       </span>
                     </div>
+                    <button
+                      onClick={() => {
+                        setArtworkUrl('https://www.pacdora.com/share?filter_url=psb5vv3n6w');
+                        setIsArtworkOpen(true);
+                      }}
+                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg hover:opacity-90 transition-opacity group-hover:shadow-lg group-hover:shadow-indigo-500/20"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Sample 01
+                    </button>
+                    <button
+                      onClick={() => {
+                        setArtworkUrl('https://www.pacdora.com/share?filter_url=ps0x2ejs0o');
+                        setIsArtworkOpen(true);
+                      }}
+                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg hover:opacity-90 transition-opacity group-hover:shadow-lg group-hover:shadow-indigo-500/20"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Sample 02
+                    </button>
+                    <button
+                      onClick={() => {
+                        setArtworkUrl('https://www.pacdora.com/share?filter_url=pslu23py9h');
+                        setIsArtworkOpen(true);
+                      }}
+                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg hover:opacity-90 transition-opacity group-hover:shadow-lg group-hover:shadow-indigo-500/20"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Sample 03
+                    </button>
                   </div>
                 </div>
               </motion.div>
 
               {/* Freelancing */}
               <motion.div 
-                className="relative group"
-                initial={{ opacity: 0, x: 50 }}
+                className="relative group pl-8 md:pl-0"
+                initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
                 <div className="absolute -right-4 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 z-10">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1130,7 +1266,7 @@ const Home = () => {
                 <div className="mr-12">
                   <div className="absolute -right-1 top-0 w-0.5 h-full bg-gradient-to-b from-blue-500/30 to-transparent"></div>
                   <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-xl shadow-blue-500/5 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group-hover:-translate-y-1">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-3">
                       <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400">
                         Social Media Designer
                       </h3>
@@ -1165,10 +1301,10 @@ const Home = () => {
 
               {/* Company of Environment */}
               <motion.div 
-                className="relative group"
+                className="relative group pl-8 md:pl-0"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 z-10">
@@ -1179,7 +1315,7 @@ const Home = () => {
                 <div className="ml-12">
                   <div className="absolute -left-1 top-0 w-0.5 h-full bg-gradient-to-b from-emerald-500/30 to-transparent"></div>
                   <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-xl shadow-emerald-500/5 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300 group-hover:-translate-y-1">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-3">
                       <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400">
                         Social Media Manager
                       </h3>
@@ -1229,18 +1365,202 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
-        <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold text-white mb-6">Ready to get started?</h2>
-          <p className="text-xl text-indigo-100 mb-8">
-            Join thousands of satisfied users who are already using our platform.
-          </p>
-          <button className="px-8 py-3 bg-white text-indigo-600 font-medium rounded-lg hover:bg-opacity-90 transition-opacity">
-            Sign Up Free
-          </button>
+      {/* Contact Section */}
+      <section id="contact" className="py-20 bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-900/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 mb-4">
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></span>
+              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">GET IN TOUCH</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Let's <span className="text-indigo-600 dark:text-indigo-400">Work Together</span>
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Have a project in mind or want to discuss potential opportunities? I'd love to hear from you!
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Contact Form */}
+            <motion.div 
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm transition-all duration-200"
+                      placeholder="Your name"
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm transition-all duration-200"
+                      placeholder="your.email@example.com"
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm transition-all duration-200"
+                    placeholder="How can I help you?"
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm transition-all duration-200"
+                    placeholder="Tell me about your project..."
+                    required
+                    disabled={isSubmitting}
+                  ></textarea>
+                </div>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className={`w-full px-6 py-3.5 text-white font-medium bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                      isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+                    }`}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </span>
+                    ) : 'Send Message'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+
+            {/* Contact Info */}
+            <motion.div 
+              className="space-y-8"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl h-full">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Contact Information</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Email</h4>
+                      <a href="mailto:contact@example.com" className="text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">gimhandeshapriya567@gmail.com</a>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</h4>
+                      <a href="tel:+1234567890" className="text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">+94 76 8582 057</a>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</h4>
+                      <p className="text-gray-900 dark:text-white">Gampaha, Sri Lanka</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-10">
+                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Connect with me</h4>
+                  <div className="flex items-center gap-4">
+                    {[
+                      { name: 'LinkedIn', icon: 'M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z', path: 'https://linkedin.com' },
+                      { name: 'GitHub', icon: 'M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.39-1.332-1.76-1.332-1.76-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z', path: 'https://github.com' },
+                      { name: 'Twitter', icon: 'M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z', path: 'https://twitter.com' },
+                      { name: 'Dribbble', icon: 'M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm9.746 13.034a15.07 15.07 0 01-4.095 1.199c.521-.34.985-.756 1.374-1.23a5.99 5.99 0 01-1.9.625 2.98 2.98 0 00-5.06 2.716c0 .234.027.462.08.68a8.48 8.48 0 01-6.15-3.118 2.98 2.98 0 00.922 3.977 2.96 2.96 0 01-1.35-.373v.038a2.98 2.98 0 002.39 2.922 2.977 2.977 0 01-1.345.052 2.98 2.98 0 002.784 2.07 5.978 5.978 0 01-3.7 1.275 6.044 6.044 0 01-.71-.042 8.43 8.43 0 004.566 1.34c5.48 0 8.475-4.54 8.475-8.474 0-.129-.003-.258-.01-.386a6.05 6.05 0 001.488-1.54z', path: 'https://dribbble.com' }
+                    ].map((social) => (
+                      <a
+                        key={social.name}
+                        href={social.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                        aria-label={social.name}
+                      >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d={social.icon} />
+                        </svg>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
+      
+      {/* Artwork Popup */}
+      <ArtworkPopup 
+        isOpen={isArtworkOpen} 
+        onClose={() => setIsArtworkOpen(false)}
+        artworkUrl={artworkUrl}
+      />
     </div>
   );
 };

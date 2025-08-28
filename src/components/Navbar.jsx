@@ -213,8 +213,17 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="md:hidden fixed top-4 right-4 z-50 p-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg"
+        aria-label="Toggle menu"
+      >
+        <MenuIcon open={mobileMenuOpen} />
+      </button>
+
       {/* Mobile Navigation - Bottom Bar */}
-      <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${
+      <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled 
           ? 'bg-white/90 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg' 
           : 'bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700'

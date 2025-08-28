@@ -358,19 +358,11 @@ const Home = () => {
                 }}
               />
               
-              {/* Transparent circle container */}
+              {/* Transparent container */}
               <motion.div 
-                className="relative rounded-full p-1 bg-transparent overflow-visible"
-                style={{
-                  border: '2px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: '0 0 40px rgba(124, 58, 237, 0.2)',
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%)',
-                  backdropFilter: 'blur(10px)'
-                }}
+                className="relative bg-transparent overflow-visible"
                 variants={{
                   hover: {
-                    rotateX: -5,
-                    rotateY: -5,
                     transition: { 
                       type: 'spring',
                       stiffness: 300,
@@ -379,16 +371,6 @@ const Home = () => {
                   }
                 }}
               >
-                {/* Subtle circular grid */}
-                <div className="absolute inset-0 opacity-20 dark:opacity-10">
-                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                    <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                    <circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                    <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                    <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                  </svg>
-                </div>
                 
                 {/* Profile image with parallax effect */}
                 <motion.div 
@@ -425,64 +407,9 @@ const Home = () => {
                   </motion.div>
                   
                   {/* Animated gradient overlay */}
-                  <motion.div 
-                    className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                    style={{
-                      background: 'radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.2), transparent 50%)',
-                      mixBlendMode: 'overlay'
-                    }}
-                    variants={{
-                      hover: {
-                        opacity: 1,
-                        transition: { duration: 0.5 }
-                      }
-                    }}
-                  />
+                  
                 </motion.div>
                 
-                {/* Floating particles - More visible and dynamic */}
-                {[...Array(12)].map((_, i) => {
-                  const size = Math.random() * 8 + 4;
-                  const color = `hsl(${Math.random() * 60 + 200}, 90%, 70%)`;
-                  const startX = 10 + Math.random() * 80; // Keep particles more centered
-                  const startY = 10 + Math.random() * 80;
-                  
-                  return (
-                    <motion.div
-                      key={`particle-${i}`}
-                      className="absolute rounded-full z-10"
-                      style={{
-                        width: `${size}px`,
-                        height: `${size}px`,
-                        background: color,
-                        boxShadow: `0 0 ${size}px ${size/2}px ${color}40`,
-                        top: `${startY}%`,
-                        left: `${startX}%`,
-                        opacity: 0,
-                        filter: 'blur(1.5px)'
-                      }}
-                      animate={{
-                        y: [0, -40, 0],
-                        x: [0, (Math.random() - 0.5) * 60, 0],
-                        opacity: [0, 0.9, 0],
-                        scale: [0.3, 1.5, 0.3],
-                        boxShadow: [
-                          `0 0 ${size}px ${size/3}px ${color}40`,
-                          `0 0 ${size*2}px ${size}px ${color}80`,
-                          `0 0 ${size}px ${size/3}px ${color}40`
-                        ]
-                      }}
-                      transition={{
-                        duration: 6 + Math.random() * 8,
-                        repeat: Infinity,
-                        repeatType: 'loop',
-                        delay: Math.random() * 3,
-                        ease: 'easeInOut',
-                        times: [0, 0.5, 1]
-                      }}
-                    />
-                  );
-                })}
               </motion.div>
               
               {/* Tech Stack Grid */}

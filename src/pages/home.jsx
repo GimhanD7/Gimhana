@@ -746,165 +746,119 @@ const Home = () => {
 
         
 
-        {/* Education Section - Modern Background */}
-        <section className="py-20 relative overflow-hidden">
-          {/* Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/50 dark:from-gray-900/95 dark:via-gray-800/95 dark:to-gray-900/95"></div>
-          
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-10 dark:opacity-5" style={{
-            backgroundImage: 'linear-gradient(to right, #6366f1 1px, transparent 1px), linear-gradient(to bottom, #6366f1 1px, transparent 1px)',
-            backgroundSize: '40px 40px'
-          }}></div>
-          
-          {/* Animated Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -right-32 -top-32 w-[600px] h-[600px] bg-gradient-to-br from-indigo-100 to-blue-100 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:opacity-10 animate-float"></div>
-            <div className="absolute -left-32 -bottom-32 w-[600px] h-[600px] bg-gradient-to-tr from-blue-100 to-cyan-100 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:opacity-10 animate-float animation-delay-2000"></div>
-            <br/>
-            <br/>
-          
-            <div className="text-center mb-16 overflow-hidden">
-              <motion.h2 
-                className="text-4xl font-bold text-gray-900 dark:text-white mb-4"
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                whileInView={{ 
-                  opacity: 1, 
-                  y: 0, 
-                  scale: 1,
-                  transition: { 
-                    duration: 0.8,
-                    ease: [0.16, 1, 0.3, 1] 
-                  }
-                }}
-                viewport={{ once: true, margin: "-50px" }}
-              >
-                <motion.span 
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ 
-                    opacity: 1, 
-                    x: 0,
-                    transition: { 
-                      delay: 0.1,
-                      duration: 0.6
-                    }
-                  }}
-                  className="inline-block"
-                >
-                  My 
-                </motion.span>
-                <motion.span 
-                  initial={{ opacity: 0, x: 10 }}
-                  whileInView={{ 
-                    opacity: 1, 
-                    x: 0,
-                    transition: { 
-                      delay: 0.2,
-                      duration: 0.6
-                    }
-                  }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 inline-block"
-                >
-                  Education
-                </motion.span>
-              </motion.h2>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { 
-                    delay: 0.4,
-                    duration: 0.6,
-                    ease: [0.22, 1, 0.36, 1]
-                  }
-                }}
-                viewport={{ once: true, margin: "-20px" }}
-              >
-                <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-                  Academic journey and achievements
-                </p>
-              </motion.div>
-            </div>
-            
-            {/* Subtle dots */}
-            <div className="absolute right-20 top-1/4 w-3 h-3 bg-indigo-400 dark:bg-indigo-600 rounded-full opacity-70 animate-pulse"></div>
-            <div className="absolute left-1/4 bottom-1/3 w-2 h-2 bg-blue-400 dark:bg-blue-600 rounded-full opacity-70 animate-pulse animation-delay-1000"></div>
+        {/* Education Section */}
+        <section className="relative py-20 overflow-hidden bg-white dark:bg-gray-900">
+          {/* Background pattern */}
+          <div className="absolute inset-0 bg-grid-gray-200 dark:bg-grid-gray-800 [mask-image:linear-gradient(0deg,white,transparent)]">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-white/20 dark:from-gray-900/80 dark:to-gray-900/20"></div>
           </div>
-          <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
 
-            <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-              {[
-                {
-                  degree: "BSc (Hons) in Information Technology",
-                  institution: "Sri Lanka Institute of Information Technology",
-                  period: "2021 - Present",
-                  description: "Specializing in Software Engineering and Web Development with hands-on experience in modern technologies.",
-                  skills: ["Web Development", "Software Engineering", "Database Systems", "UI/UX Design"],
-                  icon: (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.01a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.01a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                    </svg>
-                  )
-                },
-                {
-                  degree: "G.C.E Advanced Level (A/L)",
-                  institution: "Thakshila College Gampaha",
-                  period: "2017 - 2019",
-                  description: "Physical Science Stream with strong analytical and problem-solving skills development.",
-                  skills: ["Combined Mathematics", "Physics", "Chemistry"],
-                  icon: (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.486M7 17h.01" />
-                    </svg>
-                  )
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Section Header */}
+            <motion.div 
+              className="text-center mb-16 px-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ 
+                opacity: 1, 
+                y: 0,
+                transition: { 
+                  duration: 0.6,
+                  ease: [0.16, 1, 0.3, 1] 
                 }
-              ].map((edu, index) => (
-                <motion.div
-                  key={index}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-500 text-indigo-600 dark:text-indigo-400">
-                      {edu.icon}
+              }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-3">
+                ACADEMIC BACKGROUND
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                My <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">Education</span>
+              </h2>
+              <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                A journey of continuous learning and academic excellence
+              </p>
+            </motion.div>
+
+            {/* Timeline */}
+            <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              {/* Timeline line */}
+              <div className="absolute left-1/2 w-0.5 h-full bg-gradient-to-b from-indigo-200 to-blue-200 dark:from-gray-700 dark:to-gray-600"></div>
+              
+              {/* Education Items */}
+              <div className="space-y-12">
+                {[
+                  {
+                    degree: "BSc (Hons) in Information Technology",
+                    institution: "Sri Lanka Institute of Information Technology",
+                    period: "2021 - Present",
+                    description: "Specializing in Software Engineering and Web Development with hands-on experience in modern technologies.",
+                    skills: ["Web Development", "Software Engineering", "Database Systems", "UI/UX Design"],
+                    icon: (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    )
+                  },
+                  {
+                    degree: "G.C.E Advanced Level (A/L)",
+                    institution: "Thakshila College Gampaha",
+                    period: "2017 - 2019",
+                    description: "Physical Science Stream with strong analytical and problem-solving skills development.",
+                    skills: ["Combined Mathematics", "Physics", "Chemistry"],
+                    icon: (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    )
+                  }
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className={`relative flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center`}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ 
+                      opacity: 1, 
+                      y: 0,
+                      transition: { 
+                        duration: 0.6,
+                        delay: index * 0.15
+                      }
+                    }}
+                    viewport={{ once: true }}
+                  >
+                    {/* Timeline dot */}
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full bg-indigo-500 dark:bg-indigo-600 border-4 border-white dark:border-gray-800 z-10"></div>
+                    
+                    {/* Card */}
+                    <div className="w-5/12">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg backdrop-blur-sm bg-opacity-70 dark:bg-opacity-70 border border-gray-100 dark:border-gray-700">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+                            {item.icon}
+                          </div>
+                          <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">{item.period}</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{item.degree}</h3>
+                        <p className="text-indigo-600 dark:text-indigo-400 font-medium mb-3">{item.institution}</p>
+                        <p className="text-gray-600 dark:text-gray-300 mb-4">{item.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {item.skills.map((skill, i) => (
+                            <span 
+                              key={i}
+                              className="px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300 rounded-full"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">{edu.degree}</h3>
-                      <p className="text-indigo-600 dark:text-indigo-400 font-medium">{edu.institution}</p>
-                    </div>
-                  </div>
-                  
-                  <span className="inline-block px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300 rounded-full mb-4">
-                    {edu.period}
-                  </span>
-                  
-                  <p className="text-gray-600 dark:text-gray-300 mb-5">{edu.description}</p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {edu.skills.map((skill, i) => (
-                      <span 
-                        key={i}
-                        className="px-3 py-1 text-xs font-medium bg-white dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-full border border-gray-200 dark:border-gray-600"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
+              </div>
+              
+              {/* View Resume Button */}
+              
             </div>
           </div>
         </section>

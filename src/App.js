@@ -22,6 +22,7 @@ function App() {
             </Routes>
           </div>
         </div>
+        {/* <ThemeToggle /> */}
       </Router>
       </ToastProvider>
     </ThemeProvider>

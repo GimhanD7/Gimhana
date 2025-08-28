@@ -359,18 +359,18 @@ const Home = () => {
               {/* Orbiting tech badges with 3D effect */}
               <div className="absolute -inset-10 -z-10 flex items-center justify-center scale-110">
                 {[
-                  { name: 'React', icon: 'react' },
-                  { name: 'Node', icon: 'nodejs' },
-                  { name: 'Express', icon: 'express' },
-                  { name: 'MongoDB', icon: 'mongodb' },
-                  { name: 'Firebase', icon: 'firebase' },
-                  { name: 'CSS', icon: 'css3' },
-                  { name: 'HTML', icon: 'html5' },
-                  { name: 'JavaScript', icon: 'javascript' },
-                  { name: 'Redux', icon: 'redux' },
-                  { name: 'Git', icon: 'git' },
-                  { name: 'REST', icon: 'rest' },
-                  { name: 'JWT', icon: 'jwt' }
+                  { name: 'React', icon: 'react', color: 'text-blue-500' },
+                  { name: 'Node', icon: 'nodejs', color: 'text-green-500' },
+                  { name: 'Express', icon: 'express', color: 'text-gray-500' },
+                  { name: 'MongoDB', icon: 'mongodb', color: 'text-green-600' },
+                  { name: 'Firebase', icon: 'firebase', color: 'text-yellow-500' },
+                  { name: 'CSS', icon: 'css3', color: 'text-blue-400' },
+                  { name: 'HTML', icon: 'html5', color: 'text-orange-500' },
+                  { name: 'JavaScript', icon: 'javascript', color: 'text-yellow-400' },
+                  { name: 'Redux', icon: 'redux', color: 'text-purple-500' },
+                  { name: 'Git', icon: 'git', color: 'text-orange-600' },
+                  { name: 'REST', icon: 'rest', color: 'text-blue-500' },
+                  { name: 'JWT', icon: 'jwt', color: 'text-pink-500' }
                 ].map((tech, i, arr) => {
                   const angle = (i * (360 / arr.length)) * (Math.PI / 180);
                   const baseRadius = 16; // Increased base radius
@@ -384,22 +384,13 @@ const Home = () => {
                   const color = `hsl(${hue}, 80%, 60%)`;
                   
                   return (
-                    <motion.div
-                      key={tech}
-                      className="absolute"
-                      style={{
-                        x: `${x}rem`,
-                        y: `${y}rem`,
-                        zIndex: 100 + Math.round(z),
-                        scale: 1.2,
-                        transformStyle: 'preserve-3d',
-                        transform: 'translateZ(0)',
-                        willChange: 'transform, opacity'
+                    <motion.div 
+                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg p-2"
+                      style={{ 
+                        boxShadow: `0 10px 20px -5px ${color}40`,
+                        transform: `translateZ(${z}px) translateY(${y}rem)`
                       }}
-                      initial={{ opacity: 0, scale: 0.5, y: 20 }}
                       animate={{
-                        x: `${x}rem`,
-                        y: `${y}rem`,
                         z: z,
                         opacity: [0.9, 1, 0.9],
                         scale: [0.9, 1.1, 0.9],

@@ -955,6 +955,24 @@ const Home = () => {
                   icon: 'firebase',
                   color: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
                 },
+                {
+                  name: 'Git',
+                  category: 'Version Control',
+                  icon: 'git',
+                  color: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
+                },
+                {
+                  name: 'Github',
+                  category: 'Version Control',
+                  icon: 'github',
+                  color: 'bg-gray-100 text-gray-600 dark:bg-gray-900/30 dark:text-gray-400',
+                },
+                {
+                  name: 'Wordpress',
+                  category: 'CMS',
+                  icon: 'wordpress',
+                  color: 'bg-white-100 text-white-600 dark:bg-white-900/30 dark:text-white-400',
+                }
               ].map((skill, index) => (
                 <motion.div 
                   key={index}
@@ -1012,6 +1030,203 @@ const Home = () => {
             </motion.div>
           ))}
         </motion.div>
+      </section>
+
+      {/* Work Experience Section */}
+      <section className="relative py-20 overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-500/5 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.02]"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 mb-4">
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></span>
+              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">EXPERIENCE</span>
+            </div>
+            <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300">
+              Professional Journey
+            </h2>
+            <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+              A timeline of my professional growth and key contributions
+            </p>
+          </motion.div>
+
+          <div className="relative max-w-4xl mx-auto">
+            {/* Vertical line */}
+            <div className="absolute left-1/2 w-0.5 h-full bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+            
+            <div className="space-y-16">
+              {/* JCEY Tea Factory */}
+              <motion.div 
+                className="relative group"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 z-10">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+                <div className="ml-12">
+                  <div className="absolute -left-1 top-0 w-0.5 h-full bg-gradient-to-b from-indigo-500/30 to-transparent"></div>
+                  <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-xl shadow-indigo-500/5 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 group-hover:-translate-y-1">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+                        Art Work Designer
+                      </h3>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-700 dark:text-indigo-300 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                        2023
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      JCEY Tea Factory
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      Leading the design of visually stunning tea packaging and marketing materials, collaborating with the Artwork development team to create compelling brand experiences that resonate with customers.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      <span className="px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">
+                        Packaging Design
+                      </span>
+                      <span className="px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">
+                        Brand Identity
+                      </span>
+                      <span className="px-3 py-1 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">
+                        Print Production
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Freelancing */}
+              <motion.div 
+                className="relative group"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="absolute -right-4 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 z-10">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 18h.01" />
+                  </svg>
+                </div>
+                <div className="mr-12">
+                  <div className="absolute -right-1 top-0 w-0.5 h-full bg-gradient-to-b from-blue-500/30 to-transparent"></div>
+                  <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-xl shadow-blue-500/5 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group-hover:-translate-y-1">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400">
+                        Social Media Designer
+                      </h3>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-700 dark:text-blue-300 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                        2022
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 18h.01" />
+                      </svg>
+                      Freelance Designer
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      Crafted engaging social media content and strategic visual assets for diverse clients, helping them build strong brand identities and increase their digital presence across multiple platforms.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      <span className="px-3 py-1 text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">
+                        Social Media Graphics
+                      </span>
+                      <span className="px-3 py-1 text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">
+                        Brand Strategy
+                      </span>
+                      <span className="px-3 py-1 text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">
+                        Content Creation
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Company of Environment */}
+              <motion.div 
+                className="relative group"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 z-10">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.486M7 17h.01" />
+                  </svg>
+                </div>
+                <div className="ml-12">
+                  <div className="absolute -left-1 top-0 w-0.5 h-full bg-gradient-to-b from-emerald-500/30 to-transparent"></div>
+                  <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-xl shadow-emerald-500/5 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300 group-hover:-translate-y-1">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400">
+                        Social Media Manager
+                      </h3>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        2020
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      Company of Environment
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      Managed and curated content for social media platforms, creating impactful campaigns to raise environmental awareness and engage the community in sustainability initiatives.
+                    </p>
+                    <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
+                      <div className="flex flex-wrap gap-2">
+                        <span className="px-3 py-1 text-xs font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full">
+                          Content Strategy
+                        </span>
+                        <span className="px-3 py-1 text-xs font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full">
+                          Community Engagement
+                        </span>
+                        <span className="px-3 py-1 text-xs font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full">
+                          Visual Storytelling
+                        </span>
+                      </div>
+                      <a 
+                        href="https://www.facebook.com/companyofenvironment76" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg hover:opacity-90 transition-opacity group-hover:shadow-lg group-hover:shadow-emerald-500/20"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                        </svg>
+                        View Work
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* CTA Section */}

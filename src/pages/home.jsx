@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import Button from '../components/Button';
 import { useToast } from '../contexts/ToastContext';
 import emailjs from '@emailjs/browser';
+import Background from '../components/Background';
 
 // Animation variants
 const container = {
@@ -186,7 +187,8 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-500 relative overflow-hidden">
+    <div className="min-h-screen text-gray-800 dark:text-gray-200 relative">
+      <Background />
       {/* Grid background */}
       <div className="absolute inset-0 bg-grid-gray-200 dark:bg-grid-gray-800 [mask-image:linear-gradient(0deg,transparent,black,transparent)]"></div>
       

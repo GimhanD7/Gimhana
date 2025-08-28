@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
+import Background from '../components/Background';
 
 const About = () => {
+  
   const skills = [
     { 
       name: 'Frontend', 
@@ -114,12 +116,13 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200">
+    <div className="min-h-screen text-gray-800 dark:text-gray-200 relative">
+      <Background />
       <Helmet>
-        <title>About Me | Gimhana Deshapriya</title>
-        <meta name="description" content="Learn more about my skills, experience, and journey in software development" />
+        <title>About | Gimhana Deshapriya</title>
+        <meta name="description" content="Learn more about my skills, experience, and background" />
       </Helmet>
-
+      
       <main className="container mx-auto px-4 py-12 md:py-20 max-w-7xl">
         {/* Hero Section */}
         <motion.section 
@@ -211,7 +214,7 @@ const About = () => {
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
                   <h3 className="text-xl font-bold">Gimhana deshapriya</h3>
-                  <p className="text-indigo-200">Senior Software Engineer</p>
+                  <p className="text-indigo-200">Software Engineer</p>
                 </div>
               </div>
             </div>
@@ -277,11 +280,7 @@ const About = () => {
             ))}
           </div>
           
-          <div className="mt-16 text-center">
-            <button className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300 hover:-translate-y-0.5">
-              Download Resume
-            </button>
-          </div>
+           
         </section>
 
         {/* Experience Section */}
@@ -434,9 +433,7 @@ const About = () => {
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
               Continuous learning is at the heart of what I do. I'm always exploring new technologies and methodologies to stay at the forefront of web development.
             </p>
-            <button className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300 hover:-translate-y-0.5">
-              Let's Work Together
-            </button>
+            
           </motion.div>
         </section>
 
@@ -498,13 +495,19 @@ const About = () => {
             100% { transform: translate(0px, 0px) scale(1); }
           }
           .animate-blob {
-            animation: blob 7s infinite;
+            animation: blob 15s infinite ease-in-out;
           }
           .animation-delay-2000 {
             animation-delay: 2s;
           }
           .animation-delay-4000 {
             animation-delay: 4s;
+          }
+          .bg-grid-white\/\[0\.05\] {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+          }
+          .dark .bg-grid-white\/\[0\.02\] {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.02)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
           }
         `}</style>
       </main>

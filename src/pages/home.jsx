@@ -245,7 +245,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              I craft exceptional digital experiences that blend beautiful design with clean, efficient code. Let's build something amazing together! 🚀
+              I craft exceptional digital experiences that blend beautiful design with clean, efficient code. Let's build something amazing together! 
             </motion.p>
             
             <motion.div 
@@ -485,146 +485,50 @@ const Home = () => {
                 })}
               </motion.div>
               
-              {/* Orbiting tech badges with 3D effect */}
-              <div className="absolute -inset-10 -z-10 flex items-center justify-center scale-110">
-                {[
-                  { name: 'React', icon: 'react', color: 'text-blue-500' },
-                  { name: 'Node', icon: 'nodejs', color: 'text-green-500' },
-                  { name: 'Express', icon: 'express', color: 'text-gray-500' },
-                  { name: 'MongoDB', icon: 'mongodb', color: 'text-green-600' },
-                  { name: 'Firebase', icon: 'firebase', color: 'text-yellow-500' },
-                  { name: 'CSS', icon: 'css3', color: 'text-blue-400' },
-                  { name: 'HTML', icon: 'html5', color: 'text-orange-500' },
-                  { name: 'JavaScript', icon: 'javascript', color: 'text-yellow-400' },
-                  { name: 'Redux', icon: 'redux', color: 'text-purple-500' },
-                  { name: 'Git', icon: 'git', color: 'text-orange-600' },
-                  { name: 'REST', icon: 'rest', color: 'text-blue-500' },
-                  { name: 'JWT', icon: 'jwt', color: 'text-pink-500' }
-                ].map((tech, i, arr) => {
-                  const angle = (i * (360 / arr.length)) * (Math.PI / 180);
-                  const baseRadius = 16; // Increased base radius
-                  const radiusVariance = 4; // More dynamic movement
-                  const radius = baseRadius + (Math.sin(angle * 2) * radiusVariance);
-                  const x = Math.cos(angle) * radius;
-                  const y = Math.sin(angle) * radius;
-                  const z = Math.sin(angle * 2) * 15;
-                  
-                  const hue = (i * (360 / arr.length) + 200) % 360;
-                  const color = `hsl(${hue}, 80%, 60%)`;
-                  
-                  return (
-                    <motion.div 
-                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg p-2"
-                      style={{ 
-                        boxShadow: `0 10px 20px -5px ${color}40`,
-                        transform: `translateZ(${z}px) translateY(${y}rem)`
-                      }}
-                      animate={{
-                        z: z,
-                        opacity: [0.9, 1, 0.9],
-                        scale: [0.9, 1.1, 0.9],
-                        rotateY: [0, 180, 360],
-                        rotateX: [0, 180, 360]
-                      }}
-                      transition={{
-                        x: {
-                          duration: 30 + Math.random() * 10,
-                          repeat: Infinity,
-                          ease: 'linear',
-                          repeatType: 'reverse'
-                        },
-                        y: {
-                          duration: 35 + Math.random() * 15,
-                          repeat: Infinity,
-                          ease: [0.4, 0, 0.2, 1],
-                          repeatType: 'reverse'
-                        },
-                        z: {
-                          duration: 20 + Math.random() * 10,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          repeatType: 'reverse'
-                        },
-                        rotateY: {
-                          duration: 40 + Math.random() * 20,
-                          repeat: Infinity,
-                          ease: 'linear'
-                        },
-                        rotateX: {
-                          duration: 30 + Math.random() * 20,
-                          repeat: Infinity,
-                          ease: 'linear',
-                          delay: Math.random() * 5
-                        },
-                        opacity: {
-                          duration: 5 + Math.random() * 3,
-                          repeat: Infinity,
-                          ease: 'easeInOut'
-                        },
-                        scale: {
-                          duration: 4 + Math.random() * 2,
-                          repeat: Infinity,
-                          ease: 'easeInOut'
-                        },
-                        default: {
-                          duration: 0.6,
-                          delay: 0.1 + (i * 0.05),
-                          type: 'spring',
-                          stiffness: 120,
-                          damping: 12
+              {/* Tech Stack Grid */}
+              <div className="relative w-full max-w-5xl mx-auto hidden sm:block">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 p-4">
+                  {[
+                    { name: 'React', icon: '⚛️' },
+                    { name: 'Node.js', icon: '🟢' },
+                    { name: 'MongoDB', icon: '🍃' },
+                    { name: 'Firebase', icon: '🔥' },
+                    { name: 'HTML5', icon: '📄' },
+                    { name: 'JavaScript', icon: 'JS' },
+                  ].map((tech, i) => (
+                    <motion.div
+                      key={tech.name}
+                      className="group relative"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          delay: 0.05 * i,
+                          duration: 0.4
                         }
                       }}
-                      whileHover={{
-                        scale: 1.3,
-                        z: 50,
-                        filter: 'brightness(1.2)',
-                        transition: { 
-                          duration: 0.2,
-                          type: 'spring',
-                          stiffness: 400,
-                          damping: 10
-                        }
-                      }}
+                      viewport={{ once: true, margin: "-50px" }}
                     >
-                      <motion.div 
-                        className="glass-card p-0.5 rounded-xl backdrop-blur-sm"
-                        style={{
-                          transform: 'translateZ(20px)',
-                          background: `linear-gradient(145deg, ${color}05, rgba(255,255,255,0.05))`,
-                          boxShadow: `0 4px 12px -4px ${color}15, 0 2px 4px -2px rgba(0, 0, 0, 0.05)`,
-                          border: '1px solid rgba(255, 255, 255, 0.1)'
-                        }}
-                        whileHover={{
-                          y: -2,
-                          scale: 1.02,
-                          boxShadow: `0 6px 16px -2px ${color}20, 0 2px 8px -2px rgba(0, 0, 0, 0.1)`,
-                          transition: { 
-                            duration: 0.2,
-                            type: 'spring',
-                            stiffness: 400,
-                            damping: 15
-                          }
-                        }}
-                      >
-                        <div className="px-2.5 py-1.5 bg-white/90 dark:bg-gray-800/90 rounded-lg flex items-center gap-2">
-                          <div 
-                            className="w-5 h-5 rounded-md flex items-center justify-center text-sm"
-                            style={{
-                              background: `linear-gradient(135deg, ${color}15, ${color}30)`,
-                              color: color,
-                              border: `1px solid ${color}20`
-                            }}
-                          >
+                      <div className="relative p-1">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />
+                        <div className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-3 border border-gray-100/50 dark:border-gray-700/50 group-hover:border-blue-200/50 dark:group-hover:border-blue-900/30 transition-all duration-300 h-full flex flex-col items-center">
+                          <div className="text-2xl mb-1.5 text-gray-700 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                             {tech.icon}
                           </div>
-                          <span className="font-medium text-xs text-gray-700 dark:text-gray-200">
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300">
                             {tech.name}
                           </span>
                         </div>
-                      </motion.div>
+                      </div>
                     </motion.div>
-                  );
-                })}
+                  ))}
+                </div>
+                
+                {/* Subtle animated grid background */}
+                <div className="absolute inset-0 -z-10 overflow-hidden opacity-20">
+                  <div className="absolute inset-0 bg-grid-gray-200 dark:bg-grid-gray-800 [mask-image:linear-gradient(0deg,transparent,white,darkgray,transparent)] dark:[mask-image:linear-gradient(0deg,transparent,rgba(0,0,0,0.05),rgba(0,0,0,0.2),transparent)]" />
+                </div>
               </div>
             </motion.div>
             
@@ -678,9 +582,9 @@ const Home = () => {
         {/* About Me Section */}
         <section className="py-20 bg-white dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid md:grid-cols-1 gap-12 items-center">
               {/* Left Column - Image */}
-              <motion.div 
+              {/* <motion.div 
                 className="relative"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -693,49 +597,95 @@ const Home = () => {
                     alt="Profile" 
                     className="w-full h-full object-cover rounded-2xl"
                   />
-                  {/* Decorative elements */}
+                  <div className="absolute -top-6 -right-6 w-32 h-32 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-10"></div>
+                  <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-10"></div>
+                </div>
+              </motion.div> */}
+
+              {/* Right Column - Content */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6 }}
+                className="max-w-5xl mx-auto"
+              >
+                <div className="text-left mb-12">
+                  <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-3">ABOUT ME</span>
+                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                    Crafting digital experiences that users <span className="text-indigo-600 dark:text-indigo-400">love</span>
+                  </h2>
+                  <div className="h-1 w-20 bg-indigo-600 mb-8"></div>
+                  
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-6">
+                        I'm a UI/UX Designer passionate about creating intuitive and engaging digital experiences. With expertise in user research, wireframing, and prototyping, I transform complex problems into simple, beautiful, and functional designs.
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-8">
+                        My approach combines aesthetic sensibility with a strong focus on user needs, ensuring that every design decision serves a purpose and enhances the overall user experience.
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-6 mt-8">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                            <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Name</p>
+                            <p className="font-medium text-gray-800 dark:text-white">Gimhana Deshapriya</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                            <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                            <p className="font-medium text-indigo-600 dark:text-indigo-400">Gimhandeshapriya567@gmail.com</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                            <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Location</p>
+                            <p className="font-medium text-gray-800 dark:text-white">Gampaha, Sri Lanka</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="relative rounded-2xl overflow-hidden aspect-square hidden md:block">
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl transform rotate-6 scale-105"></div>
+                      {/* Replace with your actual image */}
+                      <motion.div 
+                className="relative"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="relative w-full h-full">
+                  <img 
+                    src="/121.png" 
+                    alt="Profile" 
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
                   <div className="absolute -top-6 -right-6 w-32 h-32 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-10"></div>
                   <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-10"></div>
                 </div>
               </motion.div>
-
-              {/* Right Column - Content */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="space-y-6"
-              >
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                  About <span className="text-indigo-600 dark:text-indigo-400">Me</span>
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                  A passionate UI/UX Designer with a strong foundation in user interface (UI) and user experience (UX) design. Proficient in design principles, wireframing, prototyping, and user research. Seeking opportunities to apply creative skills and contribute to designing intuitive and engaging digital experiences. Eager to leverage academic knowledge and hands-on experience to contribute to innovative design projects and enhance user satisfaction.
-                </p>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <div className="w-1 h-6 bg-indigo-600 mr-3"></div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Name</p>
-                      <p className="font-medium text-gray-800 dark:text-white">Gimhana Deshapriya</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <div className="w-1 h-6 bg-indigo-600 mr-3"></div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                      <p className="font-medium text-gray-800 dark:text-white">Gimhandeshapriya567@gmail.com</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <div className="w-1 h-6 bg-indigo-600 mr-3"></div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">From</p>
-                      <p className="font-medium text-gray-800 dark:text-white">Gampaha, Sri Lanka</p>
                     </div>
                   </div>
                 </div>

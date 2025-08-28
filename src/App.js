@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import './App.css';
 import Home from './pages/home';
 import About from './pages/about';
-import Project from './pages/project';
+import Projects from './pages/project';
 import ContactMe from './pages/contactme';
 
 
@@ -24,8 +24,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/project" element={<Project />} />
-              <Route path="/contactme" element={<ContactMe />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/contact" element={<ContactMe />} />
             </Routes>
           </div>
         </div>

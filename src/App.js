@@ -7,6 +7,10 @@ import ThemeToggle from './components/ThemeToggle';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './pages/home';
+import About from './pages/about';
+import Project from './pages/project';
+import ContactMe from './pages/contactme';
+
 
 
 function App() {
@@ -19,6 +23,9 @@ function App() {
           <div className="flex-1 overflow-auto">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/project" element={<Project />} />
+              <Route path="/contactme" element={<ContactMe />} />
             </Routes>
           </div>
         </div>

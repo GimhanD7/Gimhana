@@ -256,7 +256,7 @@ const Home = () => {
             >
               <Button 
                 primary 
-                onClick={() => window.location.href = '#work'}
+                onClick={() => window.location.href = '/project'}
               >
                 View My Work
                 <svg className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,7 +266,21 @@ const Home = () => {
               
               <Button 
                 secondary
-                onClick={() => window.open('/cv.pdf', '_blank')}
+                onClick={() => {
+                  // Create a temporary anchor element
+                  const link = document.createElement('a');
+                  // Replace '/cv.pdf' with the actual path to your CV file
+                  link.href = '/cv.pdf';
+                  // This suggests the filename for the download
+                  link.download = 'Gimhana_Deshapriya_CV.pdf';
+                  // Append to the document
+                  document.body.appendChild(link);
+                  // Trigger the download
+                  link.click();
+                  // Clean up
+                  document.body.removeChild(link);
+                }}
+                className="group"
               >
                 Download CV
                 <svg className="w-5 h-5 ml-3 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -310,10 +324,26 @@ const Home = () => {
               transition={{ delay: 0.6, duration: 0.5 }}
             >
               {[
-                { name: 'github', icon: 'github' },
-                { name: 'linkedin', icon: 'linkedin' },
-                { name: 'twitter', icon: 'twitter' },
-                { name: 'email', icon: 'mail' }
+                { 
+                  name: 'github', 
+                  icon: 'github',
+                  url: 'https://github.com/GimhanD7' 
+                },
+                { 
+                  name: 'linkedin', 
+                  icon: 'linkedin',
+                  url: 'https://www.linkedin.com/in/gimhana-deshapriya/' 
+                },
+                { 
+                  name: 'facebook', 
+                  icon: 'facebook',
+                  url: 'https://www.facebook.com/gimhana.deshapriya.7' 
+                },
+                { 
+                  name: 'email', 
+                  icon: 'envelope',
+                  url: 'mailto:gimhandeshapriya567@gmail.com' 
+                }
               ].map((social) => (
                 <a 
                   key={social.name}

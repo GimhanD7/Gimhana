@@ -357,7 +357,7 @@ const Home = () => {
               </motion.div>
               
               {/* Orbiting tech badges with 3D effect */}
-              <div className="absolute inset-0 -z-10 flex items-center justify-center scale-125">
+              <div className="absolute -inset-10 -z-10 flex items-center justify-center scale-110">
                 {[
                   { name: 'React', icon: '⚛️' },
                   { name: 'Node', icon: '⬢' },
@@ -366,19 +366,19 @@ const Home = () => {
                   { name: 'Firebase', icon: '🔥' },
                   { name: 'CSS', icon: '🎨' },
                   { name: 'HTML', icon: '🌐' },
-                  { name: 'JavaScript', icon: 'JS' },
+                  { name: 'JS', icon: 'JS' },
                   { name: 'Redux', icon: '🔄' },
                   { name: 'Git', icon: '🐙' },
-                  { name: 'REST API', icon: '🔌' },
+                  { name: 'REST', icon: '🔌' },
                   { name: 'JWT', icon: '🔑' }
                 ].map((tech, i, arr) => {
                   const angle = (i * (360 / arr.length)) * (Math.PI / 180);
-                  const baseRadius = 14; // Increased base radius
-                  const radiusVariance = 3; // More dynamic movement
+                  const baseRadius = 16; // Increased base radius
+                  const radiusVariance = 4; // More dynamic movement
                   const radius = baseRadius + (Math.sin(angle * 2) * radiusVariance);
                   const x = Math.cos(angle) * radius;
                   const y = Math.sin(angle) * radius;
-                  const z = Math.sin(angle * 2) * 20;
+                  const z = Math.sin(angle * 2) * 15;
                   
                   const hue = (i * (360 / arr.length) + 200) % 360;
                   const color = `hsl(${hue}, 80%, 60%)`;
@@ -467,37 +467,37 @@ const Home = () => {
                       }}
                     >
                       <motion.div 
-                        className="glass-card p-1.5 rounded-2xl backdrop-blur-lg"
+                        className="glass-card p-0.5 rounded-xl backdrop-blur-sm"
                         style={{
-                          transform: 'translateZ(30px)',
-                          background: `linear-gradient(145deg, ${color}10, rgba(255,255,255,0.1))`,
-                          boxShadow: `0 8px 32px -8px ${color}20, 0 4px 8px -4px rgba(0, 0, 0, 0.1)`,
-                          border: '1px solid rgba(255, 255, 255, 0.2)'
+                          transform: 'translateZ(20px)',
+                          background: `linear-gradient(145deg, ${color}05, rgba(255,255,255,0.05))`,
+                          boxShadow: `0 4px 12px -4px ${color}15, 0 2px 4px -2px rgba(0, 0, 0, 0.05)`,
+                          border: '1px solid rgba(255, 255, 255, 0.1)'
                         }}
                         whileHover={{
-                          y: -5,
-                          scale: 1.05,
-                          boxShadow: `0 12px 24px -4px ${color}30, 0 6px 12px -4px rgba(0, 0, 0, 0.15)`,
+                          y: -2,
+                          scale: 1.02,
+                          boxShadow: `0 6px 16px -2px ${color}20, 0 2px 8px -2px rgba(0, 0, 0, 0.1)`,
                           transition: { 
-                            duration: 0.3,
+                            duration: 0.2,
                             type: 'spring',
-                            stiffness: 300,
+                            stiffness: 400,
                             damping: 15
                           }
                         }}
                       >
-                        <div className="px-4 py-3 bg-white/90 dark:bg-gray-800/90 rounded-xl flex items-center gap-3">
+                        <div className="px-2.5 py-1.5 bg-white/90 dark:bg-gray-800/90 rounded-lg flex items-center gap-2">
                           <div 
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-lg"
+                            className="w-5 h-5 rounded-md flex items-center justify-center text-sm"
                             style={{
                               background: `linear-gradient(135deg, ${color}15, ${color}30)`,
                               color: color,
-                              border: `1px solid ${color}30`
+                              border: `1px solid ${color}20`
                             }}
                           >
                             {tech.icon}
                           </div>
-                          <span className="font-medium text-sm text-gray-800 dark:text-gray-100">
+                          <span className="font-medium text-xs text-gray-700 dark:text-gray-200">
                             {tech.name}
                           </span>
                         </div>
@@ -510,7 +510,7 @@ const Home = () => {
             
             {/* Animated background glow */}
             <motion.div 
-              className="absolute -z-20 -inset-20 rounded-full bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 filter blur-3xl"
+              className="absolute -z-20 -inset-32 rounded-full bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 filter blur-3xl"
               animate={{
                 scale: [1, 1.1, 1],
                 opacity: [0.1, 0.15, 0.1],

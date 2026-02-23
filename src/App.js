@@ -17,20 +17,20 @@ function App() {
   return (
     <ThemeProvider>
       <ToastProvider>
-      <Router>
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200 flex flex-col">
-          <Navbar />
-          <div className="flex-1 overflow-auto">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/contact" element={<ContactMe />} />
-            </Routes>
+        <Router>
+          <div className="min-h-screen bg-white transition-colors duration-200 flex flex-col">
+            <Navbar />
+            <div className="flex-1 overflow-auto">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/contact" element={<ContactMe />} />
+              </Routes>
+            </div>
           </div>
-        </div>
-        {/* <ThemeToggle /> */}
-      </Router>
+          {/* <ThemeToggle /> */}
+        </Router>
       </ToastProvider>
     </ThemeProvider>
   );

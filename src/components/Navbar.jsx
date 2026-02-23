@@ -43,7 +43,7 @@ const MenuIcon = ({ open }) => (
 const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-  
+
   // Animation variants
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -91,21 +91,21 @@ const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) 
       variants={itemVariants}
       className="relative"
     >
-      <Link 
+      <Link
         to={to}
-        className={`relative px-3 py-2 flex items-center text-sm font-medium transition-colors duration-200 ${className} ${
-          isActive 
-            ? 'text-indigo-600 dark:text-indigo-400' 
-            : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
-        }`}
+        className={`relative px-4 py-2 flex items-center text-sm font-semibold tracking-tight transition-all duration-300 ${className} ${isActive
+          ? 'text-purple-600'
+          : 'text-slate-600 hover:text-slate-950'
+          }`}
       >
         {children}
         {isActive && (
-          <motion.span 
-            className="absolute left-0 bottom-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400"
-            variants={indicatorVariants}
-            initial="hidden"
-            animate={isActive ? 'visible' : 'hidden'}
+          <motion.span
+            className="absolute left-1/2 -bottom-1 w-1.5 h-1.5 rounded-full bg-purple-600 -translate-x-1/2"
+            layoutId="nav-indicator"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
           />
         )}
       </Link>
@@ -129,96 +129,86 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop Navigation - Centered */}
-      <motion.nav 
-        className="hidden md:block fixed top-0 left-0 right-0 z-50     backdrop-blur-sm  "
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+      <motion.nav
+        className={`hidden md:block fixed top-6 left-1/2 -translate-x-1/2 z-50 glass rounded-2xl shadow-xl transition-all duration-500 ${isScrolled ? 'px-6 py-2' : 'px-8 py-3'
+          }`}
+        initial={{ y: -100, x: '-50%' }}
+        animate={{ y: 0, x: '-50%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex justify-between items-center h-16">
-            <div className="w-10"></div> {/* Spacer to balance the theme toggle */}
-            <motion.div 
-              className="flex items-center space-x-8"
-              initial="hidden"
-              animate="show"
-              variants={{
-                hidden: { opacity: 0 },
-                show: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1,
-                    delayChildren: 0.2
-                  }
+        <div className="flex items-center gap-12">
+          <motion.div
+            className="flex items-center space-x-2"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                  delayChildren: 0.2
                 }
-              }}
-            >
-              {[
-                { to: '/', icon: <HomeIcon className="w-6 h-6" />, text: 'Home' },
-                { to: '/about', icon: <AboutIcon className="w-6 h-6" />, text: 'About' },
-                { to: '/projects', icon: <ProjectsIcon className="w-6 h-6" />, text: 'Projects' },
-                { to: '/contact', icon: <ContactIcon className="w-6 h-6" />, text: 'Contact' }
-              ].map((item, index) => (
-                <NavLink 
-                  key={item.to}
-                  to={item.to} 
-                  className="flex flex-col items-center group"
-                  index={index}
-                >
-                  <motion.div
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-2 rounded-full"
-                  >
-                    {item.icon}
-                  </motion.div>
-                  <motion.span 
-                    className="text-xs mt-1"
-                    initial={{ opacity: 0.7 }}
-                    whileHover={{ opacity: 1 }}
-                  >
-                    {item.text}
-                  </motion.span>
-                </NavLink>
-              ))}
-            </motion.div>
-            
-            {/* Theme Toggle Button */}
-            <motion.button
-              onClick={toggleTheme}
-              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-            >
-              <motion.div
-                key={theme}
-                initial={{ rotate: theme === 'light' ? 0 : 180, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: theme === 'light' ? 180 : 0, opacity: 0 }}
-                transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 20 }}
+              }
+            }}
+          >
+            {[
+              { to: '/', icon: <HomeIcon className="w-5 h-5" />, text: 'Home' },
+              { to: '/about', icon: <AboutIcon className="w-5 h-5" />, text: 'About' },
+              { to: '/projects', icon: <ProjectsIcon className="w-5 h-5" />, text: 'Projects' },
+              { to: '/contact', icon: <ContactIcon className="w-5 h-5" />, text: 'Contact' }
+            ].map((item, index) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className="group p-2 rounded-xl hover:bg-white/50 transition-all duration-300"
+                index={index}
               >
-                {theme === 'light' ? (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                  </svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                )}
-              </motion.div>
-            </motion.button>
-          </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="group-hover:scale-110 transition-transform duration-300">
+                    {item.icon}
+                  </span>
+                  <span className="text-sm tracking-tight">{item.text}</span>
+                </div>
+              </NavLink>
+            ))}
+          </motion.div>
+
+          <div className="w-[1px] h-6 bg-slate-200" />
+
+          {/* Theme Toggle Button */}
+          <motion.button
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/50 border border-white/50 hover:bg-white shadow-sm transition-all duration-300"
+            whileHover={{ scale: 1.05, rotate: 15 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            <motion.div
+              key={theme}
+              initial={{ rotate: theme === 'light' ? 0 : 180, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {theme === 'light' ? (
+                <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              )}
+            </motion.div>
+          </motion.button>
         </div>
       </motion.nav>
 
       {/* Mobile Navigation - Bottom Bar */}
-      <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/90 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg' 
-          : 'bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700'
-      }`}>
+      <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-white/90 backdrop-blur-sm shadow-lg'
+        : 'bg-white border-t border-gray-200'
+        }`}>
         <div className="flex justify-around items-center h-16 px-2">
           <NavLink to="/" className="flex flex-col items-center flex-1">
             <HomeIcon className="w-5 h-5" />
@@ -231,7 +221,7 @@ const Navbar = () => {
           {/* Theme Toggle for Mobile - Centered */}
           <motion.button
             onClick={toggleTheme}
-            className="w-12 h-12 flex items-center justify-center rounded-full -mt-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg"
+            className="w-12 h-12 flex items-center justify-center rounded-full -mt-6 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -267,29 +257,29 @@ const Navbar = () => {
       {/* Mobile menu - Only shown when menu button is clicked */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: '100%' }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               y: 0,
-              transition: { 
+              transition: {
                 type: 'spring',
                 damping: 25,
                 stiffness: 300
               }
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               y: '100%',
-              transition: { 
+              transition: {
                 type: 'spring',
                 damping: 30,
                 stiffness: 300
-              } 
+              }
             }}
-            className="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-40 pt-20 pb-24 px-6 overflow-y-auto"
+            className="fixed inset-0 bg-white/95 backdrop-blur-sm z-40 pt-20 pb-24 px-6 overflow-y-auto"
           >
-            <motion.div 
+            <motion.div
               className="flex flex-col space-y-4 mt-8"
               initial="closed"
               animate="open"
@@ -330,10 +320,10 @@ const Navbar = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <NavLink 
+                  <NavLink
                     to={item.to}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center p-4 rounded-xl text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                    className="flex items-center p-4 rounded-xl text-lg font-medium hover:bg-gray-100"
                     isMobile
                     index={index}
                   >

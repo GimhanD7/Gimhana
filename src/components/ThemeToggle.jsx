@@ -20,13 +20,13 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white shadow-md border border-gray-200
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-white shadow-xl border border-gray-100
+        focus:outline-none focus:ring-4 focus:ring-purple-500/20 hover:scale-110 active:scale-95 transition-all duration-300 group"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? (
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-6 h-6 text-gray-700 group-hover:text-purple-600 transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -40,7 +40,7 @@ const ThemeToggle = () => {
         </svg>
       ) : (
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-6 h-6 text-gray-300 group-hover:text-purple-400 transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -53,10 +53,10 @@ const ThemeToggle = () => {
           />
         </svg>
       )}
-      
+
       {/* Simple tooltip */}
       {isHovered && (
-        <div className="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+        <div className="absolute -top-12 right-0 bg-gray-950 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg shadow-purple-500/10 whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 duration-200">
           {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
         </div>
       )}

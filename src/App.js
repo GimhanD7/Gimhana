@@ -9,6 +9,8 @@ import Home from './pages/home';
 import About from './pages/about';
 import Projects from './pages/project';
 import ContactMe from './pages/contactme';
+import Admin from './pages/admin';
+import ProjectDetail from './pages/ProjectDetail';
 
 
 
@@ -24,7 +26,9 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:id" element={<ProjectDetail />} />
                 <Route path="/contact" element={<ContactMe />} />
+                <Route path="/admin" element={<Admin />} />
               </Routes>
             </div>
           </div>

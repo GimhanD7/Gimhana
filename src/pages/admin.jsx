@@ -59,7 +59,7 @@ const Admin = () => {
       }
     };
     loadProjects();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, toast]);
 
   // Handle PIN input digit tap
   const handlePinTap = (digit) => {

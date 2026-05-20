@@ -18,13 +18,13 @@ const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-full max-w-5xl bg-white rounded-3xl overflow-hidden shadow-2xl"
+            className="relative w-full max-w-5xl bg-white rounded-xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-1">
               <iframe
                 src={artworkUrl}
-                className="w-full h-[75vh] border-0 rounded-2xl"
+                className="w-full h-[75vh] border-0 rounded-lg"
                 title="Portfolio Showcase"
                 allowFullScreen
               />
@@ -109,7 +109,7 @@ const Home = () => {
               className="relative z-10"
               whileHover={{ y: -10 }}
              >
-              <div className="relative   p-4 rounded-[4rem]  overflow-hidden group">
+              <div className="relative   p-4 rounded-2xl  overflow-hidden group">
                 <div className="aspect-[4/5]   overflow-hidden   relative  ">
                   <img
                     src="/profile.png"
@@ -144,7 +144,7 @@ const Home = () => {
                     delay: item.delay
                   }}
                 >
-                  <div className="glass p-4 rounded-2xl shadow-xl hover:scale-110 transition-transform duration-500 group/sat cursor-default">
+                  <div className="glass p-4 rounded-lg shadow-xl hover:scale-110 transition-transform duration-500 group/sat cursor-default">
                     <div className="relative">
                       <div
                         className="absolute inset-0 blur-md opacity-20 group-hover/sat:opacity-100 transition-opacity"
@@ -218,7 +218,7 @@ const Home = () => {
               ].map((item, idx) => (
                 <motion.div
                   key={idx}
-                  className="glass p-8 rounded-3xl hover:bg-slate-50 transition-all duration-500 group"
+                  className="glass p-8 rounded-xl hover:bg-slate-50 transition-all duration-500 group"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -266,7 +266,7 @@ const Home = () => {
               ].map((item, idx) => (
                 <motion.div
                   key={idx}
-                  className="glass p-8 rounded-3xl hover:bg-slate-50 transition-all duration-500 group"
+                  className="glass p-8 rounded-xl hover:bg-slate-50 transition-all duration-500 group"
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -318,13 +318,13 @@ const Home = () => {
             ].map((tech, idx) => (
               <motion.div
                 key={tech}
-                className="bg-slate-900/50 p-8 rounded-[2rem] flex flex-col items-center justify-center gap-6 hover:bg-slate-900 hover:shadow-purple-500/10 transition-all duration-500 group"
+                className="bg-slate-900/50 p-8 rounded-xl flex flex-col items-center justify-center gap-6 hover:bg-slate-900 hover:shadow-purple-500/10 transition-all duration-500 group"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-600/20 transition-all duration-500">
+                <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-600/20 transition-all duration-500">
                   <img
                     src={`/icons/${getIconName(tech)}-original.svg`}
                     alt={tech}
@@ -357,7 +357,7 @@ const Home = () => {
               </p>
               <div className="space-y-6 pt-8 border-t border-slate-100">
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-purple-600 shrink-0">
+                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-purple-600 shrink-0">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                   </div>
                   <div>
@@ -368,7 +368,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-emerald-600 shrink-0">
+                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-emerald-600 shrink-0">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                   </div>
                   <div>
@@ -379,7 +379,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-pink-600 shrink-0">
+                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-pink-600 shrink-0">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
                   </div>
                   <div>
@@ -390,7 +390,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-indigo-600 shrink-0">
+                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-indigo-600 shrink-0">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                   </div>
                   <div>
@@ -403,7 +403,7 @@ const Home = () => {
           </div>
 
           <motion.div
-            className="glass p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden border border-slate-100/50 space-y-8"
+            className="glass p-12 rounded-2xl shadow-2xl relative overflow-hidden border border-slate-100/50 space-y-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -442,7 +442,7 @@ const Home = () => {
             <div className="pt-4">
               <a
                 href="mailto:gimhandeshapriya567@gmail.com"
-                className="w-full inline-flex items-center justify-center py-4 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-2xl hover:bg-purple-600 transition-all duration-500 shadow-lg hover:shadow-purple-500/10 font-main"
+                className="w-full inline-flex items-center justify-center py-4 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-lg hover:bg-purple-600 transition-all duration-500 shadow-lg hover:shadow-purple-500/10 font-main"
               >
                 Initiate Dialogue
               </a>

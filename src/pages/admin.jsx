@@ -59,7 +59,7 @@ const Admin = () => {
       }
     };
     loadProjects();
-  }, [isAuthenticated, toast]);
+  }, [isAuthenticated]);
 
   // Handle PIN input digit tap
   const handlePinTap = (digit) => {
@@ -395,11 +395,11 @@ const Admin = () => {
                     : { scale: 1, opacity: 1 }
                 }
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="w-full max-w-md glass p-10 rounded-[3rem] text-center border border-white/10 flex flex-col items-center space-y-8"
+                className="w-full max-w-md glass p-10 rounded-2xl text-center border border-white/10 flex flex-col items-center space-y-8"
               >
                 {/* Vault Shield Header */}
                 <div className="space-y-3">
-                  <div className="w-16 h-16 rounded-3xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto animate-pulse">
+                  <div className="w-16 h-16 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto animate-pulse">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -430,26 +430,26 @@ const Admin = () => {
                     <button
                       key={num}
                       onClick={() => handlePinTap(num.toString())}
-                      className="h-16 rounded-2xl bg-white/5 border border-white/5 text-white font-bold text-xl hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
+                      className="h-16 rounded-lg bg-white/5 border border-white/5 text-white font-bold text-xl hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
                     >
                       {num}
                     </button>
                   ))}
                   <button
                     onClick={handleClear}
-                    className="h-16 rounded-2xl bg-white/5 border border-white/5 text-slate-400 font-semibold text-xs hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 active:scale-95 transition-all duration-200"
+                    className="h-16 rounded-lg bg-white/5 border border-white/5 text-slate-400 font-semibold text-xs hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 active:scale-95 transition-all duration-200"
                   >
                     CLEAR
                   </button>
                   <button
                     onClick={() => handlePinTap('0')}
-                    className="h-16 rounded-2xl bg-white/5 border border-white/5 text-white font-bold text-xl hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
+                    className="h-16 rounded-lg bg-white/5 border border-white/5 text-white font-bold text-xl hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
                   >
                     0
                   </button>
                   <button
                     onClick={handleBackspace}
-                    className="h-16 rounded-2xl bg-white/5 border border-white/5 text-slate-400 font-semibold text-xs hover:bg-white/10 active:scale-95 transition-all duration-200 flex items-center justify-center"
+                    className="h-16 rounded-lg bg-white/5 border border-white/5 text-slate-400 font-semibold text-xs hover:bg-white/10 active:scale-95 transition-all duration-200 flex items-center justify-center"
                     aria-label="backspace"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -492,7 +492,7 @@ const Admin = () => {
 
             {/* Metrics cards grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-              <div className="glass p-8 rounded-3xl border border-slate-50 relative overflow-hidden group">
+              <div className="glass p-8 rounded-xl border border-slate-50 relative overflow-hidden group">
                 <div className="absolute top-6 right-6 w-10 h-10 rounded-xl bg-purple-500/5 flex items-center justify-center text-purple-600 border border-purple-500/10">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                 </div>
@@ -500,7 +500,7 @@ const Admin = () => {
                 <h3 className="text-4xl font-black text-slate-900 mt-2 font-heading">{isLoading ? '...' : totalProjects}</h3>
               </div>
 
-              <div className="glass p-8 rounded-3xl border border-slate-50 relative overflow-hidden group">
+              <div className="glass p-8 rounded-xl border border-slate-50 relative overflow-hidden group">
                 <div className="absolute top-6 right-6 w-10 h-10 rounded-xl bg-indigo-500/5 flex items-center justify-center text-indigo-600 border border-indigo-500/10">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 </div>
@@ -508,7 +508,7 @@ const Admin = () => {
                 <h3 className="text-4xl font-black text-slate-900 mt-2 font-heading">{isLoading ? '...' : categoriesCount}</h3>
               </div>
 
-              <div className="glass p-8 rounded-3xl border border-slate-50 relative overflow-hidden group">
+              <div className="glass p-8 rounded-xl border border-slate-50 relative overflow-hidden group">
                 <div className="absolute top-6 right-6 w-10 h-10 rounded-xl bg-emerald-500/5 flex items-center justify-center text-emerald-600 border border-emerald-500/10">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                 </div>
@@ -521,7 +521,7 @@ const Admin = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
               {/* Form/CRUD Editor Box - 5 columns */}
-              <div className="lg:col-span-5 glass p-10 rounded-[3rem] border border-slate-100/50 space-y-8">
+              <div className="lg:col-span-5 glass p-10 rounded-2xl border border-slate-100/50 space-y-8">
                 <div>
                   <h3 className="text-xl font-bold text-slate-950 uppercase tracking-tight font-heading">
                     {isEditing ? 'Modify Project' : 'Add New Project'}
@@ -855,7 +855,7 @@ const Admin = () => {
                   /* Loading placeholders loop */
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="glass p-6 rounded-[2rem] h-28 animate-pulse flex items-center space-x-6 border border-slate-50">
+                      <div key={i} className="glass p-6 rounded-xl h-28 animate-pulse flex items-center space-x-6 border border-slate-50">
                         <div className="w-16 h-16 bg-slate-100 rounded-2xl" />
                         <div className="flex-1 space-y-3">
                           <div className="h-3 w-1/3 bg-slate-100 rounded" />
@@ -865,7 +865,7 @@ const Admin = () => {
                     ))}
                   </div>
                 ) : projects.length === 0 ? (
-                  <div className="glass p-12 rounded-[2rem] text-center border border-slate-100">
+                  <div className="glass p-12 rounded-xl text-center border border-slate-100">
                     <p className="text-slate-400 font-semibold font-main">No projects found. Seed or create some items.</p>
                   </div>
                 ) : (
@@ -875,7 +875,7 @@ const Admin = () => {
                       <motion.div
                         key={project.id}
                         layoutId={`project-row-${project.id}`}
-                        className="glass p-6 rounded-[2rem] hover:bg-white border border-slate-100/50 hover:shadow-xl transition-all duration-300 flex items-center gap-6"
+                        className="glass p-6 rounded-xl hover:bg-white border border-slate-100/50 hover:shadow-xl transition-all duration-300 flex items-center gap-6"
                       >
                         {/* Thumbnail */}
                         <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 shrink-0 shadow-inner">

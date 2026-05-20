@@ -106,7 +106,7 @@ const saveLocalProjects = (projects) => {
 
 export const projectService = {
   // Helper to save gallery screenshots to a subcollection (to bypass 1MB document limit)
-  saveGalleryScreenshots: async (projectId, galleryArray) => {
+  async saveGalleryScreenshots(projectId, galleryArray) {
     if (!db) return;
     const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
     
@@ -137,7 +137,7 @@ export const projectService = {
   },
 
   // Helper to load gallery screenshots from subcollection
-  getGalleryScreenshots: async (projectId) => {
+  async getGalleryScreenshots(projectId) {
     if (!db) return [];
     try {
       const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
@@ -153,7 +153,7 @@ export const projectService = {
   },
 
   // Fetch a single project (merges screenshots subcollection transparently)
-  getProject: async (projectId) => {
+  async getProject(projectId) {
     try {
       if (!db) {
         const local = getLocalProjects();
@@ -164,7 +164,7 @@ export const projectService = {
       if (docSnap.exists()) {
         const projectData = { id: docSnap.id, ...docSnap.data() };
         // Merge screenshots subcollection
-        const gallery = await projectService.getGalleryScreenshots(projectId);
+        const gallery = await this.getGalleryScreenshots(projectId);
         return { ...projectData, gallery };
       } else {
         const local = getLocalProjects();
@@ -178,7 +178,7 @@ export const projectService = {
   },
 
   // Fetch all projects (with auto-seeding if Firestore is empty)
-  getProjects: async () => {
+  async getProjects() {
     try {
       if (!db) {
         console.warn('Firebase DB is not initialized. Using localStorage.');
@@ -215,7 +215,7 @@ export const projectService = {
   },
 
   // Save (Create or Update) a project (Gallery Base64s written to subcollection)
-  saveProject: async (project) => {
+  async saveProject(project) {
     try {
       const gallery = Array.isArray(project.gallery) ? project.gallery : [];
 
@@ -243,7 +243,7 @@ export const projectService = {
         await updateDoc(projectDoc, cleanProject);
         
         // Write screenshots to subcollection
-        await projectService.saveGalleryScreenshots(project.id, gallery);
+        await this.saveGalleryScreenshots(project.id, gallery);
         
         savedProject = { id: project.id, ...cleanProject, gallery };
       } else {
@@ -251,7 +251,7 @@ export const projectService = {
         const docRef = await addDoc(projectsCol, cleanProject);
         
         // Write screenshots to subcollection
-        await projectService.saveGalleryScreenshots(docRef.id, gallery);
+        await this.saveGalleryScreenshots(docRef.id, gallery);
         
         savedProject = { id: docRef.id, ...cleanProject, gallery };
       }
@@ -295,7 +295,7 @@ export const projectService = {
   },
 
   // Delete a project (Cleans up screenshots subcollection)
-  deleteProject: async (projectId) => {
+  async deleteProject(projectId) {
     try {
       if (!db) {
         throw new Error('Database is offline');
@@ -332,7 +332,7 @@ export const projectService = {
   },
 
   // Reset collections back to original defaults
-  resetToDefault: async () => {
+  async resetToDefault() {
     try {
       if (db) {
         const projectsCol = collection(db, 'projects');

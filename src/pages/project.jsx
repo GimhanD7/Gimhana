@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Background from '../components/Background';
 import { projectService } from '../utils/projectService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Project Detail views have been transitioned to dynamic standalone pages at /projects/:id
 
 // Main Projects Archive Component
 const Projects = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -103,7 +104,7 @@ const Projects = () => {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="glass overflow-hidden rounded-[3rem] h-[520px] animate-pulse flex flex-col">
+              <div key={i} className="glass overflow-hidden rounded-xl h-[520px] animate-pulse flex flex-col">
                 <div className="aspect-[16/10] bg-slate-100" />
                 <div className="p-10 flex-1 flex flex-col space-y-6">
                   <div className="h-2 w-1/4 bg-slate-100 rounded" />
@@ -122,9 +123,9 @@ const Projects = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project, index) => (
-                <Link
-                  to={`/projects/${project.id}`}
+                <div
                   key={project.id || project.title}
+                  onClick={() => navigate(`/projects/${project.id}`)}
                   className="group relative block cursor-pointer"
                 >
                   <motion.div
@@ -135,7 +136,7 @@ const Projects = () => {
                     transition={{ duration: 0.5, delay: index * 0.05 }}
                     className="h-full"
                   >
-                    <div className="glass overflow-hidden rounded-[3rem] hover:bg-white transition-all duration-700 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-2 h-full flex flex-col">
+                    <div className="glass overflow-hidden rounded-xl hover:bg-white transition-all duration-700 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-2 h-full flex flex-col">
                     {/* Image Holder */}
                     <div className="aspect-[16/10] overflow-hidden relative">
                       <img
@@ -199,7 +200,7 @@ const Projects = () => {
                     </div>
                   </div>
                 </motion.div>
-              </Link>
+              </div>
               ))}
             </AnimatePresence>
           </div>

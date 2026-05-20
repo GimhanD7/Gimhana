@@ -19,7 +19,7 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
         <Router>
-          <div className="min-h-screen bg-white transition-colors duration-200 flex flex-col">
+          <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-200 flex flex-col">
             <Navbar />
             <div className="flex-1 overflow-auto">
               <Routes>

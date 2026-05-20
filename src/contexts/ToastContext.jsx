@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 const ToastContext = createContext();
 
@@ -9,7 +9,7 @@ export const ToastProvider = ({ children }) => {
     type: 'info', // 'info', 'success', 'error', 'warning'
   });
 
-  const showToast = (message, type = 'info', duration = 5000) => {
+  const showToast = useCallback((message, type = 'info', duration = 5000) => {
     setToast({
       show: true,
       message,
@@ -23,33 +23,33 @@ export const ToastProvider = ({ children }) => {
         show: false,
       }));
     }, duration);
-  };
+  }, []);
 
-  const hideToast = () => {
+  const hideToast = useCallback(() => {
     setToast(prev => ({
       ...prev,
       show: false,
     }));
-  };
+  }, []);
 
   // Convenience methods
-  const showSuccess = (message, duration) => showToast(message, 'success', duration);
-  const showError = (message, duration) => showToast(message, 'error', duration);
-  const showWarning = (message, duration) => showToast(message, 'warning', duration);
-  const showInfo = (message, duration) => showToast(message, 'info', duration);
+  const showSuccess = useCallback((message, duration) => showToast(message, 'success', duration), [showToast]);
+  const showError = useCallback((message, duration) => showToast(message, 'error', duration), [showToast]);
+  const showWarning = useCallback((message, duration) => showToast(message, 'warning', duration), [showToast]);
+  const showInfo = useCallback((message, duration) => showToast(message, 'info', duration), [showToast]);
+
+  const contextValue = useMemo(() => ({
+    showToast,
+    hideToast,
+    showSuccess,
+    showError,
+    showWarning,
+    showInfo,
+    toast,
+  }), [showToast, hideToast, showSuccess, showError, showWarning, showInfo, toast]);
 
   return (
-    <ToastContext.Provider
-      value={{
-        showToast,
-        hideToast,
-        showSuccess,
-        showError,
-        showWarning,
-        showInfo,
-        toast,
-      }}
-    >
+    <ToastContext.Provider value={contextValue}>
       {children}
       {toast.show && (
         <div 

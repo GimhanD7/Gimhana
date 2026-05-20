@@ -75,3 +75,97 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Premium Dark Mode Styling Overrides */
+.dark {
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.06);
+}
+
+.dark body {
+  background-color: #070a13;
+  color: #f8fafc;
+}
+
+/* Background class mappings */
+.dark .bg-\[\#fafafa\] {
+  background-color: #070a13 !important;
+}
+
+.dark .bg-white {
+  background-color: #0d121f !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-50\/50 {
+  background-color: rgba(19, 25, 39, 0.5) !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-white\/50:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Text color mappings */
+.dark .text-slate-950 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-500 {
+  color: #64748b !important;
+}
+
+.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Border mappings */
+.dark .border-slate-100,
+.dark .border-slate-100\/50,
+.dark .border-slate-100\/60,
+.dark .border-slate-200,
+.dark .border-gray-100,
+.dark .border-gray-200 {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Input, Textarea, Select element overrides */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #131927 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #475569 !important;
+}
+
+/* Smooth transitions for theme switching */
+body, .glass, button, input, textarea, select, a, span, div {
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}

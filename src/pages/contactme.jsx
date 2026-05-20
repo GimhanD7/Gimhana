@@ -70,7 +70,7 @@ const ContactMe = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="glass p-12 md:p-16 rounded-[4rem] shadow-2xl relative overflow-hidden border border-slate-100/50 space-y-8"
+            className="glass p-12 md:p-16 rounded-2xl shadow-2xl relative overflow-hidden border border-slate-100/50 space-y-8"
           >
             <div className="space-y-4">
               <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Operational Status</span>
@@ -106,13 +106,13 @@ const ContactMe = () => {
             <div className="pt-4">
               <a
                 href="mailto:gimhandeshapriya567@gmail.com"
-                className="w-full inline-flex items-center justify-center py-5 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-2xl hover:bg-purple-600 transition-all duration-500 shadow-lg hover:shadow-purple-500/10 font-main"
+                className="w-full inline-flex items-center justify-center py-5 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-lg hover:bg-purple-600 transition-all duration-500 shadow-lg hover:shadow-purple-500/10 font-main"
               >
                 Initiate Dialogue
               </a>
             </div>
 
-            <div className="absolute -bottom-10 -left-10 w-full h-full bg-indigo-500/10 rounded-[4rem] blur-[100px] -z-10" />
+            <div className="absolute -bottom-10 -left-10 w-full h-full bg-indigo-500/10 rounded-2xl blur-[100px] -z-10" />
           </motion.div>
         </div>
       </main>

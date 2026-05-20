@@ -217,8 +217,8 @@ const About = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="glass p-8 rounded-[4rem] shadow-2xl relative z-10">
-              <div className="aspect-square rounded-[3rem] overflow-hidden bg-slate-100 grayscale hover:grayscale-0 transition-all duration-1000 shadow-inner">
+            <div className="glass p-8 rounded-2xl shadow-2xl relative z-10">
+              <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 grayscale hover:grayscale-0 transition-all duration-1000 shadow-inner">
                 <img
                   src="/profile.png"
                   alt="Identity"
@@ -228,7 +228,7 @@ const About = () => {
               </div>
             </div>
             {/* Background Accent */}
-            <div className="absolute -top-10 -right-10 w-full h-full bg-purple-500/10 rounded-[4rem] blur-[100px] -z-10" />
+            <div className="absolute -top-10 -right-10 w-full h-full bg-purple-500/10 rounded-2xl blur-[100px] -z-10" />
           </motion.div>
         </section>
 
@@ -246,7 +246,7 @@ const About = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="glass p-10 rounded-[2.5rem] group hover:bg-slate-50 transition-all duration-500"
+                className="glass p-10 rounded-xl group hover:bg-slate-50 transition-all duration-500"
               >
                 <div className="text-4xl mb-8 group-hover:scale-125 transition-transform duration-500">{category.icon}</div>
                 <h3 className="text-xl font-bold mb-6 text-slate-950 uppercase tracking-tighter">{category.name}</h3>
@@ -275,7 +275,7 @@ const About = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="p-8 md:p-10 rounded-[2.5rem] glass hover:bg-white transition-all duration-500 grid lg:grid-cols-12 gap-8 items-start relative overflow-hidden group shadow-sm hover:shadow-xl border border-slate-100/50"
+                className="p-8 md:p-10 rounded-xl glass hover:bg-white transition-all duration-500 grid lg:grid-cols-12 gap-8 items-start relative overflow-hidden group shadow-sm hover:shadow-xl border border-slate-100/50"
               >
                 {/* Visual Accent */}
                 <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-500 to-purple-600 opacity-50" />
@@ -351,7 +351,7 @@ const About = () => {
             {extracurriculars.map((act, idx) => (
               <motion.div
                 key={idx}
-                className="glass p-8 md:p-10 rounded-[3rem] group transition-all duration-700 hover:shadow-2xl hover:shadow-pink-500/5 border border-slate-100/50 flex flex-col justify-between"
+                className="glass p-8 md:p-10 rounded-xl group transition-all duration-700 hover:shadow-2xl hover:shadow-pink-500/5 border border-slate-100/50 flex flex-col justify-between"
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}

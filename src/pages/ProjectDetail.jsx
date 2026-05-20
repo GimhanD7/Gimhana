@@ -11,6 +11,32 @@ const ProjectDetail = () => {
   
   // Lightbox gallery state
   const [lightboxIndex, setLightboxIndex] = useState(-1);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const diff = touchStartX - touchEndX;
+    const threshold = 50;
+    const imgs = Array.isArray(project?.gallery) ? project.gallery.filter(Boolean) : [];
+    if (imgs.length <= 1) return;
+
+    if (diff > threshold) {
+      setLightboxIndex((prev) => (prev + 1) % imgs.length);
+    } else if (diff < -threshold) {
+      setLightboxIndex((prev) => (prev - 1 + imgs.length) % imgs.length);
+    }
+    setTouchStartX(0);
+    setTouchEndX(0);
+  };
 
   useEffect(() => {
     const loadProject = async () => {
@@ -63,7 +89,7 @@ const ProjectDetail = () => {
       <div className="min-h-screen text-slate-900 overflow-x-hidden font-main relative">
         <Background />
         <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10 text-center flex flex-col items-center justify-center min-h-[70vh] space-y-6">
-          <div className="w-16 h-16 rounded-3xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
+          <div className="w-16 h-16 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -116,7 +142,7 @@ const ProjectDetail = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative w-full h-[320px] sm:h-[480px] rounded-[3.5rem] overflow-hidden border border-slate-100 shadow-2xl mb-16"
+          className="relative w-full h-[320px] sm:h-[480px] rounded-2xl overflow-hidden border border-slate-100 shadow-2xl mb-16"
         >
           <img
             src={project.image}
@@ -158,7 +184,7 @@ const ProjectDetail = () => {
               </h2>
             </div>
             
-            <p className="text-slate-600 font-medium leading-relaxed font-main text-lg sm:text-xl whitespace-pre-line bg-white/40 p-8 rounded-[2.5rem] border border-slate-100/50 shadow-sm backdrop-blur-sm">
+            <p className="text-slate-600 font-medium leading-relaxed font-main text-lg sm:text-xl whitespace-pre-line bg-white/40 p-8 rounded-xl border border-slate-100/50 shadow-sm backdrop-blur-sm">
               {project.description}
             </p>
           </motion.div>
@@ -168,7 +194,7 @@ const ProjectDetail = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="lg:col-span-4 bg-slate-50/50 p-8 sm:p-10 rounded-[3rem] border border-slate-100/60 shadow-inner backdrop-blur-md space-y-10"
+            className="lg:col-span-4 bg-slate-50/50 p-8 sm:p-10 rounded-2xl border border-slate-100/60 shadow-inner backdrop-blur-md space-y-10"
           >
             {/* Tech Chips */}
             <div className="space-y-5">
@@ -252,7 +278,7 @@ const ProjectDetail = () => {
                   key={index}
                   whileHover={{ scale: 1.03, y: -4 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="aspect-[16/10] overflow-hidden rounded-[2rem] border border-slate-100/50 bg-slate-50 cursor-zoom-in hover:shadow-xl duration-300 transition-all shadow-sm relative group"
+                  className="aspect-[16/10] overflow-hidden rounded-xl border border-slate-100/50 bg-slate-50 cursor-zoom-in hover:shadow-xl duration-300 transition-all shadow-sm relative group"
                   onClick={() => setLightboxIndex(index)}
                 >
                   <img
@@ -283,8 +309,11 @@ const ProjectDetail = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4"
+            className="fixed inset-0 z-[200] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 select-none"
             onClick={() => setLightboxIndex(-1)}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {/* Top Navigation Controls bar */}
             <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-[210]">
@@ -309,7 +338,7 @@ const ProjectDetail = () => {
                   e.stopPropagation();
                   setLightboxIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
                 }}
-                className="absolute left-6 p-4 rounded-2xl bg-white/5 hover:bg-white text-white hover:text-slate-900 border border-white/5 shadow-2xl hover:scale-110 duration-300 transition-all hidden md:flex items-center justify-center z-[210]"
+                className="absolute left-4 md:left-6 p-3 md:p-4 rounded-2xl bg-white/10 hover:bg-white text-white hover:text-slate-900 border border-white/5 shadow-2xl hover:scale-110 duration-300 transition-all flex items-center justify-center z-[210]"
                 aria-label="Previous Image"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,13 +353,13 @@ const ProjectDetail = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
-              className="max-w-[85vw] max-h-[80vh] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl relative"
+              className="max-w-[85vw] max-h-[80vh] rounded-xl overflow-hidden border border-white/10 shadow-2xl relative"
               onClick={(e) => e.stopPropagation()}
             >
               <img
                 src={galleryImages[lightboxIndex]}
                 alt={`Lightbox active shot ${lightboxIndex + 1}`}
-                className="max-w-full max-h-[80vh] object-contain rounded-[2rem]"
+                className="max-w-full max-h-[80vh] object-contain rounded-xl"
               />
             </motion.div>
 
@@ -341,7 +370,7 @@ const ProjectDetail = () => {
                   e.stopPropagation();
                   setLightboxIndex((prev) => (prev + 1) % galleryImages.length);
                 }}
-                className="absolute right-6 p-4 rounded-2xl bg-white/5 hover:bg-white text-white hover:text-slate-900 border border-white/5 shadow-2xl hover:scale-110 duration-300 transition-all hidden md:flex items-center justify-center z-[210]"
+                className="absolute right-4 md:right-6 p-3 md:p-4 rounded-2xl bg-white/10 hover:bg-white text-white hover:text-slate-900 border border-white/5 shadow-2xl hover:scale-110 duration-300 transition-all flex items-center justify-center z-[210]"
                 aria-label="Next Image"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

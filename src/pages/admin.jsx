@@ -9,11 +9,11 @@ import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 
 
 // Hardcoded Default PIN
-const ADMIN_PIN = process.env.REACT_APP_ADMIN_PIN || '1234';
+const ADMIN_PIN = process.env.REACT_APP_ADMIN_PIN || '4561';
 
 const Admin = () => {
   const toast = useToast();
-  
+
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [enteredPin, setEnteredPin] = useState('');
@@ -47,7 +47,7 @@ const Admin = () => {
   // Load projects once authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
-    
+
     const loadProjects = async () => {
       try {
         setIsLoading(true);
@@ -230,7 +230,7 @@ const Admin = () => {
   const handleEditInit = async (project) => {
     setIsEditing(true);
     setEditingId(project.id);
-    
+
     // Set basic text fields and cover image immediately for zero-lag UI feedback
     setFormData({
       title: project.title,
@@ -257,7 +257,7 @@ const Admin = () => {
       console.error('Failed to load screenshots:', err);
       toast.showError('Failed to load screenshots for editing.');
     }
-    
+
     window.scrollTo({ top: 300, behavior: 'smooth' });
   };
 
@@ -281,7 +281,7 @@ const Admin = () => {
       toast.showError('Required fields are missing.');
       return;
     }
-    
+
     setIsSaving(true);
     try {
       const technologies = formData.technologiesText
@@ -305,7 +305,7 @@ const Admin = () => {
       }
 
       const saved = await projectService.saveProject(payload);
-      
+
       if (isEditing) {
         setProjects(prev => prev.map(p => p.id === saved.id ? saved : p));
         toast.showSuccess('Project updated successfully.');
@@ -313,7 +313,7 @@ const Admin = () => {
         setProjects(prev => [...prev, saved]);
         toast.showSuccess('Project created successfully.');
       }
-      
+
       handleCancel();
     } catch (err) {
       toast.showError('Failed to save project.');
@@ -366,7 +366,7 @@ const Admin = () => {
       <title>Console Console | Gimhana Deshapriya</title>
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
-        
+
         {/* Passcode Security Overlay Grid */}
         <AnimatePresence>
           {!isAuthenticated && (
@@ -404,11 +404,10 @@ const Admin = () => {
                   {[0, 1, 2, 3].map((idx) => (
                     <motion.div
                       key={idx}
-                      className={`w-4 h-4 rounded-full border-2 transition-all duration-300 ${
-                        idx < enteredPin.length
-                          ? 'bg-purple-500 border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.8)] scale-110'
-                          : 'border-white/20 bg-white/5'
-                      }`}
+                      className={`w-4 h-4 rounded-full border-2 transition-all duration-300 ${idx < enteredPin.length
+                        ? 'bg-purple-500 border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.8)] scale-110'
+                        : 'border-white/20 bg-white/5'
+                        }`}
                       animate={idx < enteredPin.length ? { scale: [1, 1.2, 1] } : {}}
                     />
                   ))}
@@ -455,7 +454,7 @@ const Admin = () => {
         {/* Dashboard Console Layout */}
         {isAuthenticated && (
           <div className="space-y-16">
-            
+
             {/* Header branding */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-slate-100">
               <div className="space-y-2">
@@ -509,7 +508,7 @@ const Admin = () => {
 
             {/* Split layout: Form (CRUD Editor) & Projects List */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              
+
               {/* Form/CRUD Editor Box - 5 columns */}
               <div className="lg:col-span-5 glass p-10 rounded-[3rem] border border-slate-100/50 space-y-8">
                 <div>
@@ -568,7 +567,7 @@ const Admin = () => {
                   {/* Media Section: Cover Image and Gallery (Up to 50 Images) */}
                   <div className="space-y-6 pt-4 border-t border-slate-100">
                     <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 block pl-2">Media Deck</span>
-                    
+
                     {/* A. Cover Image Section */}
                     <div className="glass p-5 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-4">
                       <div className="flex justify-between items-center">
@@ -762,7 +761,7 @@ const Admin = () => {
                   {/* Dynamically Managed Links Array */}
                   <div className="space-y-3 pt-4 border-t border-slate-100">
                     <label className="text-[10px] font-black tracking-widest uppercase text-slate-400 pl-2 block">Action Deployments ({formData.links.length})</label>
-                    
+
                     {/* Links loop */}
                     {formData.links.length > 0 && (
                       <div className="flex flex-col gap-2 max-h-40 overflow-y-auto bg-slate-50/50 p-3 rounded-xl border border-slate-100">

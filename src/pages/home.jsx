@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
-import { useToast } from '../contexts/ToastContext';
-import emailjs from '@emailjs/browser';
 import Background from '../components/Background';
 
 const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => {
@@ -47,45 +45,18 @@ const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => {
   );
 };
 
+const getIconName = (tech) => {
+  const mapping = {
+    'node.js': 'nodejs',
+    'c++': 'cplusplus'
+  };
+  const key = tech.toLowerCase();
+  return mapping[key] || key;
+};
+
 const Home = () => {
-  const toast = useToast();
   const [isArtworkOpen, setIsArtworkOpen] = useState(false);
   const [artworkUrl, setArtworkUrl] = useState('');
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    emailjs.init('uEfOjnUp0V07aWPgO');
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
-      toast.showError('Required fields missing.');
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      await emailjs.send('service_1k7k7ce', 'template_6znvb0k', {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject || 'Portfolio Inquiry',
-        message: formData.message,
-        to_email: 'gimhanadissanayake7@gmail.com'
-      }, 'uEfOjnUp0V07aWPgO');
-      toast.showSuccess('Message sent!');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (error) {
-      toast.showError('Submission failed.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden">
@@ -116,7 +87,7 @@ const Home = () => {
               </h1>
             </div>
             <p className="text-xl text-slate-600 max-w-lg leading-relaxed font-medium font-main">
-              Information Technology graduate and web developer with a strong foundation in UI/UX design and modern web technologies. Skilled in building responsive, user-friendly web applications.
+              Information Technology graduate and full-stack web developer with comprehensive expertise in UI/UX design, modern web technologies, and database management. Demonstrated success in developing enterprise-level systems and creating intuitive, mobile-responsive user interfaces.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Button primary onClick={() => window.location.href = '#projects'}>Explore Work</Button>
@@ -180,7 +151,7 @@ const Home = () => {
                         style={{ backgroundColor: item.color }}
                       />
                       <img
-                        src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${item.tech}/${item.tech}-${item.tech === 'php' || item.tech === 'mysql' ? 'plain' : 'original'}.svg`}
+                        src={`/icons/${item.tech}-${item.tech === 'php' || item.tech === 'mysql' ? 'plain' : 'original'}.svg`}
                         alt={item.tech}
                         className="w-8 h-8 relative z-10 grayscale group-hover/sat:grayscale-0 transition-all duration-500"
                       />
@@ -227,16 +198,22 @@ const Home = () => {
             <div className="space-y-8">
               {[
                 {
-                  year: '2026 - Present',
-                  title: 'Bachelor of Business Administration',
-                  sub: 'Universidad Azteca (Marketing Management)',
-                  desc: 'Pursuing a degree in Marketing Management to complement technical expertise with business strategy.'
+                  year: 'January 2026 - Present',
+                  title: 'BBA (Honors) - Marketing Management',
+                  sub: 'Universidad Azteca',
+                  desc: 'Pursuing a degree in Marketing Management to complement technical expertise with business strategy and organizational leadership.'
                 },
                 {
                   year: '2021 - 2025',
-                  title: 'BSc (Hons) in Information Technology',
-                  sub: 'Sri Lanka Institute of Information Technology',
-                  desc: 'Specialized in building modern web applications and software engineering best practices.'
+                  title: 'Bachelor of Information Technology (Honors)',
+                  sub: 'Sri Lanka Institute of Information Technology (SLIIT)',
+                  desc: 'Comprehensive curriculum covering software engineering, web development, database systems, UI/UX design, and project management.'
+                },
+                {
+                  year: '2017 - 2019',
+                  title: 'Advanced Level - Mathematics Stream',
+                  sub: 'Thakshila College, Gampaha',
+                  desc: 'Core foundation in mathematical logic, physics, and chemistry, laying the groundwork for software engineering and analytical skills.'
                 }
               ].map((item, idx) => (
                 <motion.div
@@ -246,8 +223,8 @@ const Home = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                 >
-                  <span className="text-xs font-black tracking-widest text-purple-600 uppercase mb-4 block opacity-50">{item.year}</span>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors uppercase tracking-tight">{item.title}</h3>
+                  <span className="text-xs font-black tracking-widest text-purple-600 uppercase mb-4 block opacity-50 font-main">{item.year}</span>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors uppercase tracking-tight font-heading">{item.title}</h3>
                   <p className="text-slate-500 font-bold text-sm mb-4 italic">{item.sub}</p>
                   <p className="text-slate-600 leading-relaxed font-main font-medium">{item.desc}</p>
                 </motion.div>
@@ -270,18 +247,21 @@ const Home = () => {
             <div className="space-y-8">
               {[
                 {
-                  year: '2025 Jan',
+                  year: 'January 2025',
                   title: 'Web Developer',
-                  sub: 'Tuition Class Management System',
-                  desc: 'Designed and developed a comprehensive management system for students, teachers, and payments.',
-                  link: 'https://sudeshmaths.com/'
+                  sub: 'Tuition Class Management Systems',
+                  desc: 'Architected and developed comprehensive tuition management platforms serving multiple user roles with automated payments and enrollment systems.',
+                  links: [
+                    { label: 'Manoj Maths', url: 'http://mathswithmanoj.com/' },
+                    { label: 'Sudesh Maths', url: 'https://sudeshmaths.com/' }
+                  ]
                 },
                 {
-                  year: '2024',
+                  year: 'July 2024 - December 2024',
                   title: 'Software Engineer Intern',
                   sub: 'Associated Newspapers of Ceylon Limited',
-                  desc: 'Developed and maintained a PDF Management System for managing newspaper documents.',
-                  link: null
+                  desc: 'Developed and maintained an enterprise-grade PDF Management System handling document workflows across multiple newspaper departments.',
+                  links: []
                 }
               ].map((item, idx) => (
                 <motion.div
@@ -291,18 +271,23 @@ const Home = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="text-xs font-black tracking-widest text-indigo-600 uppercase opacity-50">{item.year}</span>
-                    {item.link && (
-                      <button
-                        onClick={() => { setArtworkUrl(item.link); setIsArtworkOpen(true); }}
-                        className="text-[10px] font-black tracking-widest text-indigo-600 uppercase border-b border-indigo-200 hover:border-indigo-600 transition-all"
-                      >
-                        View Project
-                      </button>
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                    <span className="text-xs font-black tracking-widest text-indigo-600 uppercase opacity-50 font-main">{item.year}</span>
+                    {item.links && item.links.length > 0 && (
+                      <div className="flex flex-wrap gap-3">
+                        {item.links.map((link, lIdx) => (
+                          <button
+                            key={lIdx}
+                            onClick={() => { setArtworkUrl(link.url); setIsArtworkOpen(true); }}
+                            className="text-[10px] font-black tracking-widest text-indigo-600 uppercase border-b border-indigo-200 hover:border-indigo-600 transition-all font-main cursor-pointer"
+                          >
+                            View {link.label}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors uppercase tracking-tight font-heading">{item.title}</h3>
                   <p className="text-slate-500 font-bold text-sm mb-4 italic">{item.sub}</p>
                   <p className="text-slate-600 leading-relaxed font-main font-medium">{item.desc}</p>
                 </motion.div>
@@ -341,10 +326,15 @@ const Home = () => {
               >
                 <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-600/20 transition-all duration-500">
                   <img
-                    src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tech.toLowerCase()}/${tech.toLowerCase()}-original.svg`}
+                    src={`/icons/${getIconName(tech)}-original.svg`}
                     alt={tech}
                     className="w-6 h-6 grayscale group-hover:grayscale-0"
-                    onError={(e) => { e.target.src = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tech.toLowerCase()}/${tech.toLowerCase()}-plain.svg` }}
+                    onError={(e) => {
+                      const iconName = getIconName(tech);
+                      if (!e.target.src.endsWith('-plain.svg')) {
+                        e.target.src = `/icons/${iconName}-plain.svg`;
+                      }
+                    }}
                   />
                 </div>
                 <span className="text-xs font-black tracking-widest uppercase text-slate-500 group-hover:text-white transition-colors">{tech}</span>
@@ -371,8 +361,32 @@ const Home = () => {
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                   </div>
                   <div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1">Email</p>
-                    <p className="text-lg font-bold text-slate-900">gimhandeshapriya567@gmail.com</p>
+                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Email</p>
+                    <p className="text-lg font-bold text-slate-900 font-main">
+                      <a href="mailto:gimhandeshapriya567@gmail.com" className="hover:text-purple-600 transition-colors">gimhandeshapriya567@gmail.com</a>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-emerald-600 shrink-0">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Phone</p>
+                    <p className="text-lg font-bold text-slate-900 font-main">
+                      <a href="tel:+94768582057" className="hover:text-emerald-600 transition-colors">+94 76 8582 057</a>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-pink-600 shrink-0">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Website</p>
+                    <p className="text-lg font-bold text-slate-900 font-main">
+                      <a href="https://www.gimhan.me" target="_blank" rel="noopener noreferrer" className="hover:text-pink-600 transition-colors">www.gimhan.me</a>
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-6">
@@ -380,8 +394,8 @@ const Home = () => {
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                   </div>
                   <div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1">Location</p>
-                    <p className="text-lg font-bold text-slate-900">257, Indolamulla, Dompe, Sri Lanka</p>
+                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Location</p>
+                    <p className="text-lg font-bold text-slate-900 font-main">257, Indolamulla, Dompe, Sri Lanka</p>
                   </div>
                 </div>
               </div>
@@ -389,53 +403,50 @@ const Home = () => {
           </div>
 
           <motion.div
-            className="glass p-12 rounded-[3.5rem] shadow-2xl"
+            className="glass p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden border border-slate-100/50 space-y-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black tracking-widest uppercase text-slate-400 pl-2">Full Name</label>
-                  <input
-                    type="text" name="name" value={formData.name} onChange={handleInputChange} required
-                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-purple-200 transition-all font-bold placeholder:text-slate-300"
-                    placeholder="Enter name"
-                  />
+            <div className="space-y-4">
+              <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Operational Status</span>
+              <div className="flex items-center gap-3">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span className="text-2xl font-black text-slate-950 tracking-tight font-heading">Accepting New Ventures</span>
+              </div>
+            </div>
+
+            <div className="space-y-6 pt-8 border-t border-slate-100">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Timezone</span>
+                  <p className="text-base font-bold text-slate-950 font-main">GMT +5:30 (SLST)</p>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black tracking-widest uppercase text-slate-400 pl-2">Email Address</label>
-                  <input
-                    type="email" name="email" value={formData.email} onChange={handleInputChange} required
-                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-purple-200 transition-all font-bold placeholder:text-slate-300"
-                    placeholder="name@company.com"
-                  />
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Response Window</span>
+                  <p className="text-base font-bold text-slate-950 font-main">Within 12 Hours</p>
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black tracking-widest uppercase text-slate-400 pl-2">Subject</label>
-                <input
-                  type="text" name="subject" value={formData.subject} onChange={handleInputChange}
-                  className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-purple-200 transition-all font-bold placeholder:text-slate-300"
-                  placeholder="How can I help?"
-                />
+
+              <div className="space-y-1">
+                <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Primary Focus Areas</span>
+                <p className="text-base font-bold text-slate-950 leading-relaxed font-main">
+                  Enterprise Portals, Process Automation Pipelines, Responsive System Architectures.
+                </p>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black tracking-widest uppercase text-slate-400 pl-2">Message</label>
-                <textarea
-                  name="message" value={formData.message} onChange={handleInputChange} rows="4" required
-                  className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-purple-200 transition-all font-bold placeholder:text-slate-300 resize-none"
-                  placeholder="The project brief..."
-                />
-              </div>
-              <button
-                type="submit" disabled={isSubmitting}
-                className="w-full py-5 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-2xl hover:bg-purple-600 transition-all duration-500 shadow-xl hover:shadow-purple-500/20 disabled:opacity-50"
+            </div>
+
+            <div className="pt-4">
+              <a
+                href="mailto:gimhandeshapriya567@gmail.com"
+                className="w-full inline-flex items-center justify-center py-4 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-2xl hover:bg-purple-600 transition-all duration-500 shadow-lg hover:shadow-purple-500/10 font-main"
               >
-                {isSubmitting ? 'Transmitting...' : 'Send Message'}
-              </button>
-            </form>
+                Initiate Dialogue
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>

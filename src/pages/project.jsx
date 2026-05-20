@@ -1,55 +1,64 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Helmet } from 'react-helmet';
 import Background from '../components/Background';
 
 const Projects = () => {
   const projects = [
     {
-      title: 'Tuition Class Management System',
+      title: 'Tuition Class Management Systems',
       period: 'January 2025',
-      description: 'A comprehensive system to manage students, teachers, classes, payments, and results. Features role-based access and intuitive dashboards.',
-      technologies: ['React.js', 'Node.js', 'MySQL', 'Express'],
+      description: 'Architected and developed comprehensive tuition management platforms serving multiple user roles including students, teachers, and administrators across two independent educational institutions. Implemented student enrollment, class scheduling, automated payment processing, real-time attendance tracking, and comprehensive result evaluation modules.',
+      technologies: ['React.js', 'Node.js', 'MySQL', 'Express', 'Responsive Design'],
       category: 'Web Development',
-      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop'
+      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop',
+      links: [
+        { label: 'Manoj Maths', url: 'http://mathswithmanoj.com/' },
+        { label: 'Sudesh Maths', url: 'https://sudeshmaths.com/' }
+      ]
     },
     {
-      title: 'Leo Club SLIIT Portal',
+      title: 'Leo Club of SLIIT Portal',
       period: 'July 2024',
-      description: 'A web-based portal for member management and internal operations. Implemented secure authentication and user-friendly dashboards.',
-      technologies: ['React.js', 'Firebase', 'Authentication'],
+      description: 'Engineered a comprehensive web-based portal streamlining internal club operations and member management processes. Implemented secure authentication protocols, role-based access controls, and user-friendly dashboards for enhanced operational efficiency.',
+      technologies: ['React.js', 'Firebase', 'Authentication', 'Responsive Design'],
       category: 'Web Development',
-      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop'
+      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop',
+      links: [
+        { label: 'Portal', url: 'https://web.portal.sliitleo.org' }
+      ]
     },
     {
-      title: 'PDF Management System',
-      period: 'July 2024 - Dec 2024',
-      description: 'System for managing newspaper documents across departments, improving document organization and workflow efficiency.',
-      technologies: ['PHP', 'MySQL', 'JavaScript'],
+      title: 'PDF Management System (Associated Newspapers of Ceylon Limited)',
+      period: 'July 2024 - December 2024',
+      description: 'Developed and maintained an enterprise-grade PDF Management System handling document workflows across multiple newspaper departments, improving document organization efficiency, search functionality, and cross-departmental collaboration.',
+      technologies: ['PHP', 'MySQL', 'JavaScript', 'System Enhancement'],
       category: 'System Design',
       image: 'https://images.unsplash.com/photo-1568667256549-094345857637?q=80&w=2030&auto=format&fit=crop'
     },
     {
-      title: 'Official Leo Club Website',
+      title: 'Official Leo Club of SLIIT Website',
       period: 'July 2024',
-      description: 'Official website for Leo Club of SLIIT with a focus on responsive design, performance optimization, and modern UI/UX.',
-      technologies: ['React.js', 'Tailwind', 'Framer Motion'],
+      description: 'Designed and developed the official Leo Club website with emphasis on responsive design and exceptional user experience. Applied modern UI/UX practices to enhance accessibility, usability, and visual appeal across all device platforms. Managed complete website architecture, content integration, SEO optimization, and performance tuning.',
+      technologies: ['React.js', 'Tailwind CSS', 'Framer Motion', 'SEO Optimization'],
       category: 'Web Development',
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop'
+      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop',
+      links: [
+        { label: 'Official Site', url: 'https://sliitleo.org' }
+      ]
     },
     {
-      title: 'JCEY Tea Packaging Design',
-      period: 'July 2023 - Dec 2023',
-      description: 'Designed tea box packaging for 7 regional variants and 10 flavor-based products, aligned with brand identity.',
-      technologies: ['Adobe Photoshop', 'Figma', 'Branding'],
+      title: 'JCEY Tea Box Packaging Design',
+      period: 'July 2023 - December 2023',
+      description: 'Designed comprehensive tea box packaging for 7 regional variants and 10 flavor-based products, ensuring alignment with brand identity and market positioning. Created engaging promotional artwork and marketing materials for both digital and print platforms.',
+      technologies: ['Adobe Photoshop', 'Figma', 'Branding', 'Graphic Design'],
       category: 'Design',
       image: 'https://images.unsplash.com/photo-1544787210-2211d7c309c7?q=80&w=1974&auto=format&fit=crop'
     },
     {
-      title: 'Social Media Visual Branding',
-      period: 'January 2022',
-      description: 'Crafting engaging visual content for multiple clients to improve brand visibility and audience engagement.',
-      technologies: ['Adobe Photoshop', 'Graphic Design'],
+      title: 'Freelance Social Media Visual Branding',
+      period: 'January 2022 - Present',
+      description: 'Designed engaging and visually compelling social media content for diverse clients across multiple platforms including Facebook, Instagram, and LinkedIn. Improved brand visibility and audience engagement through strategic creative visual content development and platform-optimized designs.',
+      technologies: ['Adobe Photoshop', 'Graphic Design', 'Visual Branding'],
       category: 'Design',
       image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop'
     }
@@ -65,10 +74,8 @@ const Projects = () => {
   return (
     <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden font-main">
       <Background />
-      <Helmet>
-        <title>Portfolio | Gimhana Deshapriya</title>
-        <meta name="description" content="A curated selection of technical solutions and architectural explorations." />
-      </Helmet>
+      <title>Portfolio | Gimhana Deshapriya</title>
+      <meta name="description" content="A curated selection of technical solutions and architectural explorations." />
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
         {/* Section Header */}
@@ -145,6 +152,23 @@ const Projects = () => {
                       {project.description}
                     </p>
 
+                    {project.links && (
+                      <div className="flex flex-wrap gap-4 mb-6">
+                        {project.links.map((lnk) => (
+                          <a
+                            key={lnk.url}
+                            href={lnk.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] font-black tracking-widest text-indigo-600 uppercase border-b border-indigo-200 hover:border-indigo-600 transition-all flex items-center gap-1.5"
+                          >
+                            <span>{lnk.label}</span>
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 pt-6 border-t border-slate-50">
                       {project.technologies.map((tech) => (
                         <span
@@ -167,7 +191,7 @@ const Projects = () => {
       <footer className="py-32 border-t border-slate-100 mt-40">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-[10px] font-black tracking-[0.5em] text-slate-400 uppercase">
-            Curated with Architectural Intent. © 2024
+            Curated with Architectural Intent. © 2025
           </p>
         </div>
       </footer>

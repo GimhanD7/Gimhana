@@ -1,32 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
 import { useToast } from '../contexts/ToastContext';
 import emailjs from '@emailjs/browser';
 import Background from '../components/Background';
-
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 100
-    }
-  }
-};
 
 const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => {
   return (

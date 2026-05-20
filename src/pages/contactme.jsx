@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import Background from '../components/Background';
-import Button from '../components/Button';
 import { useToast } from '../contexts/ToastContext';
 
 const ContactMe = () => {

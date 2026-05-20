@@ -214,7 +214,7 @@ const About = () => {
                   {exp.description}
                 </p>
                 {exp.link && (
-                  <a href={exp.link} target="_blank" className="p-4 rounded-full bg-slate-50 hover:bg-indigo-600 hover:text-white transition-all self-start md:self-center">
+                  <a href={exp.link} target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-slate-50 hover:bg-indigo-600 hover:text-white transition-all self-start md:self-center">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                   </a>
                 )}
@@ -222,7 +222,7 @@ const About = () => {
             ))}
           </div>
         </section>
-
+ 
         {/* Leadership & Activities */}
         <section className="mb-20">
           <div className="flex items-center gap-6 mb-16">
@@ -250,15 +250,15 @@ const About = () => {
           </div>
         </section>
       </main>
-
+ 
       {/* Footer Identity */}
       <footer className="py-20 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 text-center space-y-8">
           <h2 className="text-4xl md:text-6xl font-black tracking-tighter opacity-10 uppercase font-heading">Gimhana Deshapriya</h2>
           <div className="flex justify-center gap-12 text-[10px] font-black tracking-[0.4em] text-slate-400 uppercase">
-            <a href="#" className="hover:text-purple-600 transition-colors">Manifesto</a>
-            <a href="#" className="hover:text-purple-600 transition-colors">Artifacts</a>
-            <a href="#" className="hover:text-purple-600 transition-colors">Contact</a>
+            <button type="button" className="hover:text-purple-600 transition-colors bg-transparent border-0 p-0 text-[10px] font-black tracking-[0.4em] uppercase text-slate-400 cursor-pointer font-main">Manifesto</button>
+            <button type="button" className="hover:text-purple-600 transition-colors bg-transparent border-0 p-0 text-[10px] font-black tracking-[0.4em] uppercase text-slate-400 cursor-pointer font-main">Artifacts</button>
+            <button type="button" className="hover:text-purple-600 transition-colors bg-transparent border-0 p-0 text-[10px] font-black tracking-[0.4em] uppercase text-slate-400 cursor-pointer font-main">Contact</button>
           </div>
         </div>
       </footer>

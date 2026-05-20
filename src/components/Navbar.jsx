@@ -28,17 +28,6 @@ const ContactIcon = ({ className = 'w-5 h-5' }) => (
   </svg>
 );
 
-const MenuIcon = ({ open }) => (
-  open ? (
-    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  ) : (
-    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-    </svg>
-  )
-);
 
 const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) => {
   const location = useLocation();
@@ -62,23 +51,6 @@ const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) 
       transition: { type: 'spring', stiffness: 400, damping: 10 }
     },
     tap: { scale: 0.95 }
-  };
-
-  const indicatorVariants = {
-    hidden: { scaleX: 0 },
-    visible: {
-      scaleX: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 25
-      }
-    },
-    hover: {
-      scaleX: 1.2,
-      originX: 0.5,
-      transition: { type: 'spring', stiffness: 400, damping: 10 }
-    }
   };
 
   return (

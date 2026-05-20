@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 // import CategoryRegistration from './pages/categoryRegistration';
-import ThemeToggle from './components/ThemeToggle';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './pages/home';
@@ -29,7 +28,6 @@ function App() {
               </Routes>
             </div>
           </div>
-          {/* <ThemeToggle /> */}
         </Router>
       </ToastProvider>
     </ThemeProvider>

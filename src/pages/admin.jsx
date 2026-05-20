@@ -4,8 +4,7 @@ import Background from '../components/Background';
 import { projectService } from '../utils/projectService';
 import { useToast } from '../contexts/ToastContext';
 import { Link } from 'react-router-dom';
-import { storage } from '../firebase';
-import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+
 
 
 // Hardcoded Default PIN

@@ -151,10 +151,17 @@ const Admin = () => {
     }
   };
 
-  // Multi-Image Gallery Files Input Handler (Directly stages to Firestore payload)
+  // Multi-Image Gallery Files Input Handler (Directly stages to Firestore payload with a limit of 500 images)
   const handleGalleryFilesChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
+
+    const currentCount = formData.gallery ? formData.gallery.length : 0;
+    if (currentCount + files.length > 500) {
+      toast.showError(`Cannot exceed the limit of 500 screenshots. Staging these would result in ${currentCount + files.length} screenshots.`);
+      e.target.value = '';
+      return;
+    }
 
     setIsGalleryUploading(true);
     toast.showSuccess(`Optimizing ${files.length} screenshots for Firestore...`);
@@ -184,6 +191,11 @@ const Admin = () => {
 
   const handleAddGalleryUrl = () => {
     if (!galleryUrlInput) return;
+    const currentCount = formData.gallery ? formData.gallery.length : 0;
+    if (currentCount >= 500) {
+      toast.showError('Cannot exceed the limit of 500 screenshots.');
+      return;
+    }
     setFormData(prev => ({
       ...prev,
       gallery: [...(prev.gallery || []), galleryUrlInput]
@@ -654,13 +666,13 @@ const Admin = () => {
                       </div>
                     </div>
 
-                    {/* B. Gallery Screenshots Section (Up to 50 Images) */}
+                    {/* B. Gallery Screenshots Section (Up to 500 Images) */}
                     <div className="glass p-5 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-4">
                       <div className="flex justify-between items-center">
                         <label className="text-[9px] font-black tracking-widest uppercase text-purple-600 pl-1">
                           Project Screenshot Gallery ({formData.gallery ? formData.gallery.length : 0})
                         </label>
-                        <span className="text-[8px] font-bold text-slate-400 uppercase">Limit: 50 Photos</span>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase">Limit: 500 Photos</span>
                       </div>
 
                       {/* Multi file pick uploader */}

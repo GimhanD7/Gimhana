@@ -71,14 +71,37 @@ const LOCAL_STORAGE_KEY = 'gimhana_fallback_projects';
 const getLocalProjects = () => {
   const local = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (local) {
-    return JSON.parse(local);
+    try {
+      const parsed = JSON.parse(local);
+      // Self-Healing Sanitization: strip gallery arrays from localStorage to reclaim space immediately
+      let modified = false;
+      const sanitized = parsed.map(proj => {
+        if (proj.gallery && proj.gallery.length > 0) {
+          modified = true;
+          return { ...proj, gallery: [] };
+        }
+        return proj;
+      });
+      if (modified) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(sanitized));
+      }
+      return sanitized;
+    } catch (e) {
+      console.warn('Failed to parse or sanitize localStorage projects, resetting...', e);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS));
+      return DEFAULT_PROJECTS;
+    }
   }
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS));
   return DEFAULT_PROJECTS;
 };
 
 const saveLocalProjects = (projects) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(projects));
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(projects));
+  } catch (err) {
+    console.error('Failed to set localStorage item:', err);
+  }
 };
 
 export const projectService = {
@@ -87,22 +110,29 @@ export const projectService = {
     if (!db) return;
     const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
     
-    // 1. Delete all existing screenshots in the subcollection
+    // 1. Delete all existing screenshots in the subcollection in safe chunks of 400
     const snap = await getDocs(screenshotsCol);
-    const batch = writeBatch(db);
-    snap.docs.forEach((d) => {
-      batch.delete(d.ref);
-    });
-    await batch.commit();
-    
-    // 2. Add new screenshots with order indices (doing it in chunk batches of 20 to prevent transaction limits)
-    if (galleryArray.length > 0) {
-      const saveBatch = writeBatch(db);
-      galleryArray.forEach((imgBase64, index) => {
-        const docRef = doc(screenshotsCol);
-        saveBatch.set(docRef, { image: imgBase64, index });
+    const deleteDocs = snap.docs;
+    for (let i = 0; i < deleteDocs.length; i += 400) {
+      const batch = writeBatch(db);
+      const chunk = deleteDocs.slice(i, i + 400);
+      chunk.forEach((d) => {
+        batch.delete(d.ref);
       });
-      await saveBatch.commit();
+      await batch.commit();
+    }
+    
+    // 2. Add new screenshots with order indices in safe chunks of 400
+    if (galleryArray.length > 0) {
+      for (let i = 0; i < galleryArray.length; i += 400) {
+        const batch = writeBatch(db);
+        const chunk = galleryArray.slice(i, i + 400);
+        chunk.forEach((imgBase64, index) => {
+          const docRef = doc(screenshotsCol);
+          batch.set(docRef, { image: imgBase64, index: i + index });
+        });
+        await batch.commit();
+      }
     }
   },
 
@@ -226,11 +256,12 @@ export const projectService = {
         savedProject = { id: docRef.id, ...cleanProject, gallery };
       }
 
-      // Sync local storage fallback (full data including screenshots saved in localStorage fallback)
+      // Sync local storage fallback (strip gallery screenshots to protect against localStorage 5MB quota limits)
+      const localProjectRepresentation = { ...savedProject, gallery: [] };
       const local = getLocalProjects();
-      const updated = local.some(p => p.id === savedProject.id)
-        ? local.map(p => p.id === savedProject.id ? savedProject : p)
-        : [...local, savedProject];
+      const updated = local.some(p => p.id === localProjectRepresentation.id)
+        ? local.map(p => p.id === localProjectRepresentation.id ? localProjectRepresentation : p)
+        : [...local, localProjectRepresentation];
       saveLocalProjects(updated);
 
       return savedProject;
@@ -245,7 +276,7 @@ export const projectService = {
         technologies: Array.isArray(project.technologies) ? project.technologies : [],
         category: project.category || 'Web Development',
         image: project.image || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
-        gallery: Array.isArray(project.gallery) ? project.gallery : [],
+        gallery: [], // Strip screenshots to prevent QuotaExceededError in localStorage fallback
         links: Array.isArray(project.links) ? project.links : []
       };
 
@@ -271,13 +302,15 @@ export const projectService = {
       }
       const projectDoc = doc(db, 'projects', projectId);
       
-      // Delete screenshots subcollection documents first
+      // Delete screenshots subcollection documents first in safe chunks of 400
       try {
         const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
         const snap = await getDocs(screenshotsCol);
-        if (snap.size > 0) {
+        const deleteDocs = snap.docs;
+        for (let i = 0; i < deleteDocs.length; i += 400) {
           const batch = writeBatch(db);
-          snap.docs.forEach(d => batch.delete(d.ref));
+          const chunk = deleteDocs.slice(i, i + 400);
+          chunk.forEach(d => batch.delete(d.ref));
           await batch.commit();
         }
       } catch (subErr) {

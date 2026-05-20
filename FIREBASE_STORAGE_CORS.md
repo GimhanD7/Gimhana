@@ -54,5 +54,6 @@ Even if CORS is not configured yet, our admin panel is equipped with a **Dual-Up
 2. If blocked by CORS or permissions, it **automatically catches the error** and stages the image locally as a compressed **Base64 image**.
 3. You can still save projects with cover images! 
 
-> [!WARNING]
-> While the Base64 fallback works perfectly for the **Project Cover Image**, storing more than 2-3 high-resolution screenshot strings inside a single project's gallery might exceed Firestore's **1MB document size limit**. For multi-image galleries, completing the CORS setup above is highly recommended!
+> [!TIP]
+> **🚀 Complete 1MB Size Limit Resolution!**
+> Thanks to our **Firestore Subcollection Strategy**, each screenshot in your gallery is saved as a completely separate document under the project. This means you can upload up to 50 gallery screenshots, and they will never trigger the 1MB Firestore document limit! You have zero dependency on Firebase Cloud Storage or CORS setup for both cover images and large galleries.

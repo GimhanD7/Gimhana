@@ -82,7 +82,47 @@ const saveLocalProjects = (projects) => {
 };
 
 export const projectService = {
-  // Fetch a single project
+  // Helper to save gallery screenshots to a subcollection (to bypass 1MB document limit)
+  saveGalleryScreenshots: async (projectId, galleryArray) => {
+    if (!db) return;
+    const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
+    
+    // 1. Delete all existing screenshots in the subcollection
+    const snap = await getDocs(screenshotsCol);
+    const batch = writeBatch(db);
+    snap.docs.forEach((d) => {
+      batch.delete(d.ref);
+    });
+    await batch.commit();
+    
+    // 2. Add new screenshots with order indices (doing it in chunk batches of 20 to prevent transaction limits)
+    if (galleryArray.length > 0) {
+      const saveBatch = writeBatch(db);
+      galleryArray.forEach((imgBase64, index) => {
+        const docRef = doc(screenshotsCol);
+        saveBatch.set(docRef, { image: imgBase64, index });
+      });
+      await saveBatch.commit();
+    }
+  },
+
+  // Helper to load gallery screenshots from subcollection
+  getGalleryScreenshots: async (projectId) => {
+    if (!db) return [];
+    try {
+      const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
+      const snap = await getDocs(screenshotsCol);
+      const list = snap.docs.map(d => d.data());
+      // Sort by index to maintain ordering
+      list.sort((a, b) => a.index - b.index);
+      return list.map(item => item.image);
+    } catch (err) {
+      console.warn('Failed to load gallery screenshots from subcollection:', err);
+      return [];
+    }
+  },
+
+  // Fetch a single project (merges screenshots subcollection transparently)
   getProject: async (projectId) => {
     try {
       if (!db) {
@@ -92,7 +132,10 @@ export const projectService = {
       const docRef = doc(db, 'projects', projectId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() };
+        const projectData = { id: docSnap.id, ...docSnap.data() };
+        // Merge screenshots subcollection
+        const gallery = await projectService.getGalleryScreenshots(projectId);
+        return { ...projectData, gallery };
       } else {
         const local = getLocalProjects();
         return local.find(p => p.id === projectId) || null;
@@ -141,9 +184,11 @@ export const projectService = {
     }
   },
 
-  // Save (Create or Update) a project
+  // Save (Create or Update) a project (Gallery Base64s written to subcollection)
   saveProject: async (project) => {
     try {
+      const gallery = Array.isArray(project.gallery) ? project.gallery : [];
+
       const cleanProject = {
         title: project.title || '',
         period: project.period || '',
@@ -151,7 +196,7 @@ export const projectService = {
         technologies: Array.isArray(project.technologies) ? project.technologies : [],
         category: project.category || 'Web Development',
         image: project.image || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
-        gallery: Array.isArray(project.gallery) ? project.gallery : [],
+        gallery: [], // Keep empty in the main document to protect against the 1MB Firestore limit
         links: Array.isArray(project.links) ? project.links : []
       };
 
@@ -160,29 +205,35 @@ export const projectService = {
       }
 
       const projectsCol = collection(db, 'projects');
+      let savedProject;
+
       if (project.id) {
         // Update existing project
         const projectDoc = doc(db, 'projects', project.id);
         await updateDoc(projectDoc, cleanProject);
         
-        // Sync local storage fallback
-        const local = getLocalProjects();
-        const updated = local.map(p => p.id === project.id ? { ...p, ...cleanProject } : p);
-        saveLocalProjects(updated);
+        // Write screenshots to subcollection
+        await projectService.saveGalleryScreenshots(project.id, gallery);
         
-        return { id: project.id, ...cleanProject };
+        savedProject = { id: project.id, ...cleanProject, gallery };
       } else {
         // Create new project
         const docRef = await addDoc(projectsCol, cleanProject);
-        const newProj = { id: docRef.id, ...cleanProject };
-
-        // Sync local storage fallback
-        const local = getLocalProjects();
-        local.push(newProj);
-        saveLocalProjects(local);
-
-        return newProj;
+        
+        // Write screenshots to subcollection
+        await projectService.saveGalleryScreenshots(docRef.id, gallery);
+        
+        savedProject = { id: docRef.id, ...cleanProject, gallery };
       }
+
+      // Sync local storage fallback (full data including screenshots saved in localStorage fallback)
+      const local = getLocalProjects();
+      const updated = local.some(p => p.id === savedProject.id)
+        ? local.map(p => p.id === savedProject.id ? savedProject : p)
+        : [...local, savedProject];
+      saveLocalProjects(updated);
+
+      return savedProject;
     } catch (error) {
       console.error('Failed to save project to Firebase. Saving to localStorage.', error);
       
@@ -212,13 +263,27 @@ export const projectService = {
     }
   },
 
-  // Delete a project
+  // Delete a project (Cleans up screenshots subcollection)
   deleteProject: async (projectId) => {
     try {
       if (!db) {
         throw new Error('Database is offline');
       }
       const projectDoc = doc(db, 'projects', projectId);
+      
+      // Delete screenshots subcollection documents first
+      try {
+        const screenshotsCol = collection(db, 'projects', projectId, 'screenshots');
+        const snap = await getDocs(screenshotsCol);
+        if (snap.size > 0) {
+          const batch = writeBatch(db);
+          snap.docs.forEach(d => batch.delete(d.ref));
+          await batch.commit();
+        }
+      } catch (subErr) {
+        console.warn('Failed to delete screenshots subcollection:', subErr);
+      }
+
       await deleteDoc(projectDoc);
 
       // Sync local storage fallback

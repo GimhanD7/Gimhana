@@ -227,9 +227,11 @@ const Admin = () => {
   };
 
   // Prepopulate form for editing
-  const handleEditInit = (project) => {
+  const handleEditInit = async (project) => {
     setIsEditing(true);
     setEditingId(project.id);
+    
+    // Set basic text fields and cover image immediately for zero-lag UI feedback
     setFormData({
       title: project.title,
       period: project.period,
@@ -237,9 +239,25 @@ const Admin = () => {
       category: project.category,
       image: project.image,
       technologiesText: project.technologies.join(', '),
-      gallery: project.gallery || [],
+      gallery: [], // Loaded asynchronously below
       links: project.links || []
     });
+
+    try {
+      toast.showSuccess('Loading project screenshots...');
+      const fullProject = await projectService.getProject(project.id);
+      if (fullProject) {
+        setFormData(prev => ({
+          ...prev,
+          gallery: fullProject.gallery || []
+        }));
+        toast.showSuccess('Screenshots loaded successfully!');
+      }
+    } catch (err) {
+      console.error('Failed to load screenshots:', err);
+      toast.showError('Failed to load screenshots for editing.');
+    }
+    
     window.scrollTo({ top: 300, behavior: 'smooth' });
   };
 

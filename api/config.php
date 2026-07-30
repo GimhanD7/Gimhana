@@ -23,6 +23,7 @@ return [
             'http://127.0.0.1:3000',
             'https://gimhan.me',
             'https://www.gimhan.me',
+            'https://gimhana-teal.vercel.app',
         ]))
     ))),
 ];

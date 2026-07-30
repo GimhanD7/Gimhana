@@ -27,7 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$isSecureRequest = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+$forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
+$isSecureRequest = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || $forwardedProto === 'https'
+    || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
 session_name($config['session_name']);
 session_set_cookie_params([
     'lifetime' => 0,

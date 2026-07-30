@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Background from '../components/Background';
-import { projectService } from '../utils/projectService';
+import { authService, projectService } from '../utils/projectService';
 import { useToast } from '../contexts/ToastContext';
 import { Link } from 'react-router-dom';
-
-
-
-// Hardcoded Default PIN
-const ADMIN_PIN = process.env.REACT_APP_ADMIN_PIN || '4561';
-
 const Admin = () => {
-  const toast = useToast();
+  const { showError, showSuccess } = useToast();
 
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [enteredPin, setEnteredPin] = useState('');
-  const [isPinError, setIsPinError] = useState(false);
+  const [credentials, setCredentials] = useState({ username: 'admin', password: '' });
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Projects state
   const [projects, setProjects] = useState([]);
@@ -37,11 +31,24 @@ const Admin = () => {
   });
   const [linkInput, setLinkInput] = useState({ label: '', url: '' });
   const [isSaving, setIsSaving] = useState(false);
+  const [reorderingId, setReorderingId] = useState(null);
 
   // Upload/Compression staging states
   const [isCoverUploading, setIsCoverUploading] = useState(false);
   const [isGalleryUploading, setIsGalleryUploading] = useState(false);
   const [galleryUrlInput, setGalleryUrlInput] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    authService.getSession()
+      .then((session) => {
+        if (active) setIsAuthenticated(session.authenticated);
+      })
+      .catch(() => {
+        if (active) showError('Unable to connect to the PHP backend.');
+      })
+    return () => { active = false; };
+  }, [showError]);
 
   // Load projects once authenticated
   useEffect(() => {
@@ -53,41 +60,38 @@ const Admin = () => {
         const data = await projectService.getProjects();
         setProjects(data);
       } catch (err) {
-        toast.showError('Failed to fetch projects.');
+        showError('Failed to fetch projects.');
       } finally {
         setIsLoading(false);
       }
     };
     loadProjects();
-  }, [isAuthenticated, toast]);
+  }, [isAuthenticated, showError]);
 
-  // Handle PIN input digit tap
-  const handlePinTap = (digit) => {
-    if (enteredPin.length >= 4) return;
-    const newPin = enteredPin + digit;
-    setEnteredPin(newPin);
-
-    if (newPin.length === 4) {
-      if (newPin === ADMIN_PIN) {
-        toast.showSuccess('Console Unlocked. Synchronizing Database.');
-        setTimeout(() => setIsAuthenticated(true), 300);
-      } else {
-        setIsPinError(true);
-        toast.showError('Access Denied. Incorrect Passcode.');
-        setTimeout(() => {
-          setEnteredPin('');
-          setIsPinError(false);
-        }, 600);
-      }
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setIsLoggingIn(true);
+    try {
+      await authService.login(credentials.username, credentials.password);
+      setCredentials(prev => ({ ...prev, password: '' }));
+      setIsAuthenticated(true);
+      showSuccess('Signed in securely.');
+    } catch (error) {
+      showError(error.message);
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
-  const handleBackspace = () => {
-    setEnteredPin(prev => prev.slice(0, -1));
-  };
-
-  const handleClear = () => {
-    setEnteredPin('');
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      showError(error.message);
+    } finally {
+      setProjects([]);
+      setIsAuthenticated(false);
+    }
   };
 
   // Image Compression Utility (Canvas-based)
@@ -99,8 +103,8 @@ const Admin = () => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 700; // Ultra-optimized for Firestore document size limits (20-30KB per image)
-          const MAX_HEIGHT = 700;
+          const MAX_WIDTH = 900;
+          const MAX_HEIGHT = 900;
           let width = img.width;
           let height = img.height;
 
@@ -121,8 +125,7 @@ const Admin = () => {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // 0.6 Quality JPEG Compression (creates highly optimized small payloads for Firestore documents)
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.72);
           resolve(compressedBase64);
         };
         img.onerror = (err) => reject(err);
@@ -132,39 +135,39 @@ const Admin = () => {
     });
   };
 
-  // Cover Photo File Input Handler (Directly stages to Firestore payload)
+  // Cover Photo File Input Handler
   const handleCoverFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     setIsCoverUploading(true);
     try {
-      toast.showSuccess('Optimizing cover image for Firestore...');
+      showSuccess('Optimizing cover image...');
       const compressedData = await compressImage(file);
       setFormData(prev => ({ ...prev, image: compressedData }));
-      toast.showSuccess('Cover image optimized and staged successfully for Firestore!');
+      showSuccess('Cover image is ready to save.');
     } catch (err) {
-      toast.showError('Image compression failed.');
+      showError('Image compression failed.');
     } finally {
       setIsCoverUploading(false);
       e.target.value = ''; // clear input
     }
   };
 
-  // Multi-Image Gallery Files Input Handler (Directly stages to Firestore payload with a limit of 500 images)
+  // Multi-Image Gallery Files Input Handler
   const handleGalleryFilesChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     const currentCount = formData.gallery ? formData.gallery.length : 0;
-    if (currentCount + files.length > 500) {
-      toast.showError(`Cannot exceed the limit of 500 screenshots. Staging these would result in ${currentCount + files.length} screenshots.`);
+    if (currentCount + files.length > 20) {
+      showError(`Cannot exceed 20 screenshots. This selection would result in ${currentCount + files.length}.`);
       e.target.value = '';
       return;
     }
 
     setIsGalleryUploading(true);
-    toast.showSuccess(`Optimizing ${files.length} screenshots for Firestore...`);
+    showSuccess(`Optimizing ${files.length} screenshots...`);
 
     let loadedCount = 0;
     const uploadedUrls = [];
@@ -184,7 +187,7 @@ const Admin = () => {
       gallery: [...(prev.gallery || []), ...uploadedUrls]
     }));
 
-    toast.showSuccess(`Staged ${loadedCount} optimized gallery screenshot(s) for Firestore!`);
+    showSuccess(`${loadedCount} gallery screenshot(s) ready to save.`);
     setIsGalleryUploading(false);
     e.target.value = ''; // clear input
   };
@@ -192,8 +195,8 @@ const Admin = () => {
   const handleAddGalleryUrl = () => {
     if (!galleryUrlInput) return;
     const currentCount = formData.gallery ? formData.gallery.length : 0;
-    if (currentCount >= 500) {
-      toast.showError('Cannot exceed the limit of 500 screenshots.');
+    if (currentCount >= 20) {
+      showError('Cannot exceed 20 screenshots.');
       return;
     }
     setFormData(prev => ({
@@ -201,7 +204,7 @@ const Admin = () => {
       gallery: [...(prev.gallery || []), galleryUrlInput]
     }));
     setGalleryUrlInput('');
-    toast.showSuccess('Gallery screenshot link added.');
+    showSuccess('Gallery screenshot link added.');
   };
 
   const handleRemoveGalleryImage = (idx) => {
@@ -209,7 +212,7 @@ const Admin = () => {
       ...prev,
       gallery: prev.gallery.filter((_, i) => i !== idx)
     }));
-    toast.showSuccess('Gallery screenshot removed.');
+    showSuccess('Gallery screenshot removed.');
   };
 
   // Form inputs
@@ -220,7 +223,7 @@ const Admin = () => {
 
   const handleAddLink = () => {
     if (!linkInput.label || !linkInput.url) {
-      toast.showError('Fill both Label and Link URL.');
+      showError('Fill both Label and Link URL.');
       return;
     }
     setFormData(prev => ({
@@ -255,18 +258,18 @@ const Admin = () => {
     });
 
     try {
-      toast.showSuccess('Loading project screenshots...');
+      showSuccess('Loading project screenshots...');
       const fullProject = await projectService.getProject(project.id);
       if (fullProject) {
         setFormData(prev => ({
           ...prev,
           gallery: fullProject.gallery || []
         }));
-        toast.showSuccess('Screenshots loaded successfully!');
+        showSuccess('Screenshots loaded successfully!');
       }
     } catch (err) {
       console.error('Failed to load screenshots:', err);
-      toast.showError('Failed to load screenshots for editing.');
+      showError('Failed to load screenshots for editing.');
     }
 
     window.scrollTo({ top: 300, behavior: 'smooth' });
@@ -278,10 +281,33 @@ const Admin = () => {
     try {
       await projectService.deleteProject(projectId);
       setProjects(prev => prev.filter(p => p.id !== projectId));
-      toast.showSuccess('Project deleted successfully.');
+      showSuccess('Project deleted successfully.');
       if (editingId === projectId) handleCancel();
     } catch (err) {
-      toast.showError('Failed to delete project.');
+      showError('Failed to delete project.');
+    }
+  };
+
+  const handleMoveProject = async (projectId, direction) => {
+    const currentIndex = projects.findIndex(project => project.id === projectId);
+    const targetIndex = currentIndex + direction;
+    if (currentIndex < 0 || targetIndex < 0 || targetIndex >= projects.length) return;
+
+    const previousProjects = [...projects];
+    const reorderedProjects = [...projects];
+    const [movedProject] = reorderedProjects.splice(currentIndex, 1);
+    reorderedProjects.splice(targetIndex, 0, movedProject);
+
+    setProjects(reorderedProjects);
+    setReorderingId(projectId);
+    try {
+      await projectService.reorderProjects(reorderedProjects.map(project => project.id));
+      showSuccess('Project display order updated.');
+    } catch (error) {
+      setProjects(previousProjects);
+      showError(error.message);
+    } finally {
+      setReorderingId(null);
     }
   };
 
@@ -289,7 +315,7 @@ const Admin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.period || !formData.description) {
-      toast.showError('Required fields are missing.');
+      showError('Required fields are missing.');
       return;
     }
 
@@ -319,15 +345,15 @@ const Admin = () => {
 
       if (isEditing) {
         setProjects(prev => prev.map(p => p.id === saved.id ? saved : p));
-        toast.showSuccess('Project updated successfully.');
+        showSuccess('Project updated successfully.');
       } else {
         setProjects(prev => [...prev, saved]);
-        toast.showSuccess('Project created successfully.');
+        showSuccess('Project created successfully.');
       }
 
       handleCancel();
     } catch (err) {
-      toast.showError('Failed to save project.');
+      showError('Failed to save project.');
     } finally {
       setIsSaving(false);
     }
@@ -350,22 +376,6 @@ const Admin = () => {
     setLinkInput({ label: '', url: '' });
   };
 
-  // Reset database back to default
-  const handleResetDb = async () => {
-    if (!window.confirm('CRITICAL ACTION: Reset all database items back to default? All custom entries will be lost.')) return;
-    try {
-      setIsLoading(true);
-      const data = await projectService.resetToDefault();
-      setProjects(data);
-      toast.showSuccess('Database restored to default projects.');
-      handleCancel();
-    } catch (err) {
-      toast.showError('Failed to reset database.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Compute metrics
   const totalProjects = projects.length;
   const categoriesCount = new Set(projects.map(p => p.category)).size;
@@ -373,12 +383,12 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden font-main">
-      <Background />
+      {isAuthenticated && <Background />}
       <title>Console Console | Gimhana Deshapriya</title>
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
 
-        {/* Passcode Security Overlay Grid */}
+        {/* Server-authenticated admin login */}
         <AnimatePresence>
           {!isAuthenticated && (
             <motion.div
@@ -389,74 +399,53 @@ const Admin = () => {
             >
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
-                animate={
-                  isPinError
-                    ? { x: [0, -10, 10, -10, 10, -10, 10, 0], scale: 1, opacity: 1 }
-                    : { scale: 1, opacity: 1 }
-                }
+                animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="w-full max-w-md glass p-10 rounded-2xl text-center border border-white/10 flex flex-col items-center space-y-8"
+                className="w-full max-w-md glass p-10 rounded-2xl border border-white/10"
               >
-                {/* Vault Shield Header */}
-                <div className="space-y-3">
+                <div className="space-y-3 text-center">
                   <div className="w-16 h-16 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto animate-pulse">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-black text-white tracking-tighter uppercase font-heading">Secure Vault</h2>
+                  <h2 className="text-2xl font-black text-white tracking-tighter uppercase font-heading">Admin Sign In</h2>
                   <p className="text-xs font-semibold text-slate-400 tracking-wider font-main">
-                    Enter Passcode to Initialize Management Console
+                    Authenticate through the PHP server to manage portfolio content.
                   </p>
                 </div>
 
-                {/* Secret dots grid */}
-                <div className="flex justify-center gap-4 py-4">
-                  {[0, 1, 2, 3].map((idx) => (
-                    <motion.div
-                      key={idx}
-                      className={`w-4 h-4 rounded-full border-2 transition-all duration-300 ${idx < enteredPin.length
-                        ? 'bg-purple-500 border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.8)] scale-110'
-                        : 'border-white/20 bg-white/5'
-                        }`}
-                      animate={idx < enteredPin.length ? { scale: [1, 1.2, 1] } : {}}
+                <form onSubmit={handleLogin} className="space-y-5 mt-8">
+                  <label className="block">
+                    <span className="block text-[10px] font-black tracking-widest uppercase text-slate-400 mb-2">Username</span>
+                    <input
+                      type="text"
+                      autoComplete="username"
+                      required
+                      value={credentials.username}
+                      onChange={(event) => setCredentials(prev => ({ ...prev, username: event.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
-                  ))}
-                </div>
-
-                {/* PIN keypad grid */}
-                <div className="grid grid-cols-3 gap-4 w-full max-w-xs pt-4">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                    <button
-                      key={num}
-                      onClick={() => handlePinTap(num.toString())}
-                      className="h-16 rounded-lg bg-white/5 border border-white/5 text-white font-bold text-xl hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
-                    >
-                      {num}
-                    </button>
-                  ))}
+                  </label>
+                  <label className="block">
+                    <span className="block text-[10px] font-black tracking-widest uppercase text-slate-400 mb-2">Password</span>
+                    <input
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      value={credentials.password}
+                      onChange={(event) => setCredentials(prev => ({ ...prev, password: event.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </label>
                   <button
-                    onClick={handleClear}
-                    className="h-16 rounded-lg bg-white/5 border border-white/5 text-slate-400 font-semibold text-xs hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 active:scale-95 transition-all duration-200"
+                    type="submit"
+                    disabled={isLoggingIn}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black tracking-widest text-xs uppercase disabled:opacity-50"
                   >
-                    CLEAR
+                    {isLoggingIn ? 'Authenticating...' : 'Sign In'}
                   </button>
-                  <button
-                    onClick={() => handlePinTap('0')}
-                    className="h-16 rounded-lg bg-white/5 border border-white/5 text-white font-bold text-xl hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
-                  >
-                    0
-                  </button>
-                  <button
-                    onClick={handleBackspace}
-                    className="h-16 rounded-lg bg-white/5 border border-white/5 text-slate-400 font-semibold text-xs hover:bg-white/10 active:scale-95 transition-all duration-200 flex items-center justify-center"
-                    aria-label="backspace"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414A2 2 0 0010.828 19h7.344a2 2 0 002-2V7a2 2 0 00-2-2h-7.344a2 2 0 00-1.414.586L3 12z" />
-                    </svg>
-                  </button>
-                </div>
+                </form>
               </motion.div>
             </motion.div>
           )}
@@ -482,10 +471,10 @@ const Admin = () => {
                   View Archive
                 </Link>
                 <button
-                  onClick={handleResetDb}
+                  onClick={handleLogout}
                   className="px-6 py-3.5 bg-red-50 text-red-600 font-black tracking-widest text-[9px] uppercase rounded-xl hover:bg-red-100 border border-red-100 transition-colors shadow-sm"
                 >
-                  Restore Defaults
+                  Sign Out
                 </button>
               </div>
             </div>
@@ -585,7 +574,7 @@ const Admin = () => {
                         <label className="text-[9px] font-black tracking-widest uppercase text-purple-600 pl-1">Project Cover Image</label>
                         {formData.image && (
                           <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-500 uppercase">
-                            {formData.image.startsWith('data:') ? 'Firestore Staged (Optimized)' : 'External URL Link'}
+                            {formData.image.startsWith('data:') ? 'Compressed image ready' : 'External URL'}
                           </span>
                         )}
                       </div>
@@ -666,13 +655,13 @@ const Admin = () => {
                       </div>
                     </div>
 
-                    {/* B. Gallery Screenshots Section (Up to 500 Images) */}
+                    {/* B. Gallery Screenshots Section */}
                     <div className="glass p-5 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-4">
                       <div className="flex justify-between items-center">
                         <label className="text-[9px] font-black tracking-widest uppercase text-purple-600 pl-1">
                           Project Screenshot Gallery ({formData.gallery ? formData.gallery.length : 0})
                         </label>
-                        <span className="text-[8px] font-bold text-slate-400 uppercase">Limit: 500 Photos</span>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase">Limit: 20 Photos</span>
                       </div>
 
                       {/* Multi file pick uploader */}
@@ -686,7 +675,7 @@ const Admin = () => {
                           <>
                             <span className="text-xl">📸</span>
                             <span>Upload Local Screenshots (Multi-Select)</span>
-                            <span className="text-[8px] text-slate-400 font-medium font-main">Compacts images to under 25KB each (optimized for Firestore)</span>
+                            <span className="text-[8px] text-slate-400 font-medium font-main">Compresses images before saving them to MySQL</span>
                           </>
                         )}
                         <input
@@ -847,7 +836,7 @@ const Admin = () => {
                     Active Catalog
                   </h3>
                   <p className="text-xs text-slate-400 font-medium font-main mt-1">
-                    Manage and review deployment entities synced to Firestore.
+                    Manage and review portfolio projects stored in MySQL.
                   </p>
                 </div>
 
@@ -871,7 +860,7 @@ const Admin = () => {
                 ) : (
                   /* Active projects catalog */
                   <div className="space-y-4">
-                    {projects.map((project) => (
+                    {projects.map((project, projectIndex) => (
                       <motion.div
                         key={project.id}
                         layoutId={`project-row-${project.id}`}
@@ -882,6 +871,8 @@ const Admin = () => {
                           <img
                             src={project.image}
                             alt={project.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -915,6 +906,30 @@ const Admin = () => {
 
                         {/* Actions controls */}
                         <div className="flex gap-2 shrink-0">
+                          <div className="flex flex-col gap-1">
+                            <button
+                              onClick={() => handleMoveProject(project.id, -1)}
+                              disabled={projectIndex === 0 || reorderingId !== null}
+                              className="p-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                              title="Move project up"
+                              aria-label={`Move ${project.title} up`}
+                            >
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 15l7-7 7 7" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleMoveProject(project.id, 1)}
+                              disabled={projectIndex === projects.length - 1 || reorderingId !== null}
+                              className="p-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                              title="Move project down"
+                              aria-label={`Move ${project.title} down`}
+                            >
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          </div>
                           <button
                             onClick={() => handleEditInit(project)}
                             className="p-3 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-xl hover:scale-105 transition-all shadow-sm"

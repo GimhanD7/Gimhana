@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# Gimhana Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React portfolio with a PHP 8/MySQL backend and a session-authenticated admin panel.
 
-## Available Scripts
+## Requirements
 
-In the project directory, you can run:
+- XAMPP with Apache, PHP 8.1+ and MySQL
+- Node.js and npm for rebuilding the React frontend
 
-### `npm start`
+## Database setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Start Apache and MySQL in XAMPP.
+2. Open `http://localhost/phpmyadmin`.
+3. Select **Import** and import `database.sql`.
+4. Confirm the database `gimhana_portfolio` was created.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The development database settings are in `api/config.php`:
 
-### `npm test`
+```text
+host: 127.0.0.1
+database: gimhana_portfolio
+username: root
+password: (empty)
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+For another environment, set `PORTFOLIO_DB_HOST`, `PORTFOLIO_DB_PORT`,
+`PORTFOLIO_DB_NAME`, `PORTFOLIO_DB_USER`, and `PORTFOLIO_DB_PASSWORD`.
 
-### `npm run build`
+## First admin login
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Open `http://localhost/Gimhana/admin`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```text
+Username: admin
+Password: ChangeMe123!
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Change this default before publishing. Generate a new password hash:
 
-### `npm run eject`
+```powershell
+php -r "echo password_hash('YOUR-NEW-PASSWORD', PASSWORD_DEFAULT), PHP_EOL;"
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Then replace the `admins.password_hash` value in phpMyAdmin. Passwords are
+verified on the PHP server and are never stored in the React application.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Frontend development
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```powershell
+npm install
+npm start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The development proxy forwards `/Gimhana/api` to XAMPP. The default API path
+can be overridden with `REACT_APP_API_URL`.
 
-## Learn More
+Create a deployable build with:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```powershell
+npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Copy the contents of `build` into the Apache-served project directory when
+deploying the compiled frontend.
 
-### Code Splitting
+## Backend endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+All endpoints are handled by `api/index.php`.
 
-### Analyzing the Bundle Size
+- `GET ?action=health`
+- `GET ?action=projects`
+- `GET ?action=project&id={id}`
+- `GET ?action=session`
+- `POST ?action=login`
+- `POST ?action=logout`
+- `POST ?action=projects` — authenticated
+- `PUT ?action=project&id={id}` — authenticated
+- `DELETE ?action=project&id={id}` — authenticated
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Mutating requests require both the authenticated session cookie and the CSRF
+token returned by the login/session endpoint.

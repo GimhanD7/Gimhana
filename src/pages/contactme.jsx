@@ -112,7 +112,7 @@ const ContactMe = () => {
               </a>
             </div>
 
-            <div className="absolute -bottom-10 -left-10 w-full h-full bg-indigo-500/10 rounded-2xl blur-[100px] -z-10" />
+            <div className="absolute -bottom-10 -left-10 w-full h-full bg-indigo-500/5 rounded-2xl -z-10" />
           </motion.div>
         </div>
       </main>

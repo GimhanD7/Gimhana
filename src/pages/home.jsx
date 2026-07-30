@@ -101,10 +101,6 @@ const Home = () => {
             animate={{ opacity: 1, x: 0, rotateY: 0 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            {/* Absolute Background Glows */}
-            <div className="absolute -top-20 -right-20 w-80 h-80 bg-purple-500/20 rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-indigo-500/20 rounded-full blur-[120px] animate-pulse delay-1000" />
-
             <motion.div
               className="relative z-10"
               whileHover={{ y: -10 }}
@@ -129,20 +125,10 @@ const Home = () => {
                 { tech: 'php', color: '#777BB4', delay: 2, pos: 'bottom-1/4 -right-20' },
                 { tech: 'javascript', color: '#F7DF1E', delay: 0.5, pos: 'top-1/3 -left-20' },
                 { tech: 'express', color: '#4479A1', delay: 1.5, pos: 'bottom-1/3 -left-16' }
-              ].map((item, idx) => (
+              ].map((item) => (
                 <motion.div
                   key={item.tech}
                   className={`absolute ${item.pos} z-20`}
-                  animate={{
-                    y: [0, -20, 0],
-                    rotate: [0, idx % 2 === 0 ? 10 : -10, 0]
-                  }}
-                  transition={{
-                    duration: 5 + idx,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: item.delay
-                  }}
                 >
                   <div className="glass p-4 rounded-lg shadow-xl hover:scale-110 transition-transform duration-500 group/sat cursor-default">
                     <div className="relative">
@@ -313,7 +299,7 @@ const Home = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
             {[
               'React', 'Node.js', 'PHP', 'JavaScript', 'Java',
-              'MySQL', 'MongoDB', 'Firebase', 'C', 'C++',
+              'MySQL', 'MongoDB', 'Express', 'C', 'C++',
               'Kotlin', 'Figma'
             ].map((tech, idx) => (
               <motion.div

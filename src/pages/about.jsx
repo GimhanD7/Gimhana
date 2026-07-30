@@ -18,7 +18,7 @@ const About = () => {
     },
     {
       name: 'Databases',
-      items: ['MySQL', 'MongoDB', 'Firebase', 'Database Design & Optimization'],
+      items: ['MySQL', 'MongoDB', 'PHP PDO', 'Database Design & Optimization'],
       icon: '🗄️',
       color: 'from-amber-500 to-red-500'
     },
@@ -81,7 +81,7 @@ const About = () => {
         'Implemented secure authentication protocols, role-based access controls, and user-friendly dashboards for enhanced operational efficiency.',
         'Conducted extensive testing and iterative improvements based on user feedback to optimize system usability and performance.'
       ],
-      skills: ['React.js', 'Firebase', 'Authentication', 'Responsive Design'],
+      skills: ['React.js', 'PHP', 'MySQL', 'Authentication', 'Responsive Design'],
       links: [
         { label: 'Leo Portal', url: 'https://web.portal.sliitleo.org' }
       ]
@@ -228,7 +228,7 @@ const About = () => {
               </div>
             </div>
             {/* Background Accent */}
-            <div className="absolute -top-10 -right-10 w-full h-full bg-purple-500/10 rounded-2xl blur-[100px] -z-10" />
+            <div className="absolute -top-10 -right-10 w-full h-full bg-purple-500/5 rounded-2xl -z-10" />
           </motion.div>
         </section>
 

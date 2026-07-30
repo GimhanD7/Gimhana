@@ -1,6 +1,15 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
+  app.use(
+    createProxyMiddleware({
+      pathFilter: '/Gimhana/api',
+      target: 'http://localhost',
+      changeOrigin: true,
+      logLevel: 'warn'
+    })
+  );
+
   const proxyOptions = {
     target: 'http://localhost',
     changeOrigin: true,

@@ -9,13 +9,32 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: same-origin');
 
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($requestOrigin !== '' && in_array($requestOrigin, $config['allowed_origins'], true)) {
+    header('Access-Control-Allow-Origin: ' . $requestOrigin);
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Vary: Origin');
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    if ($requestOrigin === '' || !in_array($requestOrigin, $config['allowed_origins'], true)) {
+        http_response_code(403);
+    } else {
+        http_response_code(204);
+    }
+    exit;
+}
+
+$isSecureRequest = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 session_name($config['session_name']);
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
-    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'secure' => $isSecureRequest,
     'httponly' => true,
-    'samesite' => 'Strict',
+    'samesite' => $isSecureRequest ? 'None' : 'Lax',
 ]);
 session_start();
 

@@ -26,6 +26,27 @@ password: (empty)
 For another environment, set `PORTFOLIO_DB_HOST`, `PORTFOLIO_DB_PORT`,
 `PORTFOLIO_DB_NAME`, `PORTFOLIO_DB_USER`, and `PORTFOLIO_DB_PASSWORD`.
 
+On shared hosting, create `api/config.local.php` with the server database
+credentials. This file is loaded automatically and ignored by Git. Upload it
+privately alongside the other API files; never expose it through a public
+repository.
+
+For a deployed frontend, `.env.production` points to:
+
+```text
+https://sudesh.sudeshmaths.com/backend/api/index.php
+```
+
+Upload the local `api` directory so that `index.php`, `bootstrap.php`, and
+`config.php` are available under that remote `/backend/api/` directory.
+
+Set `PORTFOLIO_ALLOWED_ORIGINS` on the backend to a comma-separated list of
+frontend origins, for example:
+
+```text
+https://gimhan.me,https://www.gimhan.me,http://localhost:3000
+```
+
 ## First admin login
 
 Open `http://localhost/Gimhana/admin`.

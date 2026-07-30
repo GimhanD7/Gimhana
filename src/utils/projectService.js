@@ -16,7 +16,7 @@ const request = async (action, options = {}) => {
   try {
     response = await fetch(url.toString(), {
       method: options.method || 'GET',
-      credentials: 'same-origin',
+    credentials: 'include',
       signal: controller.signal,
       headers: {
         Accept: 'application/json',

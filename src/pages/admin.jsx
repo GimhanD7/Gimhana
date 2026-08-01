@@ -159,13 +159,6 @@ const Admin = () => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    const currentCount = formData.gallery ? formData.gallery.length : 0;
-    if (currentCount + files.length > 20) {
-      showError(`Cannot exceed 20 screenshots. This selection would result in ${currentCount + files.length}.`);
-      e.target.value = '';
-      return;
-    }
-
     setIsGalleryUploading(true);
     showSuccess(`Optimizing ${files.length} screenshots...`);
 
@@ -194,11 +187,6 @@ const Admin = () => {
 
   const handleAddGalleryUrl = () => {
     if (!galleryUrlInput) return;
-    const currentCount = formData.gallery ? formData.gallery.length : 0;
-    if (currentCount >= 20) {
-      showError('Cannot exceed 20 screenshots.');
-      return;
-    }
     setFormData(prev => ({
       ...prev,
       gallery: [...(prev.gallery || []), galleryUrlInput]
@@ -661,7 +649,7 @@ const Admin = () => {
                         <label className="text-[9px] font-black tracking-widest uppercase text-purple-600 pl-1">
                           Project Screenshot Gallery ({formData.gallery ? formData.gallery.length : 0})
                         </label>
-                        <span className="text-[8px] font-bold text-slate-400 uppercase">Limit: 20 Photos</span>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase">No image-count limit</span>
                       </div>
 
                       {/* Multi file pick uploader */}

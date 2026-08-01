@@ -184,7 +184,7 @@ function project_payload(array $input): array
     }
 
     $gallery = [];
-    foreach (array_slice(is_array($input['gallery'] ?? null) ? $input['gallery'] : [], 0, 20) as $image) {
+    foreach (is_array($input['gallery'] ?? null) ? $input['gallery'] : [] as $image) {
         $gallery[] = normalize_url($image, true);
     }
 

@@ -9,8 +9,14 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: same-origin');
 
-$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if ($requestOrigin !== '' && in_array($requestOrigin, $config['allowed_origins'], true)) {
+$requestOrigin = rtrim($_SERVER['HTTP_ORIGIN'] ?? '', '/');
+$allowedOrigins = array_values(array_unique(array_merge(
+    $config['allowed_origins'] ?? [],
+    ['https://gimhana-teal.vercel.app']
+)));
+$isAllowedOrigin = $requestOrigin !== '' && in_array($requestOrigin, $allowedOrigins, true);
+
+if ($isAllowedOrigin) {
     header('Access-Control-Allow-Origin: ' . $requestOrigin);
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
@@ -19,7 +25,7 @@ if ($requestOrigin !== '' && in_array($requestOrigin, $config['allowed_origins']
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    if ($requestOrigin === '' || !in_array($requestOrigin, $config['allowed_origins'], true)) {
+    if (!$isAllowedOrigin) {
         http_response_code(403);
     } else {
         http_response_code(204);

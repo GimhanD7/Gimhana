@@ -31,14 +31,18 @@ credentials. This file is loaded automatically and ignored by Git. Upload it
 privately alongside the other API files; never expose it through a public
 repository.
 
-For a deployed frontend, `.env.production` points to:
+For the Vercel frontend, `.env.production` points to the same-origin proxy:
 
 ```text
-https://sudesh.sudeshmaths.com/backend/api/index.php
+/api/index.php
 ```
 
+`vercel.json` rewrites that path to the remote PHP API at
+`https://sudesh.sudeshmaths.com/backend/api/`. This avoids third-party-cookie
+and browser tracking-prevention problems during admin authentication.
+
 Upload the local `api` directory so that `index.php`, `bootstrap.php`, and
-`config.php` are available under that remote `/backend/api/` directory.
+`config.php` remain available under the remote `/backend/api/` directory.
 
 Set `PORTFOLIO_ALLOWED_ORIGINS` on the backend to a comma-separated list of
 frontend origins, for example:

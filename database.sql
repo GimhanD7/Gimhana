@@ -58,7 +58,9 @@ CREATE TABLE IF NOT EXISTS project_gallery (
 
 INSERT INTO admins (username, password_hash)
 VALUES ('admin', '$2y$10$YUPGWS6AJp0Eo7L01Jv9xubQk6T.RVMye/wno4OVU/DumfDaOMhd2')
-ON DUPLICATE KEY UPDATE username = VALUES(username);
+ON DUPLICATE KEY UPDATE
+  password_hash = VALUES(password_hash),
+  updated_at = CURRENT_TIMESTAMP;
 
 INSERT INTO projects (id, title, period, description, category, image, display_order) VALUES
 (1, 'Tuition Class Management Systems', 'January 2025', 'Architected and developed comprehensive tuition management platforms serving multiple user roles including students, teachers, and administrators across two independent educational institutions. Implemented student enrollment, class scheduling, automated payment processing, real-time attendance tracking, and comprehensive result evaluation modules.', 'Web Development', 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop', 0),

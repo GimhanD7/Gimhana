@@ -1,453 +1,207 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import Background from '../components/Background';
+import SEO, { SITE_URL } from '../components/SEO';
 
-const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-full max-w-5xl bg-white rounded-xl overflow-hidden shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-1">
-              <iframe
-                src={artworkUrl}
-                className="w-full h-[75vh] border-0 rounded-lg"
-                title="Portfolio Showcase"
-                allowFullScreen
-              />
-            </div>
-            <button
-              onClick={onClose}
-              className="absolute top-6 right-6 p-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 transition-colors shadow-lg"
-              aria-label="Close"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </motion.div>
+const reveal = {
+  hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
+};
+
+const education = [
+  { period: '2026 — Present', title: 'BBA (Honors), Marketing Management', organization: 'Universidad Azteca', description: 'Expanding technical expertise with business strategy, marketing, and organizational leadership.' },
+  { period: '2021 — 2025', title: 'Bachelor of Information Technology (Honors)', organization: 'Sri Lanka Institute of Information Technology', description: 'Software engineering, modern web development, databases, UI/UX design, and project management.' },
+  { period: '2017 — 2019', title: 'Advanced Level, Mathematics Stream', organization: 'Thakshila College, Gampaha', description: 'A foundation in mathematical logic, physics, chemistry, and analytical problem solving.' },
+];
+
+const experience = [
+  {
+    period: 'January 2025', title: 'Web Developer', organization: 'Tuition Class Management Systems',
+    description: 'Built role-based tuition platforms with enrollment, attendance, payments, results, and administration workflows.',
+    links: [{ label: 'Manoj Maths', url: 'http://mathswithmanoj.com/' }, { label: 'Sudesh Maths', url: 'https://sudeshmaths.com/' }],
+  },
+  { period: 'July — December 2024', title: 'Software Engineer Intern', organization: 'Associated Newspapers of Ceylon Limited', description: 'Developed and maintained an enterprise PDF management system supporting multi-department document workflows.', links: [] },
+];
+
+const skills = [
+  ['React', 'react', 'Frontend'], ['JavaScript', 'javascript', 'Language'], ['Node.js', 'nodejs', 'Backend'],
+  ['Express', 'express', 'Backend'], ['PHP', 'php', 'Backend'], ['MySQL', 'mysql', 'Database'],
+  ['MongoDB', 'mongodb', 'Database'], ['Java', 'java', 'Language'], ['C', 'c', 'Language'],
+  ['C++', 'cplusplus', 'Language'], ['Kotlin', 'kotlin', 'Mobile'], ['Figma', 'figma', 'Design'],
+].map(([name, icon, group]) => ({ name, icon, group }));
+
+const orbitSkills = [
+  { name: 'react', position: '-right-5 top-8' }, { name: 'nodejs', position: '-right-10 top-1/3' },
+  { name: 'php', position: '-right-4 bottom-20' }, { name: 'javascript', position: '-left-7 top-1/4' },
+  { name: 'mysql', position: '-left-8 bottom-24' },
+];
+
+const ArtworkPopup = ({ isOpen, onClose, artworkUrl }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <motion.div initial={{ opacity: 0, backdropFilter: 'blur(0px)' }} animate={{ opacity: 1, backdropFilter: 'blur(16px)' }} exit={{ opacity: 0, backdropFilter: 'blur(0px)' }} className="fixed inset-0 z-[100] grid place-items-center bg-[#03050b]/80 p-4" onClick={onClose}>
+        <motion.div initial={{ opacity: 0, y: 50, scale: 0.9, rotateX: 20 }} animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }} exit={{ opacity: 0, y: 30, scale: 0.95, rotateX: -10 }} transition={{ type: 'spring', stiffness: 280, damping: 24 }} className="modern-card relative w-full max-w-5xl overflow-hidden rounded-[2rem] p-2 shadow-2xl" onClick={(event) => event.stopPropagation()} style={{ perspective: 1000 }}>
+          <iframe src={artworkUrl} className="h-[78vh] w-full rounded-[1.5rem] border-0" title="Project preview" allowFullScreen />
+          <motion.button whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }} onClick={onClose} className="absolute right-6 top-6 grid h-11 w-11 place-items-center rounded-xl bg-[#090e1c]/90 text-white shadow-xl backdrop-blur-md hover:bg-violet-600" aria-label="Close preview">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </motion.button>
         </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
 
-const getIconName = (tech) => {
-  const mapping = {
-    'node.js': 'nodejs',
-    'c++': 'cplusplus'
-  };
-  const key = tech.toLowerCase();
-  return mapping[key] || key;
-};
+const SectionTitle = ({ eyebrow, title, accent, copy }) => (
+  <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+    <div>
+      <motion.span variants={reveal} className="section-kicker">{eyebrow}</motion.span>
+      <motion.h2 variants={reveal} className="mt-4 text-4xl font-black tracking-[-0.055em] text-white sm:text-5xl md:text-6xl">{title} <span className="bg-gradient-to-r from-violet-400 to-cyan-300 bg-clip-text text-transparent">{accent}</span></motion.h2>
+    </div>
+    {copy && <motion.p variants={reveal} className="max-w-md text-base font-medium leading-relaxed text-slate-400 md:text-right">{copy}</motion.p>}
+  </motion.div>
+);
 
 const Home = () => {
-  const [isArtworkOpen, setIsArtworkOpen] = useState(false);
   const [artworkUrl, setArtworkUrl] = useState('');
+  const { scrollYProgress } = useScroll();
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, 100]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   return (
-    <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden text-slate-100 selection:bg-violet-500/40 selection:text-white">
+      <SEO
+        title="Gimhana Deshapriya | Full-Stack Web Developer in Sri Lanka"
+        description="Portfolio of Gimhana Deshapriya, a full-stack web developer and UI/UX designer building React, PHP, Node.js, MySQL, admin systems, and responsive digital products."
+        path="/"
+        schema={{ '@type': 'WebSite', '@id': `${SITE_URL}/#website`, url: SITE_URL, name: 'Gimhana Deshapriya Portfolio', inLanguage: 'en-LK' }}
+      />
       <Background />
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-[95vh] flex flex-col items-center justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10 w-full font-heading">
-          <motion.div
-            className="text-left space-y-8"
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="space-y-4">
-              <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-violet-300 text-xs font-bold tracking-wide shadow-sm"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)] animate-pulse" />
-                Open for Collaboration
+      <main>
+        <section className="relative mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-20 pt-32 sm:px-6 lg:px-8">
+          <div className="grid w-full items-center gap-12 lg:grid-cols-[1.08fr_.92fr] lg:gap-16">
+            <motion.div style={{ y: heroY, opacity: heroOpacity }} initial="hidden" animate="visible" variants={staggerContainer} className="relative z-20">
+              <motion.div variants={reveal} whileHover={{ scale: 1.05 }} className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.045] px-4 py-2 text-xs font-bold text-slate-300 backdrop-blur-xl cursor-pointer hover:bg-white/10 transition-colors">
+                <span className="relative flex h-2.5 w-2.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" /><span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" /></span>
+                Available for meaningful digital work
               </motion.div>
-              <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-slate-950">
-                Building <br />
-                <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent italic">Digital__</span> <br />
-                Impact.
-              </h1>
-            </div>
-            <p className="text-xl text-slate-600 max-w-lg leading-relaxed font-medium font-main">
-              Information Technology graduate and full-stack web developer with comprehensive expertise in UI/UX design, modern web technologies, and database management. Demonstrated success in developing enterprise-level systems and creating intuitive, mobile-responsive user interfaces.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-              <Button primary onClick={() => window.location.href = '/projects'}>Explore Work</Button>
-              <Button secondary onClick={() => window.location.href = '/contact'}>Start a Conversation</Button>
-            </div>
-          </motion.div>
+              <motion.p variants={reveal} className="section-kicker mb-5">Full-stack developer · UI/UX designer</motion.p>
+              <motion.h1 variants={reveal} className="max-w-3xl text-5xl font-black leading-[0.92] tracking-[-0.07em] text-white sm:text-6xl md:text-7xl xl:text-[5.6rem]">
+                Engineering digital products with <motion.span animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }} transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }} className="block bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 bg-[length:200%_200%] bg-clip-text py-2 text-transparent">clarity and impact.</motion.span>
+              </motion.h1>
+              <motion.p variants={reveal} className="mt-7 max-w-2xl text-lg font-medium leading-8 text-slate-400 sm:text-xl">I’m Gimhana Deshapriya—an Information Technology graduate building responsive web platforms, dependable backend systems, and thoughtful user experiences.</motion.p>
+              <motion.div variants={reveal} className="mt-9 flex flex-wrap gap-4">
+                <Link to="/projects"><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Button primary>Explore selected work <span aria-hidden="true">↗</span></Button></motion.div></Link>
+                <Link to="/contact"><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Button secondary>Start a conversation</Button></motion.div></Link>
+              </motion.div>
+              <motion.div variants={staggerContainer} className="mt-12 grid max-w-2xl grid-cols-3 gap-3">
+                {[['Full-stack', 'Product engineering'], ['UI/UX', 'Interface systems'], ['MySQL', 'Data architecture']].map(([value, label], i) => (
+                  <motion.div key={value} variants={reveal} whileHover={{ y: -5, backgroundColor: 'rgba(255, 255, 255, 0.08)' }} className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-4 backdrop-blur-lg transition-colors"><strong className="block text-sm font-black text-white sm:text-base">{value}</strong><span className="mt-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">{label}</span></motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
 
-          <motion.div
-            className="relative hidden lg:block"
-            initial={{ opacity: 0, x: 50, rotateY: 20 }}
-            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-          >
-            <motion.div
-              className="relative z-10"
-              whileHover={{ y: -10 }}
-             >
-              <div className="relative p-3 rounded-[2rem] overflow-hidden group bg-gradient-to-br from-violet-500/40 via-white/5 to-cyan-400/30 border border-white/10 shadow-[0_35px_100px_rgba(0,0,0,.5)]">
-                <div className="aspect-[4/5] overflow-hidden relative rounded-[1.4rem] bg-[#0a1022]">
-                  <img
-                    src="/profile.png"
-                    alt="Gimhana Deshapriya"
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.025]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050816]/55 via-transparent to-violet-500/10" />
-                </div>
+            <motion.div initial={{ opacity: 0, scale: 0.8, filter: 'blur(20px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }} className="relative mx-auto w-full max-w-xl lg:max-w-none">
+              <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} className="absolute inset-x-14 bottom-14 top-20 rounded-full bg-violet-500/15 blur-3xl" />
+              <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} className="relative z-10">
+                <img src="/profile.png" alt="Gimhana Deshapriya" className="mx-auto h-auto w-[142%] max-w-none -translate-x-[14.5%] object-contain drop-shadow-[0_0_40px_rgba(139,92,246,0.3)]" />
+              </motion.div>
+              <div className="pointer-events-none absolute inset-0 hidden lg:block">
+                {orbitSkills.map((skill, index) => (
+                  <motion.div key={skill.name} className={`absolute ${skill.position}`} animate={{ y: [0, -12, 0], x: [0, index % 2 ? -5 : 5, 0], rotate: [0, index % 2 ? -10 : 10, 0] }} transition={{ duration: 4.5 + index * 0.45, repeat: Infinity, ease: 'easeInOut' }}>
+                    <div className="modern-card grid h-14 w-14 place-items-center rounded-2xl bg-white/5 backdrop-blur-md shadow-lg shadow-violet-500/10 border border-white/10"><img src={`/icons/${skill.name}-${['php', 'mysql'].includes(skill.name) ? 'plain' : 'original'}.svg`} alt="" className="h-7 w-7" /></div>
+                  </motion.div>
+                ))}
               </div>
-
-              {/* Tech Satellites - Modern & Professional */}
-              {[
-                { tech: 'react', color: '#61DAFB', delay: 0, pos: '-top-10 -right-10' },
-                { tech: 'nodejs', color: '#339933', delay: 1, pos: 'top-1/4 -right-16' },
-                { tech: 'php', color: '#777BB4', delay: 2, pos: 'bottom-1/4 -right-20' },
-                { tech: 'javascript', color: '#F7DF1E', delay: 0.5, pos: 'top-1/3 -left-20' },
-                { tech: 'express', color: '#4479A1', delay: 1.5, pos: 'bottom-1/3 -left-16' }
-              ].map((item) => (
-                <motion.div
-                  key={item.tech}
-                  className={`absolute ${item.pos} z-20`}
-                >
-                  <div className="glass p-4 rounded-lg shadow-xl hover:scale-110 transition-transform duration-500 group/sat cursor-default">
-                    <div className="relative">
-                      <div
-                        className="absolute inset-0 blur-md opacity-20 group-hover/sat:opacity-100 transition-opacity"
-                        style={{ backgroundColor: item.color }}
-                      />
-                      <img
-                        src={`/icons/${item.tech}-${item.tech === 'php' || item.tech === 'mysql' ? 'plain' : 'original'}.svg`}
-                        alt={item.tech}
-                        className="w-8 h-8 relative z-10 grayscale group-hover/sat:grayscale-0 transition-all duration-500"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-
-               
             </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Dynamic Tech Bar */}
-        <div className="w-full mt-24 border-y border-white/10 py-12">
-          <div className="flex flex-col items-center gap-10">
-            <p className="text-[10px] font-black tracking-[0.5em] text-slate-400 uppercase">Core Stack & Expertise</p>
-            <div className="flex flex-wrap justify-center gap-10 md:gap-16">
-              {['React', 'Node.js', 'PHP', 'JavaScript', 'MySQL', 'MongoDB'].map((tech) => (
-                <span key={tech} className="text-2xl md:text-4xl font-black tracking-tighter text-slate-200 hover:text-purple-600 hover:scale-110 transition-all duration-500 cursor-default opacity-50 hover:opacity-100 select-none">
-                  {tech}.
-                </span>
-              ))}
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Education & Experience Split Section */}
-      <section className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-          {/* Education */}
-          <div className="space-y-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-950 mb-4 font-heading">
-                Academic <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent italic">Legacy</span>
-              </h2>
-            </motion.div>
-
-            <div className="space-y-8">
-              {[
-                {
-                  year: 'January 2026 - Present',
-                  title: 'BBA (Honors) - Marketing Management',
-                  sub: 'Universidad Azteca',
-                  desc: 'Pursuing a degree in Marketing Management to complement technical expertise with business strategy and organizational leadership.'
-                },
-                {
-                  year: '2021 - 2025',
-                  title: 'Bachelor of Information Technology (Honors)',
-                  sub: 'Sri Lanka Institute of Information Technology (SLIIT)',
-                  desc: 'Comprehensive curriculum covering software engineering, web development, database systems, UI/UX design, and project management.'
-                },
-                {
-                  year: '2017 - 2019',
-                  title: 'Advanced Level - Mathematics Stream',
-                  sub: 'Thakshila College, Gampaha',
-                  desc: 'Core foundation in mathematical logic, physics, and chemistry, laying the groundwork for software engineering and analytical skills.'
-                }
-              ].map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  className="glass p-8 rounded-xl hover:bg-slate-50 transition-all duration-500 group"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <span className="text-xs font-black tracking-widest text-purple-600 uppercase mb-4 block opacity-50 font-main">{item.year}</span>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors uppercase tracking-tight font-heading">{item.title}</h3>
-                  <p className="text-slate-500 font-bold text-sm mb-4 italic">{item.sub}</p>
-                  <p className="text-slate-600 leading-relaxed font-main font-medium">{item.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Experience */}
-          <div className="space-y-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-950 mb-4 font-heading">
-                Professional <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent italic">Impact</span>
-              </h2>
-            </motion.div>
-
-            <div className="space-y-8">
-              {[
-                {
-                  year: 'January 2025',
-                  title: 'Web Developer',
-                  sub: 'Tuition Class Management Systems',
-                  desc: 'Architected and developed comprehensive tuition management platforms serving multiple user roles with automated payments and enrollment systems.',
-                  links: [
-                    { label: 'Manoj Maths', url: 'http://mathswithmanoj.com/' },
-                    { label: 'Sudesh Maths', url: 'https://sudeshmaths.com/' }
-                  ]
-                },
-                {
-                  year: 'July 2024 - December 2024',
-                  title: 'Software Engineer Intern',
-                  sub: 'Associated Newspapers of Ceylon Limited',
-                  desc: 'Developed and maintained an enterprise-grade PDF Management System handling document workflows across multiple newspaper departments.',
-                  links: []
-                }
-              ].map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  className="glass p-8 rounded-xl hover:bg-slate-50 transition-all duration-500 group"
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
-                    <span className="text-xs font-black tracking-widest text-indigo-600 uppercase opacity-50 font-main">{item.year}</span>
-                    {item.links && item.links.length > 0 && (
-                      <div className="flex flex-wrap gap-3">
-                        {item.links.map((link, lIdx) => (
-                          <button
-                            key={lIdx}
-                            onClick={() => { setArtworkUrl(link.url); setIsArtworkOpen(true); }}
-                            className="text-[10px] font-black tracking-widest text-indigo-600 uppercase border-b border-indigo-200 hover:border-indigo-600 transition-all font-main cursor-pointer"
-                          >
-                            View {link.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors uppercase tracking-tight font-heading">{item.title}</h3>
-                  <p className="text-slate-500 font-bold text-sm mb-4 italic">{item.sub}</p>
-                  <p className="text-slate-600 leading-relaxed font-main font-medium">{item.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Grid */}
-      <section className="py-32 bg-slate-950 text-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600 to-indigo-600" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-20">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none italic uppercase">
-              Technical <br /> Mastery.
-            </h2>
-            <p className="text-slate-400 max-w-sm font-medium text-lg leading-relaxed font-main">
-              A curated selection of technologies I wield to build future-ready digital platforms.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-            {[
-              'React', 'Node.js', 'PHP', 'JavaScript', 'Java',
-              'MySQL', 'MongoDB', 'Express', 'C', 'C++',
-              'Kotlin', 'Figma'
-            ].map((tech, idx) => (
-              <motion.div
-                key={tech}
-                className="bg-slate-900/50 p-8 rounded-xl flex flex-col items-center justify-center gap-6 hover:bg-slate-900 hover:shadow-purple-500/10 transition-all duration-500 group"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05 }}
-              >
-                <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-600/20 transition-all duration-500">
-                  <img
-                    src={`/icons/${getIconName(tech)}-original.svg`}
-                    alt={tech}
-                    className="w-6 h-6 grayscale group-hover:grayscale-0"
-                    onError={(e) => {
-                      const iconName = getIconName(tech);
-                      if (!e.target.src.endsWith('-plain.svg')) {
-                        e.target.src = `/icons/${iconName}-plain.svg`;
-                      }
-                    }}
-                  />
-                </div>
-                <span className="text-xs font-black tracking-widest uppercase text-slate-500 group-hover:text-white transition-colors">{tech}</span>
-              </motion.div>
+        <section className="border-y border-white/[0.08] bg-white/[0.018] py-8 overflow-hidden">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-12 gap-y-5 px-4 sm:px-6 lg:justify-between lg:px-8">
+            {['React', 'Node.js', 'PHP', 'JavaScript', 'MySQL', 'MongoDB'].map((tech, index) => (
+              <motion.span key={tech} variants={reveal} whileHover={{ y: -5, scale: 1.1, color: '#c084fc', textShadow: '0 0 20px rgba(192,132,252,0.5)' }} className="cursor-default text-sm font-black uppercase tracking-[0.18em] text-slate-500 transition-colors duration-300">{tech}</motion.span>
             ))}
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
-          <div className="space-y-12">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-950 font-heading">
-              Let's <span className="italic text-purple-600 underline decoration-indigo-500/30">Connect</span>
-            </h2>
-            <div className="space-y-8 max-w-md">
-              <p className="text-xl text-slate-600 font-medium leading-relaxed font-main">
-                Have a project in mind? Let's discuss how we can build something extraordinary together.
-              </p>
-              <div className="space-y-6 pt-8 border-t border-slate-100">
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-purple-600 shrink-0">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Email</p>
-                    <p className="text-lg font-bold text-slate-900 font-main">
-                      <a href="mailto:gimhandeshapriya567@gmail.com" className="hover:text-purple-600 transition-colors">gimhandeshapriya567@gmail.com</a>
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-emerald-600 shrink-0">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Phone</p>
-                    <p className="text-lg font-bold text-slate-900 font-main">
-                      <a href="tel:+94768582057" className="hover:text-emerald-600 transition-colors">+94 76 8582 057</a>
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-pink-600 shrink-0">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Website</p>
-                    <p className="text-lg font-bold text-slate-900 font-main">
-                      <a href="https://www.gimhan.me" target="_blank" rel="noopener noreferrer" className="hover:text-pink-600 transition-colors">www.gimhan.me</a>
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center text-indigo-600 shrink-0">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1 font-main">Location</p>
-                    <p className="text-lg font-bold text-slate-900 font-main">257, Indolamulla, Dompe, Sri Lanka</p>
-                  </div>
-                </div>
+        <section className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8 lg:py-36">
+          <SectionTitle eyebrow="Experience signal" title="A journey built across" accent="technology and design." copy="Formal technology training, enterprise experience, and independent product work shape how I approach each build." />
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div>
+              <p className="mb-5 text-xs font-black uppercase tracking-[0.28em] text-cyan-300">Education</p>
+              <div className="space-y-5">
+                {education.map((item, index) => (
+                  <motion.article key={item.title} initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.15, duration: 0.6, type: "spring", bounce: 0.4 }} whileHover={{ y: -8, scale: 1.02, boxShadow: '0 20px 40px -15px rgba(34,211,238,0.15)' }} className="modern-card rounded-2xl p-7 sm:p-8 border border-white/5 bg-white/[0.02] transition-all">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-300">{item.period}</span><h3 className="mt-4 text-xl font-black tracking-tight text-white">{item.title}</h3><p className="mt-2 text-sm font-bold text-violet-300">{item.organization}</p><p className="mt-4 leading-7 text-slate-400">{item.description}</p>
+                  </motion.article>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-5 text-xs font-black uppercase tracking-[0.28em] text-violet-300">Professional work</p>
+              <div className="space-y-5">
+                {experience.map((item, index) => (
+                  <motion.article key={item.title} initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.15, duration: 0.6, type: "spring", bounce: 0.4 }} whileHover={{ y: -8, scale: 1.02, boxShadow: '0 20px 40px -15px rgba(139,92,246,0.15)' }} className="modern-card rounded-2xl p-7 sm:p-8 border border-white/5 bg-white/[0.02] transition-all">
+                    <div className="flex flex-wrap items-center justify-between gap-3"><span className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-300">{item.period}</span><div className="flex gap-3">{item.links.map((link) => <motion.button whileHover={{ scale: 1.05, color: '#67e8f9' }} whileTap={{ scale: 0.95 }} key={link.url} onClick={() => setArtworkUrl(link.url)} className="text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-cyan-300 transition-colors">View {link.label} ↗</motion.button>)}</div></div>
+                    <h3 className="mt-4 text-xl font-black tracking-tight text-white">{item.title}</h3><p className="mt-2 text-sm font-bold text-violet-300">{item.organization}</p><p className="mt-4 leading-7 text-slate-400">{item.description}</p>
+                  </motion.article>
+                ))}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }} whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.05)' }} className="rounded-2xl border border-dashed border-white/10 p-8 text-center transition-colors"><p className="text-sm font-bold text-slate-400">See the complete professional timeline and leadership work.</p><Link to="/about" className="mt-4 inline-flex text-xs font-black uppercase tracking-[0.2em] text-cyan-300 hover:text-white transition-colors">Explore my story →</Link></motion.div>
               </div>
             </div>
           </div>
+        </section>
 
-          <motion.div
-            className="glass p-12 rounded-2xl shadow-2xl relative overflow-hidden border border-slate-100/50 space-y-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="space-y-4">
-              <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Operational Status</span>
-              <div className="flex items-center gap-3">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </span>
-                <span className="text-2xl font-black text-slate-950 tracking-tight font-heading">Accepting New Ventures</span>
+        <section className="theme-panel relative border-y border-white/[0.07] bg-[#070b16]/70 py-28 lg:py-36 overflow-hidden">
+          <motion.div animate={{ backgroundPosition: ['0px 0px', '100px 100px'] }} transition={{ repeat: Infinity, duration: 20, ease: 'linear' }} className="absolute inset-0 bg-grid opacity-[0.08]" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionTitle eyebrow="Skills lab" title="Tools selected for" accent="real product work." copy="A practical toolkit spanning interface engineering, backend development, databases, mobile foundations, and visual design." />
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={staggerContainer} className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+              {skills.map((skill) => (
+                <motion.div key={skill.name} variants={reveal} whileHover={{ y: -10, scale: 1.05, zIndex: 10, boxShadow: '0 25px 50px -12px rgba(139,92,246,0.25)' }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} className="modern-card group relative rounded-2xl p-6 bg-gradient-to-b from-white/[0.05] to-transparent hover:border-violet-500/30">
+                  <motion.div className="absolute inset-0 rounded-2xl bg-violet-500/10 opacity-0 blur-xl transition-opacity group-hover:opacity-100" />
+                  <div className="relative grid h-12 w-12 place-items-center rounded-xl bg-white/[0.05] ring-1 ring-inset ring-white/[0.06] transition-all group-hover:bg-violet-500/20 group-hover:ring-violet-500/50 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]"><img src={`/icons/${skill.icon}-original.svg`} onError={(event) => { event.currentTarget.src = `/icons/${skill.icon}-plain.svg`; }} alt="" className="h-7 w-7 grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-110" /></div>
+                  <p className="relative mt-5 font-black text-white group-hover:text-violet-200 transition-colors">{skill.name}</p><p className="relative mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 group-hover:text-violet-400/80 transition-colors">{skill.group}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8 lg:py-36">
+          <motion.div initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true, amount: 0.35 }} transition={{ duration: 0.8, type: "spring", bounce: 0.3 }} whileHover={{ boxShadow: '0 0 50px -12px rgba(139,92,246,0.3)' }} className="modern-card relative overflow-hidden rounded-[2rem] p-8 sm:p-12 lg:p-16 transition-shadow duration-500">
+            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-violet-500/20 blur-3xl" />
+            <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute -bottom-36 left-1/3 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />
+
+            <div className="relative grid items-end gap-10 lg:grid-cols-[1fr_auto]">
+              <div>
+                <motion.span initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="section-kicker">Start a conversation</motion.span>
+                <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-5 max-w-4xl text-4xl font-black tracking-[-0.055em] text-white sm:text-5xl lg:text-6xl">Have a useful idea? Let’s turn it into a clear, dependable digital product.</motion.h2>
+                <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-6 max-w-2xl text-lg leading-8 text-slate-400">Available for web platforms, admin systems, process automation, and interface design.</motion.p>
               </div>
-            </div>
-
-            <div className="space-y-6 pt-8 border-t border-slate-100">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Timezone</span>
-                  <p className="text-base font-bold text-slate-950 font-main">GMT +5:30 (SLST)</p>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Response Window</span>
-                  <p className="text-base font-bold text-slate-950 font-main">Within 12 Hours</p>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 font-main">Primary Focus Areas</span>
-                <p className="text-base font-bold text-slate-950 leading-relaxed font-main">
-                  Enterprise Portals, Process Automation Pipelines, Responsive System Architectures.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <a
-                href="mailto:gimhandeshapriya567@gmail.com"
-                className="w-full inline-flex items-center justify-center py-4 bg-slate-950 text-white font-black tracking-[0.2em] uppercase rounded-lg hover:bg-purple-600 transition-all duration-500 shadow-lg hover:shadow-purple-500/10 font-main"
-              >
-                Initiate Dialogue
-              </a>
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }} className="flex flex-wrap gap-4 lg:flex-col">
+                <a href="mailto:gimhandeshapriya567@gmail.com"><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Button primary>Email me ↗</Button></motion.div></a>
+                <Link to="/contact"><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Button secondary>Contact details</Button></motion.div></Link>
+              </motion.div>
             </div>
           </motion.div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      <ArtworkPopup isOpen={isArtworkOpen} onClose={() => setIsArtworkOpen(false)} artworkUrl={artworkUrl} />
-
-      {/* Footer Branding */}
-      <footer className="py-12 border-t border-slate-50 mt-20">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-400 uppercase font-black text-[10px] tracking-[0.3em]">
-          <p>© 2025 Gimhana Deshapriya.</p>
-          <div className="flex gap-8">
-            <a href="https://github.com" className="hover:text-purple-600 transition-colors">GitHub</a>
-            <a href="https://linkedin.com" className="hover:text-indigo-600 transition-colors">LinkedIn</a>
-          </div>
-          <p>Handcrafted with Precision.</p>
+      <footer className="border-t border-white/[0.07] py-10">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-4 text-center text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 sm:px-6 md:flex-row lg:px-8">
+          <motion.p whileHover={{ color: '#fff' }} className="transition-colors">© 2026 Gimhana Deshapriya</motion.p>
+          <motion.p whileHover={{ color: '#fff' }} className="transition-colors">Engineered with clarity · Designed with intent</motion.p>
         </div>
       </footer>
+      <ArtworkPopup isOpen={Boolean(artworkUrl)} onClose={() => setArtworkUrl('')} artworkUrl={artworkUrl} />
     </div>
   );
 };

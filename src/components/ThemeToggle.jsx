@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -16,17 +16,25 @@ const ThemeToggle = () => {
   }
 
   return (
-    <button
+    <motion.button
       onClick={toggleTheme}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-white shadow-xl border border-gray-100
-        focus:outline-none focus:ring-4 focus:ring-purple-500/20 hover:scale-110 active:scale-95 transition-all duration-300 group"
+      whileHover={{ y: -3, rotate: 6 }}
+      whileTap={{ scale: 0.92 }}
+      className="fixed bottom-6 right-6 z-50 grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-[#0b1224]/90 text-white shadow-2xl shadow-black/40 backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 group"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
-      {theme === 'light' ? (
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={theme}
+          initial={{ opacity: 0, rotate: -35, scale: 0.7 }}
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          exit={{ opacity: 0, rotate: 35, scale: 0.7 }}
+          className="block"
+        >
+        {theme === 'light' ? (
         <svg
-          className="w-6 h-6 text-gray-700 group-hover:text-purple-600 transition-colors"
+          className="w-5 h-5 text-violet-300"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -40,7 +48,7 @@ const ThemeToggle = () => {
         </svg>
       ) : (
         <svg
-          className="w-6 h-6 text-gray-300 group-hover:text-purple-400 transition-colors"
+          className="w-5 h-5 text-cyan-300"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -53,14 +61,9 @@ const ThemeToggle = () => {
           />
         </svg>
       )}
-
-      {/* Simple tooltip */}
-      {isHovered && (
-        <div className="absolute -top-12 right-0 bg-gray-950 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg shadow-purple-500/10 whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 duration-200">
-          {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-        </div>
-      )}
-    </button>
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
   );
 };
 

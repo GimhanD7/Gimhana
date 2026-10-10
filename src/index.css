@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-main: 'Times New Roman', Times, serif;
+  --font-heading: 'Times New Roman', Times, serif;
 
-  --primary: #8b5cf6;
-  --primary-light: #a78bfa;
-  --primary-dark: #6d28d9;
+  --primary: #a855f7;
+  --primary-light: #d8b4fe;
+  --primary-dark: #7e22ce;
+  --purple-glow: rgba(168, 85, 247, 0.42);
 
   --glass-bg: rgba(10, 16, 34, 0.78);
   --glass-border: rgba(148, 163, 184, 0.12);
@@ -28,20 +29,20 @@ body {
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #e2e8f0;
-  background: #050816;
+  color: #1e293b;
+  background: #f8f7ff;
   line-height: 1.6;
 }
 
 html {
-  color-scheme: dark;
-  background: #050816;
+  color-scheme: light;
+  background: #f8f7ff;
   scroll-behavior: smooth;
 }
 
 ::selection {
   color: #fff;
-  background: rgba(124, 58, 237, 0.75);
+  background: rgba(168, 85, 247, 0.82);
 }
 
 ::-webkit-scrollbar {
@@ -49,12 +50,12 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050816;
+  background: #f8f7ff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(#7c3aed, #0891b2);
-  border: 3px solid #050816;
+  background: linear-gradient(#d946ef, #8b5cf6);
+  border: 3px solid #f8f7ff;
   border-radius: 999px;
 }
 
@@ -106,6 +107,7 @@ code {
 
 /* Premium Dark Mode Styling Overrides */
 .dark {
+  color-scheme: dark;
   --glass-bg: rgba(10, 16, 34, 0.78);
   --glass-border: rgba(148, 163, 184, 0.12);
 }
@@ -113,6 +115,14 @@ code {
 .dark body {
   background-color: #050816;
   color: #f8fafc;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #050816;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  border-color: #050816;
 }
 
 /* Background class mappings */
@@ -251,6 +261,63 @@ main {
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(216, 180, 254, 0.95);
+  outline-offset: 3px;
+}
+
+.modern-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(8, 12, 25, 0.78));
+  border: 1px solid rgba(192, 132, 252, 0.16);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25), 0 0 40px rgba(126, 34, 206, 0.07);
+  backdrop-filter: blur(18px);
+}
+
+.modern-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(216, 180, 254, 0.68), rgba(217, 70, 239, 0.58), transparent);
+  pointer-events: none;
+}
+
+html:not(.dark) .glass,
+html:not(.dark) .modern-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 243, 255, 0.9));
+  border-color: rgba(126, 34, 206, 0.13);
+  box-shadow: 0 24px 70px rgba(76, 29, 149, 0.11), 0 0 36px rgba(168, 85, 247, 0.05);
+}
+
+html:not(.dark) main .text-white,
+html:not(.dark) footer .text-white,
+html:not(.dark) .text-slate-100 {
+  color: #21153b !important;
+}
+
+html:not(.dark) main button.text-white,
+html:not(.dark) main a.text-white,
+html:not(.dark) button[class*="bg-purple-"],
+html:not(.dark) button[class*="bg-violet-"],
+html:not(.dark) a[class*="bg-purple-"],
+html:not(.dark) a[class*="bg-violet-"] {
+  color: #fff !important;
+}
+
+html:not(.dark) .theme-panel {
+  background: rgba(245, 243, 255, 0.74) !important;
+}
+
+.section-kicker {
+  color: #d8b4fe;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
 }
 
 /* Skip layout and paint work for sections that are far outside the viewport. */

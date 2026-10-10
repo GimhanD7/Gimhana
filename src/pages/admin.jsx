@@ -4,6 +4,7 @@ import Background from '../components/Background';
 import { authService, projectService } from '../utils/projectService';
 import { useToast } from '../contexts/ToastContext';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 const Admin = () => {
   const { showError, showSuccess } = useToast();
 
@@ -378,9 +379,9 @@ const Admin = () => {
   const techStackSize = new Set(projects.flatMap(p => p.technologies)).size;
 
   return (
-    <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden font-main">
+    <div className="min-h-screen text-slate-100 selection:bg-violet-500/40 selection:text-white overflow-x-hidden font-main">
       {isAuthenticated && <Background />}
-      <title>Console Console | Gimhana Deshapriya</title>
+      <SEO title="Portfolio Administration" description="Private portfolio administration area." path="/admin" noIndex />
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
 
@@ -397,7 +398,7 @@ const Admin = () => {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="w-full max-w-md glass p-10 rounded-2xl border border-white/10"
+                className="w-full max-w-md modern-card p-10 rounded-[2rem]"
               >
                 <div className="space-y-3 text-center">
                   <div className="w-16 h-16 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto animate-pulse">
@@ -577,7 +578,7 @@ const Admin = () => {
 
                       {/* Display thumbnail card if cover exists */}
                       {formData.image && (
-                        <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden border border-slate-200/50 shadow-inner group">
+                        <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden shadow-inner group">
                           <img
                             src={formData.image}
                             alt="Cover thumbnail"
@@ -706,7 +707,7 @@ const Admin = () => {
                       {formData.gallery && formData.gallery.length > 0 && (
                         <div className="grid grid-cols-4 gap-2 pt-2 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
                           {formData.gallery.map((img, idx) => (
-                            <div key={idx} className="relative aspect-[16/10] rounded-lg overflow-hidden border border-slate-200/50 shadow-sm group bg-slate-100">
+                            <div key={idx} className="relative aspect-[16/10] rounded-lg overflow-hidden shadow-sm group bg-slate-100">
                               <img
                                 src={img}
                                 alt={`Gallery thumbnail ${idx + 1}`}
@@ -860,7 +861,8 @@ const Admin = () => {
                       <motion.div
                         key={project.id}
                         layoutId={`project-row-${project.id}`}
-                        className="glass p-6 rounded-xl hover:bg-white border border-slate-100/50 hover:shadow-xl transition-all duration-300 flex items-center gap-6"
+                        whileHover={{ y: -4, scale: 1.005 }}
+                        className="modern-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 flex items-center gap-6"
                       >
                         {/* Thumbnail */}
                         <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 shrink-0 shadow-inner">

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Background from '../components/Background';
 import { projectService } from '../utils/projectService';
 import { Link, useNavigate } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 // Project Detail views have been transitioned to dynamic standalone pages at /projects/:id
 
@@ -38,10 +39,14 @@ const Projects = () => {
     : projects.filter(project => project.category === selectedCategory);
 
   return (
-    <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden font-main">
+    <div className="min-h-screen text-slate-100 selection:bg-violet-500/40 selection:text-white overflow-x-hidden font-main">
       <Background />
-      <title>Portfolio | Gimhana Deshapriya</title>
-      <meta name="description" content="A curated selection of technical solutions and architectural explorations." />
+      <SEO
+        title="Web Development Projects | Gimhana Deshapriya Portfolio"
+        description="Explore React, PHP, Node.js, MySQL, system design, admin portal, automation, and UI/UX projects developed by Gimhana Deshapriya."
+        path="/projects"
+        schema={{ '@type': 'CollectionPage', name: 'Web Development Projects by Gimhana Deshapriya', url: 'https://www.gimhan.me/projects' }}
+      />
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
         
@@ -87,16 +92,18 @@ const Projects = () => {
         <div className="flex flex-wrap items-center gap-4 mb-20 border-b border-slate-100 pb-10">
           <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 mr-4">Filter By Domain:</span>
           {categories.map((category) => (
-            <button
+            <motion.button
               key={category}
               onClick={() => setSelectedCategory(category)}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.96 }}
               className={`px-6 py-2.5 rounded-xl text-[10px] font-black tracking-widest uppercase border transition-all duration-300 ${selectedCategory === category
                 ? 'bg-violet-500/20 text-violet-200 border-violet-400/35 shadow-lg shadow-violet-950/30'
                 : 'bg-white/[0.03] border-white/10 text-slate-400 hover:text-white hover:bg-white/[0.07]'
                 }`}
             >
               {category}
-            </button>
+            </motion.button>
           ))}
         </div>
 
@@ -138,7 +145,7 @@ const Projects = () => {
                     whileTap={{ scale: 0.99 }}
                     className="h-full"
                   >
-                    <div className="glass overflow-hidden rounded-2xl transition-colors duration-500 hover:border-violet-400/30 hover:shadow-[0_28px_80px_rgba(76,29,149,.22)] h-full flex flex-col">
+                    <div className="modern-card overflow-hidden rounded-2xl transition-colors duration-500 hover:border-violet-400/30 hover:shadow-[0_28px_80px_rgba(76,29,149,.22)] h-full flex flex-col">
                     {/* Image Holder */}
                     <div className="aspect-[16/10] overflow-hidden relative">
                       <img

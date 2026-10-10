@@ -8,10 +8,13 @@ export const ThemeProvider = ({ children }) => {
 
   // Toggle theme function
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    setTheme((currentTheme) => {
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      document.documentElement.classList.toggle('dark', newTheme === 'dark');
+      document.documentElement.dataset.theme = newTheme;
+      return newTheme;
+    });
   };
 
   // Initialize theme on mount
@@ -24,6 +27,7 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('design-theme-version', '2');
     setTheme(savedTheme);
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    document.documentElement.dataset.theme = savedTheme;
     setIsMounted(true);
   }, []);
 

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const Toast = ({ message, type = 'info', isVisible, onClose, duration = 5000 }) => {
   useEffect(() => {
@@ -14,7 +15,7 @@ const Toast = ({ message, type = 'info', isVisible, onClose, duration = 5000 }) 
   if (!isVisible) return null;
 
   const getToastStyles = () => {
-    const baseStyles = "fixed top-8 right-8 z-[100] max-w-sm w-full glass rounded-2xl shadow-2xl transform transition-all duration-500 ease-out animate-in slide-in-from-right-full backdrop-blur-xl border border-white/50";
+    const baseStyles = "fixed top-6 right-4 sm:right-6 z-[100] max-w-sm w-[calc(100%-2rem)] rounded-2xl bg-[#0b1224]/95 shadow-2xl shadow-black/50 backdrop-blur-xl border border-white/10 overflow-hidden";
 
     switch (type) {
       case 'success':
@@ -31,13 +32,13 @@ const Toast = ({ message, type = 'info', isVisible, onClose, duration = 5000 }) 
   const getIconStyles = () => {
     switch (type) {
       case 'success':
-        return 'text-green-500 bg-green-100';
+        return 'text-emerald-300 bg-emerald-400/10';
       case 'error':
-        return 'text-red-500 bg-red-100';
+        return 'text-red-300 bg-red-400/10';
       case 'warning':
-        return 'text-yellow-500 bg-yellow-100';
+        return 'text-amber-300 bg-amber-400/10';
       default:
-        return 'text-purple-600 bg-purple-100';
+        return 'text-violet-300 bg-violet-400/10';
     }
   };
 
@@ -71,20 +72,26 @@ const Toast = ({ message, type = 'info', isVisible, onClose, duration = 5000 }) 
   };
 
   return (
-    <div className={getToastStyles()}>
+    <motion.div
+      initial={{ opacity: 0, x: 28, scale: 0.96 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, x: 28, scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 360, damping: 28 }}
+      className={getToastStyles()}
+    >
       <div className="p-5">
         <div className="flex items-center">
           <div className={`flex-shrink-0 p-2 rounded-xl ${getIconStyles()}`}>
             {getIcon()}
           </div>
           <div className="ml-4 flex-1">
-            <p className="text-sm font-bold text-gray-950 leading-tight">
+            <p className="text-sm font-semibold text-slate-100 leading-relaxed">
               {message}
             </p>
           </div>
           <div className="ml-4 flex-shrink-0">
             <button
-              className="p-1 px-3 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all focus:outline-none"
+              className="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-white/5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
               onClick={onClose}
             >
               <span className="sr-only">Close</span>
@@ -98,7 +105,7 @@ const Toast = ({ message, type = 'info', isVisible, onClose, duration = 5000 }) 
 
       {/* Progress bar */}
       {duration > 0 && (
-        <div className="h-1.5 w-full bg-gray-100 rounded-b-2xl overflow-hidden">
+        <div className="h-1 w-full bg-white/5 overflow-hidden">
           <div
             className={`h-full transition-all ease-linear ${type === 'success' ? 'bg-green-500' :
               type === 'error' ? 'bg-red-500' :
@@ -118,7 +125,7 @@ const Toast = ({ message, type = 'info', isVisible, onClose, duration = 5000 }) 
           to { width: 0%; }
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 };
 

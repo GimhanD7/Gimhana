@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Background from '../components/Background';
 import { projectService } from '../utils/projectService';
+import SEO from '../components/SEO';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -72,7 +73,7 @@ const ProjectDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen text-slate-900 overflow-x-hidden font-main relative">
+      <div className="min-h-screen text-slate-100 overflow-x-hidden font-main relative">
         <Background />
         <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10 flex flex-col items-center justify-center min-h-[80vh]">
           <div className="w-16 h-16 rounded-full border-4 border-purple-500/20 border-t-purple-600 animate-spin" />
@@ -86,7 +87,7 @@ const ProjectDetail = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen text-slate-900 overflow-x-hidden font-main relative">
+      <div className="min-h-screen text-slate-100 overflow-x-hidden font-main relative">
         <Background />
         <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10 text-center flex flex-col items-center justify-center min-h-[70vh] space-y-6">
           <div className="w-16 h-16 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
@@ -112,10 +113,24 @@ const ProjectDetail = () => {
   const galleryImages = Array.isArray(project.gallery) ? project.gallery.filter(Boolean) : [];
 
   return (
-    <div className="min-h-screen text-slate-900 selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden font-main relative">
+    <div className="min-h-screen text-slate-100 selection:bg-violet-500/40 selection:text-white overflow-x-hidden font-main relative">
       <Background />
-      <title>{project.title} | Gimhana Deshapriya</title>
-      <meta name="description" content={project.description.slice(0, 150)} />
+      <SEO
+        title={`${project.title} | Gimhana Deshapriya`}
+        description={project.description.slice(0, 160)}
+        path={`/projects/${project.id}`}
+        image={project.image}
+        type="article"
+        schema={{
+          '@type': 'CreativeWork',
+          name: project.title,
+          description: project.description,
+          url: `https://www.gimhan.me/projects/${project.id}`,
+          image: project.image,
+          creator: { '@id': 'https://www.gimhan.me/#person' },
+          keywords: project.technologies.join(', '),
+        }}
+      />
 
       {/* Floating sliding back button */}
       <div className="fixed top-24 left-4 sm:left-10 z-50">
@@ -142,7 +157,7 @@ const ProjectDetail = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative w-full h-[320px] sm:h-[480px] rounded-2xl overflow-hidden border border-slate-100 shadow-2xl mb-16"
+          className="relative w-full h-[320px] sm:h-[480px] rounded-2xl overflow-hidden shadow-2xl mb-16"
         >
           <img
             src={project.image}
@@ -194,7 +209,8 @@ const ProjectDetail = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="lg:col-span-4 bg-slate-50/50 p-8 sm:p-10 rounded-2xl border border-slate-100/60 shadow-inner backdrop-blur-md space-y-10"
+            whileHover={{ y: -5 }}
+            className="lg:col-span-4 modern-card p-8 sm:p-10 rounded-2xl space-y-10"
           >
             {/* Tech Chips */}
             <div className="space-y-5">
@@ -278,7 +294,7 @@ const ProjectDetail = () => {
                   key={index}
                   whileHover={{ scale: 1.03, y: -4 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="aspect-[16/10] overflow-hidden rounded-xl border border-slate-100/50 bg-slate-50 cursor-zoom-in hover:shadow-xl duration-300 transition-all shadow-sm relative group"
+                  className="aspect-[16/10] overflow-hidden rounded-xl bg-slate-50 cursor-zoom-in hover:shadow-xl duration-300 transition-all shadow-sm relative group"
                   onClick={() => setLightboxIndex(index)}
                 >
                   <img
@@ -353,7 +369,7 @@ const ProjectDetail = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
-              className="max-w-[85vw] max-h-[80vh] rounded-xl overflow-hidden border border-white/10 shadow-2xl relative"
+              className="max-w-[85vw] max-h-[80vh] rounded-xl overflow-hidden shadow-2xl relative"
               onClick={(e) => e.stopPropagation()}
             >
               <img

@@ -66,8 +66,8 @@ const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) 
       <Link
         to={to}
         className={`relative px-4 py-2 flex items-center text-sm font-semibold tracking-tight transition-all duration-300 ${className} ${isActive
-          ? 'text-violet-300'
-          : 'text-slate-400 hover:text-white'
+          ? 'text-violet-600 dark:text-violet-300'
+          : 'text-slate-600 dark:text-slate-400 hover:text-violet-700 dark:hover:text-white'
           }`}
       >
         {children}
@@ -108,25 +108,19 @@ const Navbar = () => {
     <>
       <motion.div
         aria-hidden="true"
-        className="fixed inset-x-0 top-0 z-[80] h-[2px] origin-left bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500"
+        className="fixed inset-x-0 top-0 z-[80] h-[2px] origin-left bg-gradient-to-r from-purple-300 via-violet-500 to-fuchsia-500 shadow-[0_0_16px_rgba(192,132,252,.8)]"
         style={{ scaleX: progress }}
       />
       {/* Desktop Navigation - Centered */}
       <motion.nav
-        className={`hidden md:block fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#0a1022]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,.45)] transition-all duration-500 ${isScrolled ? 'px-6 py-2' : 'px-8 py-3'
+        className={`hidden md:block fixed top-6 left-1/2 -translate-x-1/2 z-50 backdrop-blur-xl border rounded-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#0a1022]/90 border-white/10 shadow-[0_20px_70px_rgba(0,0,0,.45)]' : 'bg-white/90 border-purple-200/60 shadow-[0_20px_70px_rgba(76,29,149,.14)]'} ${isScrolled ? 'px-6 py-2' : 'px-8 py-3'
           }`}
         initial={{ y: -100, x: '-50%' }}
         animate={{ y: 0, x: '-50%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
         <div className="flex items-center gap-12">
-          <Link to="/" className="flex items-center gap-3 group" aria-label="Gimhana home">
-            <span className="relative grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 text-white font-black text-sm shadow-[0_8px_25px_rgba(124,58,237,.35)]">
-              G
-              <span className="absolute inset-px rounded-[11px] ring-1 ring-inset ring-white/25" />
-            </span>
-            <span className="hidden lg:block text-xs font-black tracking-[0.18em] text-white uppercase">Gimhana</span>
-          </Link>
+          
 
           <motion.div
             className="flex items-center space-x-2"
@@ -165,12 +159,11 @@ const Navbar = () => {
             ))}
           </motion.div>
 
-          <div className="w-px h-6 bg-white/10" />
+          <div className="w-px h-6 bg-slate-300 dark:bg-white/10" />
 
-          {/* Theme Toggle Button */}
           <motion.button
             onClick={toggleTheme}
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.05] border border-white/10 hover:bg-violet-500/15 hover:border-violet-400/30 shadow-sm transition-all duration-300"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-50 dark:bg-white/[0.05] border border-purple-200 dark:border-white/10 hover:bg-violet-500/15 hover:border-violet-400/30 shadow-sm transition-all duration-300"
             whileHover={{ scale: 1.05, rotate: 15 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -197,8 +190,8 @@ const Navbar = () => {
 
       {/* Mobile Navigation - Bottom Bar */}
       <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? 'bg-[#080d1b]/95 backdrop-blur-xl shadow-2xl border-t border-white/10'
-        : 'bg-[#080d1b] border-t border-white/10'
+        ? 'bg-white/95 dark:bg-[#080d1b]/95 backdrop-blur-xl shadow-2xl border-t border-purple-100 dark:border-white/10'
+        : 'bg-white dark:bg-[#080d1b] border-t border-purple-100 dark:border-white/10'
         }`}>
         <div className="flex justify-around items-center h-16 px-2">
           <NavLink to="/" className="flex flex-col items-center flex-1">
@@ -212,7 +205,7 @@ const Navbar = () => {
           {/* Theme Toggle for Mobile - Centered */}
           <motion.button
             onClick={toggleTheme}
-            className="w-12 h-12 flex items-center justify-center rounded-full -mt-6 bg-gradient-to-br from-violet-500 to-cyan-400 text-white shadow-[0_12px_35px_rgba(124,58,237,.4)] ring-4 ring-[#080d1b]"
+            className="w-12 h-12 flex items-center justify-center rounded-full -mt-6 bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-[0_12px_35px_rgba(124,58,237,.4)] ring-4 ring-white dark:ring-[#080d1b]"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}

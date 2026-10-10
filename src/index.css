@@ -6,12 +6,12 @@
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --font-heading: 'Plus Jakarta Sans', sans-serif;
 
-  --primary: #6d28d9;
-  --primary-light: #8b5cf6;
-  --primary-dark: #4c1d95;
+  --primary: #8b5cf6;
+  --primary-light: #a78bfa;
+  --primary-dark: #6d28d9;
 
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-bg: rgba(10, 16, 34, 0.78);
+  --glass-border: rgba(148, 163, 184, 0.12);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -28,10 +28,34 @@ body {
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #0f172a;
-  /* Slate 900 */
-  background-color: #ffffff;
+  color: #e2e8f0;
+  background: #050816;
   line-height: 1.6;
+}
+
+html {
+  color-scheme: dark;
+  background: #050816;
+  scroll-behavior: smooth;
+}
+
+::selection {
+  color: #fff;
+  background: rgba(124, 58, 237, 0.75);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050816;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#7c3aed, #0891b2);
+  border: 3px solid #050816;
+  border-radius: 999px;
 }
 
 h1,
@@ -48,6 +72,7 @@ h6 {
 .glass {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
 }
 
 .ripple {
@@ -81,27 +106,33 @@ code {
 
 /* Premium Dark Mode Styling Overrides */
 .dark {
-  --glass-bg: rgba(15, 23, 42, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-bg: rgba(10, 16, 34, 0.78);
+  --glass-border: rgba(148, 163, 184, 0.12);
 }
 
 .dark body {
-  background-color: #070a13;
+  background-color: #050816;
   color: #f8fafc;
 }
 
 /* Background class mappings */
 .dark .bg-\[\#fafafa\] {
-  background-color: #070a13 !important;
+  background-color: #050816 !important;
 }
 
 .dark .bg-white {
-  background-color: #0d121f !important;
+  background-color: #0a1022 !important;
+}
+
+.dark .bg-white\/40,
+.dark .bg-white\/50,
+.dark .bg-white\/70 {
+  background-color: rgba(15, 23, 42, 0.72) !important;
 }
 
 .dark .bg-slate-50,
 .dark .bg-slate-50\/50 {
-  background-color: rgba(19, 25, 39, 0.5) !important;
+  background-color: rgba(15, 23, 42, 0.7) !important;
 }
 
 .dark .bg-slate-100 {
@@ -135,7 +166,7 @@ code {
 }
 
 .dark .text-slate-500 {
-  color: #64748b !important;
+  color: #94a3b8 !important;
 }
 
 .dark .text-slate-400 {
@@ -149,15 +180,48 @@ code {
 .dark .border-slate-200,
 .dark .border-gray-100,
 .dark .border-gray-200 {
-  border-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+.dark .bg-purple-50,
+.dark .bg-purple-100 {
+  background-color: rgba(124, 58, 237, 0.13) !important;
+}
+
+.dark .bg-indigo-50,
+.dark .bg-indigo-100 {
+  background-color: rgba(79, 70, 229, 0.13) !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+.dark .bg-red-50,
+.dark .bg-red-100 {
+  background-color: rgba(239, 68, 68, 0.12) !important;
+}
+
+.dark .text-purple-600,
+.dark .text-purple-700 {
+  color: #a78bfa !important;
+}
+
+.dark .text-indigo-600 {
+  color: #818cf8 !important;
+}
+
+.dark .hover\:bg-white:hover {
+  background-color: rgba(255, 255, 255, 0.07) !important;
 }
 
 /* Input, Textarea, Select element overrides */
 .dark input,
 .dark textarea,
 .dark select {
-  background-color: #131927 !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: #0b1224 !important;
+  border-color: rgba(148, 163, 184, 0.16) !important;
   color: #f8fafc !important;
 }
 
@@ -171,6 +235,22 @@ body, .glass, button, input, textarea, select, a {
   transition-property: color, background-color, border-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: rgba(139, 92, 246, 0.7) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+main {
+  position: relative;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Skip layout and paint work for sections that are far outside the viewport. */

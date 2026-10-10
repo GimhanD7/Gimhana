@@ -46,7 +46,7 @@ const Projects = () => {
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
         
         {/* Section Header */}
-        <div className="flex justify-between items-start mb-24 max-w-7xl relative">
+        <div className="flex justify-between items-start mb-20 max-w-7xl relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -90,9 +90,9 @@ const Projects = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${selectedCategory === category
-                ? 'bg-slate-950 text-white shadow-xl shadow-slate-900/20 scale-105'
-                : 'bg-white/50 text-slate-400 hover:text-slate-950 hover:bg-white'
+              className={`px-6 py-2.5 rounded-xl text-[10px] font-black tracking-widest uppercase border transition-all duration-300 ${selectedCategory === category
+                ? 'bg-violet-500/20 text-violet-200 border-violet-400/35 shadow-lg shadow-violet-950/30'
+                : 'bg-white/[0.03] border-white/10 text-slate-400 hover:text-white hover:bg-white/[0.07]'
                 }`}
             >
               {category}
@@ -134,9 +134,11 @@ const Projects = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
+                    whileHover={{ y: -8, scale: 1.012 }}
+                    whileTap={{ scale: 0.99 }}
                     className="h-full"
                   >
-                    <div className="glass overflow-hidden rounded-xl hover:bg-white transition-all duration-700 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-2 h-full flex flex-col">
+                    <div className="glass overflow-hidden rounded-2xl transition-colors duration-500 hover:border-violet-400/30 hover:shadow-[0_28px_80px_rgba(76,29,149,.22)] h-full flex flex-col">
                     {/* Image Holder */}
                     <div className="aspect-[16/10] overflow-hidden relative">
                       <img
@@ -146,7 +148,7 @@ const Projects = () => {
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-transparent transition-colors duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#050816]/70 via-transparent to-transparent opacity-70 group-hover:opacity-35 transition-opacity duration-500" />
                       <div className="absolute top-6 left-6">
                         <span className="px-4 py-1.5 rounded-full glass border-white/50 text-[10px] font-black tracking-widest uppercase text-white shadow-lg">
                           {project.category}

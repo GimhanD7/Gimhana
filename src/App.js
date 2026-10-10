@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion, MotionConfig, useReducedMotion } from 'framer-motion';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 // import CategoryRegistration from './pages/categoryRegistration';
@@ -12,27 +13,54 @@ import ContactMe from './pages/contactme';
 import Admin from './pages/admin';
 import ProjectDetail from './pages/ProjectDetail';
 
+const pageVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
 
+function AnimatedRoutes() {
+  const location = useLocation();
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial={reduceMotion ? false : 'hidden'}
+        animate="visible"
+        exit={reduceMotion ? undefined : 'exit'}
+        transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+        className="min-h-full"
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/contact" element={<ContactMe />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   return (
     <ThemeProvider>
       <ToastProvider>
-        <Router>
-          <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-200 flex flex-col">
-            <Navbar />
-            <div className="flex-1 overflow-auto">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/projects/:id" element={<ProjectDetail />} />
-                <Route path="/contact" element={<ContactMe />} />
-                <Route path="/admin" element={<Admin />} />
-              </Routes>
+        <MotionConfig reducedMotion="user">
+          <Router>
+            <div className="min-h-screen bg-[#050816] text-slate-100 transition-colors duration-200 flex flex-col">
+              <Navbar />
+              <div className="flex-1 overflow-auto">
+                <AnimatedRoutes />
+              </div>
             </div>
-          </div>
-        </Router>
+          </Router>
+        </MotionConfig>
       </ToastProvider>
     </ThemeProvider>
   );

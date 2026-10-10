@@ -60,6 +60,54 @@ if ($action === 'logout') {
     respond(['authenticated' => false]);
 }
 
+if ($action === 'upload-image') {
+    require_method('POST');
+    require_auth();
+    require_csrf();
+
+    $upload = $_FILES['image'] ?? null;
+    if (!is_array($upload) || ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        respond(['error' => 'Select a valid image to upload.'], 422);
+    }
+
+    $temporaryPath = $upload['tmp_name'] ?? '';
+    $fileSize = (int) ($upload['size'] ?? 0);
+    if (!is_uploaded_file($temporaryPath) || $fileSize < 1 || $fileSize > 10 * 1024 * 1024) {
+        respond(['error' => 'Images must be smaller than 10 MB.'], 422);
+    }
+
+    $mimeType = (new finfo(FILEINFO_MIME_TYPE))->file($temporaryPath);
+    $extensions = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+    ];
+    if (!isset($extensions[$mimeType])) {
+        respond(['error' => 'Only JPG, PNG, WebP, and GIF images are allowed.'], 422);
+    }
+
+    $uploadDirectory = __DIR__ . '/uploads';
+    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true) && !is_dir($uploadDirectory)) {
+        respond(['error' => 'The backend upload directory is unavailable.'], 500);
+    }
+
+    $fileName = bin2hex(random_bytes(16)) . '.' . $extensions[$mimeType];
+    if (!move_uploaded_file($temporaryPath, $uploadDirectory . '/' . $fileName)) {
+        respond(['error' => 'Unable to save the uploaded image.'], 500);
+    }
+
+    $forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
+    $scheme = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $forwardedProto === 'https')
+        ? 'https'
+        : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $scriptDirectory = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/api/index.php')), '/');
+    $imageUrl = sprintf('%s://%s%s/uploads/%s', $scheme, $host, $scriptDirectory, $fileName);
+
+    respond(['url' => $imageUrl], 201);
+}
+
 if ($action === 'reorder-projects') {
     require_method('POST');
     require_auth();
@@ -97,12 +145,7 @@ if ($action === 'projects') {
     require_method('GET', 'POST');
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $rows = db()->query('SELECT id FROM projects ORDER BY display_order, id DESC')->fetchAll();
-        $projects = array_values(array_filter(array_map(
-            fn ($row) => load_project((int) $row['id']),
-            $rows
-        )));
-        respond(['projects' => $projects]);
+        respond(['projects' => load_projects()]);
     }
 
     require_auth();

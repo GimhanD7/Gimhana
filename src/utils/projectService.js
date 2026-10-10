@@ -1,6 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL || '/Gimhana/api/index.php';
 
 let csrfToken = null;
+let projectsRequest = null;
 
 const request = async (action, options = {}) => {
   const url = new URL(API_URL, window.location.origin);
@@ -16,14 +17,14 @@ const request = async (action, options = {}) => {
   try {
     response = await fetch(url.toString(), {
       method: options.method || 'GET',
-    credentials: 'include',
+      credentials: 'include',
       signal: controller.signal,
       headers: {
         Accept: 'application/json',
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.body && !options.formData ? { 'Content-Type': 'application/json' } : {}),
         ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
       },
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      body: options.formData || (options.body ? JSON.stringify(options.body) : undefined),
     });
   } catch (error) {
     if (error.name === 'AbortError') {
@@ -38,6 +39,11 @@ const request = async (action, options = {}) => {
   try {
     data = await response.json();
   } catch {
+    if (response.status === 504) {
+      const error = new Error('The PHP backend timed out. Make sure Apache and MySQL are running.');
+      error.status = 504;
+      throw error;
+    }
     throw new Error('The server returned an invalid response.');
   }
 
@@ -85,9 +91,25 @@ export const authService = {
 };
 
 export const projectService = {
+  async uploadImage(image, fileName = 'portfolio-image.jpg') {
+    const formData = new FormData();
+    formData.append('image', image, fileName);
+    const data = await request('upload-image', {
+      method: 'POST',
+      formData,
+    });
+    return data.url;
+  },
+
   async getProjects() {
-    const data = await request('projects');
-    return (data.projects || []).map(normalizeProject);
+    if (!projectsRequest) {
+      projectsRequest = request('projects')
+        .then((data) => (data.projects || []).map(normalizeProject))
+        .finally(() => {
+          projectsRequest = null;
+        });
+    }
+    return projectsRequest;
   },
 
   async getProject(projectId) {

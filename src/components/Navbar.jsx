@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 
 // Icons
 const HomeIcon = ({ className = 'w-5 h-5' }) => (
@@ -66,14 +66,14 @@ const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) 
       <Link
         to={to}
         className={`relative px-4 py-2 flex items-center text-sm font-semibold tracking-tight transition-all duration-300 ${className} ${isActive
-          ? 'text-purple-600'
-          : 'text-slate-600 hover:text-slate-950'
+          ? 'text-violet-300'
+          : 'text-slate-400 hover:text-white'
           }`}
       >
         {children}
         {isActive && (
           <motion.span
-            className="absolute left-1/2 -bottom-1 w-1.5 h-1.5 rounded-full bg-purple-600 -translate-x-1/2"
+            className="absolute left-1/2 -bottom-1 w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,.9)] -translate-x-1/2"
             layoutId="nav-indicator"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -89,6 +89,12 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 150,
+    damping: 24,
+    mass: 0.2
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,15 +106,28 @@ const Navbar = () => {
 
   return (
     <>
+      <motion.div
+        aria-hidden="true"
+        className="fixed inset-x-0 top-0 z-[80] h-[2px] origin-left bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500"
+        style={{ scaleX: progress }}
+      />
       {/* Desktop Navigation - Centered */}
       <motion.nav
-        className={`hidden md:block fixed top-6 left-1/2 -translate-x-1/2 z-50 glass rounded-2xl shadow-xl transition-all duration-500 ${isScrolled ? 'px-6 py-2' : 'px-8 py-3'
+        className={`hidden md:block fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#0a1022]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,.45)] transition-all duration-500 ${isScrolled ? 'px-6 py-2' : 'px-8 py-3'
           }`}
         initial={{ y: -100, x: '-50%' }}
         animate={{ y: 0, x: '-50%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
         <div className="flex items-center gap-12">
+          <Link to="/" className="flex items-center gap-3 group" aria-label="Gimhana home">
+            <span className="relative grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 text-white font-black text-sm shadow-[0_8px_25px_rgba(124,58,237,.35)]">
+              G
+              <span className="absolute inset-px rounded-[11px] ring-1 ring-inset ring-white/25" />
+            </span>
+            <span className="hidden lg:block text-xs font-black tracking-[0.18em] text-white uppercase">Gimhana</span>
+          </Link>
+
           <motion.div
             className="flex items-center space-x-2"
             initial="hidden"
@@ -133,7 +152,7 @@ const Navbar = () => {
               <NavLink
                 key={item.to}
                 to={item.to}
-                className="group p-2 rounded-xl hover:bg-white/50 transition-all duration-300"
+                className="group p-2 rounded-xl hover:bg-white/[0.06] transition-all duration-300"
                 index={index}
               >
                 <div className="flex items-center gap-2.5">
@@ -146,12 +165,12 @@ const Navbar = () => {
             ))}
           </motion.div>
 
-          <div className="w-[1px] h-6 bg-slate-200" />
+          <div className="w-px h-6 bg-white/10" />
 
           {/* Theme Toggle Button */}
           <motion.button
             onClick={toggleTheme}
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/50 border border-white/50 hover:bg-white shadow-sm transition-all duration-300"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.05] border border-white/10 hover:bg-violet-500/15 hover:border-violet-400/30 shadow-sm transition-all duration-300"
             whileHover={{ scale: 1.05, rotate: 15 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -163,11 +182,11 @@ const Navbar = () => {
               transition={{ duration: 0.3 }}
             >
               {theme === 'light' ? (
-                <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-violet-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               ) : (
-                <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               )}
@@ -178,8 +197,8 @@ const Navbar = () => {
 
       {/* Mobile Navigation - Bottom Bar */}
       <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? 'bg-white/90 backdrop-blur-sm shadow-lg'
-        : 'bg-white border-t border-gray-200'
+        ? 'bg-[#080d1b]/95 backdrop-blur-xl shadow-2xl border-t border-white/10'
+        : 'bg-[#080d1b] border-t border-white/10'
         }`}>
         <div className="flex justify-around items-center h-16 px-2">
           <NavLink to="/" className="flex flex-col items-center flex-1">
@@ -193,7 +212,7 @@ const Navbar = () => {
           {/* Theme Toggle for Mobile - Centered */}
           <motion.button
             onClick={toggleTheme}
-            className="w-12 h-12 flex items-center justify-center rounded-full -mt-6 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
+            className="w-12 h-12 flex items-center justify-center rounded-full -mt-6 bg-gradient-to-br from-violet-500 to-cyan-400 text-white shadow-[0_12px_35px_rgba(124,58,237,.4)] ring-4 ring-[#080d1b]"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}

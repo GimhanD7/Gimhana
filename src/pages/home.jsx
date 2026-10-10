@@ -73,16 +73,16 @@ const Home = () => {
           >
             <div className="space-y-4">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass italic text-purple-700 text-sm font-bold shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-violet-300 text-xs font-bold tracking-wide shadow-sm"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <span className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)] animate-pulse" />
                 Open for Collaboration
               </motion.div>
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-slate-950">
                 Building <br />
-                <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent italic">Digital__</span> <br />
+                <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent italic">Digital__</span> <br />
                 Impact.
               </h1>
             </div>
@@ -90,8 +90,8 @@ const Home = () => {
               Information Technology graduate and full-stack web developer with comprehensive expertise in UI/UX design, modern web technologies, and database management. Demonstrated success in developing enterprise-level systems and creating intuitive, mobile-responsive user interfaces.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
-              <Button primary onClick={() => window.location.href = '#projects'}>Explore Work</Button>
-              <Button secondary onClick={() => window.location.href = '#contact'}>Get in CV</Button>
+              <Button primary onClick={() => window.location.href = '/projects'}>Explore Work</Button>
+              <Button secondary onClick={() => window.location.href = '/contact'}>Start a Conversation</Button>
             </div>
           </motion.div>
 
@@ -105,16 +105,14 @@ const Home = () => {
               className="relative z-10"
               whileHover={{ y: -10 }}
              >
-              <div className="relative   p-4 rounded-2xl  overflow-hidden group">
-                <div className="aspect-[4/5]   overflow-hidden   relative  ">
+              <div className="relative p-3 rounded-[2rem] overflow-hidden group bg-gradient-to-br from-violet-500/40 via-white/5 to-cyan-400/30 border border-white/10 shadow-[0_35px_100px_rgba(0,0,0,.5)]">
+                <div className="aspect-[4/5] overflow-hidden relative rounded-[1.4rem] bg-[#0a1022]">
                   <img
                     src="/profile.png"
                     alt="Gimhana Deshapriya"
-                    className="w-full h-full object-cover transition-transform duration-1000  "
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.025]"
                   />
-
-
-
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050816]/55 via-transparent to-violet-500/10" />
                 </div>
               </div>
 
@@ -152,7 +150,7 @@ const Home = () => {
         </div>
 
         {/* Dynamic Tech Bar */}
-        <div className="w-full mt-24 border-y border-slate-50 py-12">
+        <div className="w-full mt-24 border-y border-white/10 py-12">
           <div className="flex flex-col items-center gap-10">
             <p className="text-[10px] font-black tracking-[0.5em] text-slate-400 uppercase">Core Stack & Expertise</p>
             <div className="flex flex-wrap justify-center gap-10 md:gap-16">

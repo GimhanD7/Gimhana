@@ -94,7 +94,7 @@ const Admin = () => {
     }
   };
 
-  // Image Compression Utility (Canvas-based)
+  // Image optimization before uploading to the PHP backend.
   const compressImage = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -125,8 +125,11 @@ const Admin = () => {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.72);
-          resolve(compressedBase64);
+          canvas.toBlob(
+            (blob) => blob ? resolve(blob) : reject(new Error('Image compression failed.')),
+            'image/jpeg',
+            0.78
+          );
         };
         img.onerror = (err) => reject(err);
         img.src = event.target.result; // Set src AFTER assigning event handlers to prevent race conditions on fast sync data URLs
@@ -143,9 +146,10 @@ const Admin = () => {
     setIsCoverUploading(true);
     try {
       showSuccess('Optimizing cover image...');
-      const compressedData = await compressImage(file);
-      setFormData(prev => ({ ...prev, image: compressedData }));
-      showSuccess('Cover image is ready to save.');
+      const compressedImage = await compressImage(file);
+      const imageUrl = await projectService.uploadImage(compressedImage, `${Date.now()}-cover.jpg`);
+      setFormData(prev => ({ ...prev, image: imageUrl }));
+      showSuccess('Cover image uploaded to the backend.');
     } catch (err) {
       showError('Image compression failed.');
     } finally {
@@ -167,8 +171,12 @@ const Admin = () => {
 
     for (const file of files) {
       try {
-        const compressedData = await compressImage(file);
-        uploadedUrls.push(compressedData);
+        const compressedImage = await compressImage(file);
+        const imageUrl = await projectService.uploadImage(
+          compressedImage,
+          `${Date.now()}-${loadedCount}-gallery.jpg`
+        );
+        uploadedUrls.push(imageUrl);
         loadedCount++;
       } catch (err) {
         console.error(`Failed to stage ${file.name}:`, err);
@@ -180,7 +188,7 @@ const Admin = () => {
       gallery: [...(prev.gallery || []), ...uploadedUrls]
     }));
 
-    showSuccess(`${loadedCount} gallery screenshot(s) ready to save.`);
+    showSuccess(`${loadedCount} gallery screenshot(s) uploaded to the backend.`);
     setIsGalleryUploading(false);
     e.target.value = ''; // clear input
   };
@@ -562,7 +570,7 @@ const Admin = () => {
                         <label className="text-[9px] font-black tracking-widest uppercase text-purple-600 pl-1">Project Cover Image</label>
                         {formData.image && (
                           <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-500 uppercase">
-                            {formData.image.startsWith('data:') ? 'Compressed image ready' : 'External URL'}
+                            {formData.image.includes('/api/uploads/') ? 'Backend image' : 'External URL'}
                           </span>
                         )}
                       </div>
@@ -663,7 +671,7 @@ const Admin = () => {
                           <>
                             <span className="text-xl">📸</span>
                             <span>Upload Local Screenshots (Multi-Select)</span>
-                            <span className="text-[8px] text-slate-400 font-medium font-main">Compresses images before saving them to MySQL</span>
+                            <span className="text-[8px] text-slate-400 font-medium font-main">Optimizes and stores images in the PHP backend</span>
                           </>
                         )}
                         <input

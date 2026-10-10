@@ -35,13 +35,13 @@ const Button = forwardRef(({
     }
   };
 
-  const baseClasses = 'relative overflow-hidden px-10 py-4 font-bold rounded-2xl transition-all duration-500 flex items-center justify-center group tracking-tight';
+  const baseClasses = 'relative overflow-hidden px-8 py-3.5 font-bold rounded-xl transition-all duration-300 flex items-center justify-center group tracking-tight border';
 
   let variantClasses = '';
   if (primary) {
-    variantClasses = 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-xl shadow-purple-500/20 hover:shadow-purple-500/40';
+    variantClasses = 'border-violet-400/20 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-950/40 hover:shadow-violet-500/25';
   } else if (secondary) {
-    variantClasses = 'glass hover:bg-white text-slate-900 shadow-sm hover:shadow-md';
+    variantClasses = 'border-white/10 bg-white/[0.05] hover:bg-white/[0.10] text-slate-100 shadow-sm hover:shadow-md';
   }
 
   return (

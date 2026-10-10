@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark');
   const [isMounted, setIsMounted] = useState(false);
 
   // Toggle theme function
@@ -16,7 +16,12 @@ export const ThemeProvider = ({ children }) => {
 
   // Initialize theme on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const designVersion = localStorage.getItem('design-theme-version');
+    const savedTheme = designVersion === '2'
+      ? (localStorage.getItem('theme') || 'dark')
+      : 'dark';
+    localStorage.setItem('theme', savedTheme);
+    localStorage.setItem('design-theme-version', '2');
     setTheme(savedTheme);
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     setIsMounted(true);

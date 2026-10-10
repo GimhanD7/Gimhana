@@ -93,6 +93,7 @@ function db(): PDO
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::ATTR_TIMEOUT => 5,
         ]);
     } catch (PDOException) {
         respond(['error' => 'Database connection failed. Check api/config.php and import database.sql.'], 503);
@@ -233,6 +234,65 @@ function load_project(int $id): ?array
     $project['id'] = (string) $project['id'];
 
     return $project;
+}
+
+function load_projects(): array
+{
+    $pdo = db();
+    $projects = $pdo->query(
+        'SELECT id, title, period, description, category, image, created_at, updated_at
+         FROM projects ORDER BY display_order, id DESC'
+    )->fetchAll();
+
+    if ($projects === []) {
+        return [];
+    }
+
+    $projectIndexes = [];
+    foreach ($projects as $index => &$project) {
+        $id = (int) $project['id'];
+        $projectIndexes[$id] = $index;
+        $project['id'] = (string) $id;
+        $project['technologies'] = [];
+        $project['links'] = [];
+        $project['gallery'] = [];
+    }
+    unset($project);
+
+    $technologyRows = $pdo->query(
+        'SELECT project_id, technology FROM project_technologies ORDER BY project_id, sort_order, id'
+    )->fetchAll();
+    foreach ($technologyRows as $row) {
+        $projectId = (int) $row['project_id'];
+        if (isset($projectIndexes[$projectId])) {
+            $projects[$projectIndexes[$projectId]]['technologies'][] = $row['technology'];
+        }
+    }
+
+    $linkRows = $pdo->query(
+        'SELECT project_id, label, url FROM project_links ORDER BY project_id, sort_order, id'
+    )->fetchAll();
+    foreach ($linkRows as $row) {
+        $projectId = (int) $row['project_id'];
+        if (isset($projectIndexes[$projectId])) {
+            $projects[$projectIndexes[$projectId]]['links'][] = [
+                'label' => $row['label'],
+                'url' => $row['url'],
+            ];
+        }
+    }
+
+    $galleryRows = $pdo->query(
+        'SELECT project_id, image FROM project_gallery ORDER BY project_id, sort_order, id'
+    )->fetchAll();
+    foreach ($galleryRows as $row) {
+        $projectId = (int) $row['project_id'];
+        if (isset($projectIndexes[$projectId])) {
+            $projects[$projectIndexes[$projectId]]['gallery'][] = $row['image'];
+        }
+    }
+
+    return $projects;
 }
 
 function replace_relations(PDO $pdo, int $projectId, array $project): void

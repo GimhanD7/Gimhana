@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
@@ -88,8 +88,6 @@ const NavLink = ({ to, children, className = '', isMobile = false, index = 0 }) 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
-  const lastScrollY = useRef(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
@@ -100,11 +98,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      setIsScrolled(currentY > 10);
-      if (currentY < 80) setIsHidden(false);
-      else if (Math.abs(currentY - lastScrollY.current) > 8) setIsHidden(currentY > lastScrollY.current);
-      lastScrollY.current = currentY;
+      setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -122,7 +116,7 @@ const Navbar = () => {
         className={`hidden md:block fixed top-6 left-1/2 -translate-x-1/2 z-50 backdrop-blur-xl border rounded-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#0a1022]/90 border-white/10 shadow-[0_20px_70px_rgba(0,0,0,.45)]' : 'bg-white/90 border-purple-200/60 shadow-[0_20px_70px_rgba(76,29,149,.14)]'} ${isScrolled ? 'px-6 py-2' : 'px-8 py-3'
           }`}
         initial={{ y: -100, x: '-50%' }}
-        animate={{ y: isHidden ? -130 : 0, x: '-50%' }}
+        animate={{ y: 0, x: '-50%' }}
         transition={{ type: 'spring', stiffness: 260, damping: 30 }}
       >
         <div className="flex items-center gap-12">

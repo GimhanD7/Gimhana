@@ -195,6 +195,46 @@ const Home = () => {
 
           <GitHubSpotlight />
 
+          <section id="achievements" className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 lg:pb-32">
+            <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+              <div>
+                <span className="section-kicker">Service · leadership · recognition</span>
+                <h2 className="mt-4 max-w-3xl text-4xl font-bold tracking-[-0.055em] text-white sm:text-5xl">A journey of <span className="text-violet-300">impact and service.</span></h2>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400">Proud and honored to contribute to a team recognized for strengthening Leoism through impactful service, innovation, and digital transformation. Grateful to everyone who supported the journey.</p>
+              </div>
+              <a href="https://www.linkedin.com/in/gimhana-deshapriya/" target="_blank" rel="noreferrer" className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-violet-300/40 hover:text-violet-200">View my LinkedIn <span aria-hidden="true">↗</span></a>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="modern-card flex flex-col justify-between rounded-3xl p-7 sm:p-9">
+                <div>
+                  <span className="text-sm font-semibold text-violet-200">A team effort</span>
+                  <p className="mt-5 text-5xl font-bold tracking-tight text-white">100<span className="text-violet-300">+</span></p>
+                  <p className="mt-1 text-sm text-slate-400">impactful projects completed</p>
+                  <p className="mt-7 text-3xl font-bold tracking-tight text-white">LKR 10.2M</p>
+                  <p className="mt-1 text-sm text-slate-400">approximate total project value</p>
+                </div>
+                <p className="mt-8 border-t border-white/10 pt-5 text-sm leading-6 text-slate-400">A collective achievement that placed the club among the district’s highest-performing Leo Clubs.</p>
+              </motion.div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  ['Best Project for Betterment of Leoism', 'District recognition'],
+                  ['Best Innovative Project', 'District recognition'],
+                  ['Most Outstanding Innovative Project', 'Additional recognition'],
+                  ['Most Outstanding Digital Transformation Campaign', 'District recognition'],
+                  ['Most Innovative Project', 'Multiple-district recognition'],
+                  ['1st Runner-Up · Best Project for Betterment of Leoism', 'Multiple-district recognition'],
+                ].map(([title, level], index) => (
+                  <motion.article key={title} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: index * 0.06 }} className="modern-card flex min-h-32 items-start gap-4 rounded-2xl p-5 sm:p-6">
+                    <span aria-hidden="true" className="mt-0.5 text-xl">🏆</span>
+                    <div><h3 className="font-semibold leading-6 text-white">{title}</h3><p className="mt-2 text-[10px] font-bold uppercase tracking-[.16em] text-violet-300">{level}</p></div>
+                  </motion.article>
+                ))}
+              </div>
+            </div>
+          </section>
+
           <section className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8 lg:py-36">
           <motion.div initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true, amount: 0.35 }} transition={{ duration: 0.8, type: "spring", bounce: 0.3 }} whileHover={{ boxShadow: '0 0 50px -12px rgba(139,92,246,0.3)' }} className="modern-card relative overflow-hidden rounded-[2rem] p-8 sm:p-12 lg:p-16 transition-shadow duration-500">
             <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-violet-500/20 blur-3xl" />

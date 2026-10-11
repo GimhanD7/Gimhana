@@ -21,8 +21,8 @@ return [
         explode(',', getenv('PORTFOLIO_ALLOWED_ORIGINS') ?: implode(',', [
             'http://localhost:3000',
             'http://127.0.0.1:3000',
-            'https://gimhan.me',
-            'https://www.gimhan.me',
+            'https://gimhan.web.lk',
+            'https://www.gimhan.web.lk',
             'https://gimhana-teal.vercel.app',
         ]))
     ))),

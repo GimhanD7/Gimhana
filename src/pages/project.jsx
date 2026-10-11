@@ -45,7 +45,7 @@ const Projects = () => {
         title="Web Development Projects | Gimhana Deshapriya Portfolio"
         description="Explore React, PHP, Node.js, MySQL, system design, admin portal, automation, and UI/UX projects developed by Gimhana Deshapriya."
         path="/projects"
-        schema={{ '@type': 'CollectionPage', name: 'Web Development Projects by Gimhana Deshapriya', url: 'https://www.gimhan.me/projects' }}
+        schema={{ '@type': 'CollectionPage', name: 'Web Development Projects by Gimhana Deshapriya', url: 'https://www.gimhan.web.lk/projects' }}
       />
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">

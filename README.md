@@ -48,7 +48,7 @@ Set `PORTFOLIO_ALLOWED_ORIGINS` on the backend to a comma-separated list of
 frontend origins, for example:
 
 ```text
-https://gimhan.me,https://www.gimhan.me,https://gimhana-teal.vercel.app,http://localhost:3000
+https://gimhan.web.lk,https://www.gimhan.web.lk,https://gimhana-teal.vercel.app,http://localhost:3000
 ```
 
 ## First admin login

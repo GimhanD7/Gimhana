@@ -168,7 +168,7 @@ const About = () => {
         title="About Gimhana Deshapriya | Developer, Designer and Engineer"
         description="Learn about Gimhana Deshapriya’s full-stack development experience, technical skills, UI/UX practice, education, professional work, and community leadership."
         path="/about"
-        schema={{ '@type': 'ProfilePage', name: 'About Gimhana Deshapriya', url: 'https://www.gimhan.me/about', mainEntity: { '@id': 'https://www.gimhan.me/#person' } }}
+        schema={{ '@type': 'ProfilePage', name: 'About Gimhana Deshapriya', url: 'https://www.gimhan.web.lk/about', mainEntity: { '@id': 'https://www.gimhan.web.lk/#person' } }}
       />
 
       <main className="container mx-auto px-4 pb-28 pt-36 max-w-7xl relative z-10">

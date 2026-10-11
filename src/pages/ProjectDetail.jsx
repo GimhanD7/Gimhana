@@ -125,9 +125,9 @@ const ProjectDetail = () => {
           '@type': 'CreativeWork',
           name: project.title,
           description: project.description,
-          url: `https://www.gimhan.me/projects/${project.id}`,
+      url: `https://www.gimhan.web.lk/projects/${project.id}`,
           image: project.image,
-          creator: { '@id': 'https://www.gimhan.me/#person' },
+      creator: { '@id': 'https://www.gimhan.web.lk/#person' },
           keywords: project.technologies.join(', '),
         }}
       />

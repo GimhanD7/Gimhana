@@ -5,6 +5,9 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 // import CategoryRegistration from './pages/categoryRegistration';
 import Navbar from './components/Navbar';
+import MotionSystem from './components/MotionSystem';
+import ScrollUtilities from './components/ScrollUtilities';
+import IntroReveal from './components/IntroReveal';
 import './App.css';
 import Home from './pages/home';
 import About from './pages/about';
@@ -53,9 +56,12 @@ function AppSurface() {
   return (
     <MotionConfig reducedMotion="user">
       <Router>
+        <MotionSystem />
         <div className={`min-h-screen transition-colors duration-500 flex flex-col ${theme === 'dark' ? 'bg-[#050816] text-slate-100' : 'bg-[#f8f7ff] text-slate-900'}`}>
           <Navbar />
-          <div className="flex-1 overflow-auto">
+          <ScrollUtilities />
+          <IntroReveal />
+          <div className="flex-1">
             <AnimatedRoutes />
           </div>
         </div>

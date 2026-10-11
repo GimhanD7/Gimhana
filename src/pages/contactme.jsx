@@ -21,7 +21,7 @@ const ContactMe = () => {
         title="Contact Gimhana Deshapriya | Full-Stack Web Development"
         description="Contact Gimhana Deshapriya for full-stack web development, React and PHP systems, MySQL databases, admin portals, automation, and UI/UX design."
         path="/contact"
-        schema={{ '@type': 'ContactPage', name: 'Contact Gimhana Deshapriya', url: 'https://www.gimhan.me/contact' }}
+        schema={{ '@type': 'ContactPage', name: 'Contact Gimhana Deshapriya', url: 'https://www.gimhan.web.lk/contact' }}
       />
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
@@ -74,7 +74,7 @@ const ContactMe = () => {
             {/* Social Grid */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="flex gap-10">
               {['LinkedIn', 'GitHub', 'X'].map((social, i) => (
-                <motion.a whileHover={{ y: -5, color: '#22d3ee' }} href="#" key={social} className="text-xs font-black tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-400 transition-colors">{social}</motion.a>
+                <motion.a whileHover={{ y: -5, color: '#22d3ee' }} href={social === 'GitHub' ? 'https://github.com/GimhanD7' : '#'} key={social} className="text-xs font-black tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-400 transition-colors">{social}</motion.a>
               ))}
             </motion.div>
           </div>

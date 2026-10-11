@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import Background from '../components/Background';
 import SEO, { SITE_URL } from '../components/SEO';
+import GitHubSpotlight from '../components/GitHubSpotlight';
 
 const reveal = {
   hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
@@ -92,7 +93,7 @@ const Home = () => {
                 Available for meaningful digital work
               </motion.div>
               <motion.p variants={reveal} className="section-kicker mb-5">Full-stack developer · UI/UX designer</motion.p>
-              <motion.h1 variants={reveal} className="max-w-3xl text-5xl font-black leading-[0.92] tracking-[-0.07em] text-white sm:text-6xl md:text-7xl xl:text-[5.6rem]">
+              <motion.h1 variants={reveal} className="cinematic-title max-w-3xl text-5xl font-black leading-[0.92] tracking-[-0.07em] text-white sm:text-6xl md:text-7xl xl:text-[5.6rem]">
                 Engineering digital products with <motion.span animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }} transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }} className="block bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 bg-[length:200%_200%] bg-clip-text py-2 text-transparent">clarity and impact.</motion.span>
               </motion.h1>
               <motion.p variants={reveal} className="mt-7 max-w-2xl text-lg font-medium leading-8 text-slate-400 sm:text-xl">I’m Gimhana Deshapriya—an Information Technology graduate building responsive web platforms, dependable backend systems, and thoughtful user experiences.</motion.p>
@@ -175,7 +176,26 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8 lg:py-36">
+          <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+            <SectionTitle eyebrow="Ways I can help" title="From the first screen" accent="to the system behind it." copy="Product engineering grounded in your existing work across web platforms, administration workflows, and interface design." />
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                ['01', 'Web platforms', 'Responsive product experiences built with React and reliable backend services.'],
+                ['02', 'Admin systems', 'Role-based portals, data workflows, and practical tools that help teams run their work.'],
+                ['03', 'Interface design', 'Clear, accessible interfaces shaped around the people who use them.'],
+              ].map(([number, title, description], index) => (
+                <motion.article key={title} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.1 }} whileHover={{ y: -6 }} className="modern-card rounded-3xl p-7 sm:p-8">
+                  <span className="text-xs font-bold tracking-[.2em] text-violet-300">{number}</span>
+                  <h3 className="mt-8 text-2xl font-bold tracking-tight text-white">{title}</h3>
+                  <p className="mt-4 leading-7 text-slate-400">{description}</p>
+                </motion.article>
+              ))}
+            </div>
+          </section>
+
+          <GitHubSpotlight />
+
+          <section className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8 lg:py-36">
           <motion.div initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true, amount: 0.35 }} transition={{ duration: 0.8, type: "spring", bounce: 0.3 }} whileHover={{ boxShadow: '0 0 50px -12px rgba(139,92,246,0.3)' }} className="modern-card relative overflow-hidden rounded-[2rem] p-8 sm:p-12 lg:p-16 transition-shadow duration-500">
             <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-violet-500/20 blur-3xl" />
             <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute -bottom-36 left-1/3 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />

@@ -4,6 +4,9 @@ import Background from '../components/Background';
 import { projectService } from '../utils/projectService';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import MagazineMockup from '../components/MagazineMockup';
+import BoxMockup from '../components/BoxMockup';
+import PrintMockup from '../components/PrintMockup';
 
 // Project Detail views have been transitioned to dynamic standalone pages at /projects/:id
 
@@ -12,7 +15,10 @@ const Projects = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedDesign, setSelectedDesign] = useState('All designs');
 
   useEffect(() => {
     let isMounted = true;
@@ -25,18 +31,30 @@ const Projects = () => {
         }
       } catch (err) {
         console.error('Failed to load portfolio projects:', err);
-        if (isMounted) setIsLoading(false);
+        if (isMounted) {
+          setLoadError(true);
+          setIsLoading(false);
+        }
       }
     };
     loadData();
     return () => { isMounted = false; };
-  }, []);
+  }, [loadAttempt]);
 
   const categories = ['All', ...new Set(projects.map(project => project.category))];
+
+  const designFilters = [
+    { label: 'All designs', match: () => true },
+    { label: 'Magazine', match: (project) => project.technologies.includes('Magazine Mockup') },
+    { label: 'A3 Tuition Cover', match: (project) => project.technologies.includes('A3 Tuition Cover') },
+    { label: 'Handbill', match: (project) => project.technologies.includes('Handbill') },
+    { label: 'Product Box', match: (project) => project.technologies.includes('Product Box') },
+  ];
 
   const filteredProjects = selectedCategory === 'All'
     ? projects
     : projects.filter(project => project.category === selectedCategory);
+  const visibleProjects = filteredProjects.filter((project) => designFilters.find((filter) => filter.label === selectedDesign)?.match(project) ?? true);
 
   return (
     <div className="min-h-screen text-slate-100 selection:bg-violet-500/40 selection:text-white overflow-x-hidden font-main">
@@ -88,24 +106,41 @@ const Projects = () => {
           </motion.div>
         </div>
 
-        {/* Global Filter */}
-        <div className="flex flex-wrap items-center gap-4 mb-20 border-b border-slate-100 pb-10">
-          <span className="text-[10px] font-black tracking-widest uppercase text-slate-400 mr-4">Filter By Domain:</span>
-          {categories.map((category) => (
-            <motion.button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.96 }}
-              className={`px-6 py-2.5 rounded-xl text-[10px] font-black tracking-widest uppercase border transition-all duration-300 ${selectedCategory === category
-                ? 'bg-violet-500/20 text-violet-200 border-violet-400/35 shadow-lg shadow-violet-950/30'
-                : 'bg-white/[0.03] border-white/10 text-slate-400 hover:text-white hover:bg-white/[0.07]'
-                }`}
-            >
-              {category}
-            </motion.button>
-          ))}
-        </div>
+        {/* Project filters */}
+        <section className="mb-16 rounded-2xl border border-white/10 bg-slate-950/45 p-5 sm:p-7 shadow-xl shadow-black/10 backdrop-blur-md" aria-label="Project filters">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col xl:flex-row xl:items-center gap-3 xl:gap-8">
+              <div className="xl:w-36 shrink-0">
+                <span className="block text-[9px] font-black tracking-[.2em] uppercase text-sky-300">Browse by</span>
+                <span className="block mt-1 text-sm font-bold text-white">Project domain</span>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {categories.map((category) => (
+                  <motion.button key={category} type="button" onClick={() => { setSelectedCategory(category); setSelectedDesign('All designs'); }} whileTap={{ scale: 0.96 }} aria-pressed={selectedCategory === category} className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[10px] font-bold transition-all duration-200 ${selectedCategory === category ? 'bg-sky-300 text-slate-950 shadow-md shadow-sky-950/30' : 'border border-white/10 bg-white/[.035] text-slate-300 hover:border-sky-300/40 hover:bg-white/[.08] hover:text-white'}`}>
+                    {selectedCategory === category && <span className="h-1.5 w-1.5 rounded-full bg-slate-950" />}{category}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
+            <div className="h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
+
+            <div className="flex flex-col xl:flex-row xl:items-center gap-3 xl:gap-8">
+              <div className="xl:w-36 shrink-0">
+                <span className="block text-[9px] font-black tracking-[.2em] uppercase text-emerald-300">Print & packaging</span>
+                <span className="block mt-1 text-sm font-bold text-white">Design type</span>
+              </div>
+              <div className="flex flex-wrap gap-2.5" aria-label="Filter by print design type">
+                {designFilters.map((filter) => (
+                  <motion.button key={filter.label} type="button" onClick={() => { setSelectedDesign(filter.label); setSelectedCategory('All'); }} whileTap={{ scale: 0.96 }} aria-pressed={selectedDesign === filter.label} className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[10px] font-bold transition-all duration-200 ${selectedDesign === filter.label ? 'bg-emerald-300 text-slate-950 shadow-md shadow-emerald-950/25' : 'border border-white/10 bg-white/[.035] text-slate-300 hover:border-emerald-300/40 hover:bg-white/[.08] hover:text-white'}`}>
+                    {selectedDesign === filter.label && <span className="h-1.5 w-1.5 rounded-full bg-slate-950" />}{filter.label}
+                  </motion.button>
+                ))}
+              </div>
+              <span className="xl:ml-auto text-[10px] text-slate-500">{visibleProjects.length} {visibleProjects.length === 1 ? 'project' : 'projects'}</span>
+            </div>
+          </div>
+        </section>
 
         {/* Loading Skeletons */}
         {isLoading ? (
@@ -125,11 +160,30 @@ const Projects = () => {
               </div>
             ))}
           </div>
+        ) : loadError ? (
+          <div className="py-12 text-center">
+            <p role="alert" className="text-sm font-semibold">Projects couldn’t be loaded.</p>
+            <button
+              type="button"
+              className="mt-3 px-4 py-2 text-sm font-semibold underline"
+              onClick={() => {
+                setLoadError(false);
+                setIsLoading(true);
+                setLoadAttempt((attempt) => attempt + 1);
+              }}
+            >
+              Try again
+            </button>
+          </div>
+        ) : visibleProjects.length === 0 ? (
+          <div className="glass rounded-2xl border border-white/10 p-12 text-center text-slate-400">
+            <p className="text-sm font-semibold">No projects match this design filter yet.</p>
+          </div>
         ) : (
           /* Dynamic Grid */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
+              {visibleProjects.map((project, index) => (
                 <div
                   key={project.id || project.title}
                   onClick={() => navigate(`/projects/${project.id}`)}
@@ -148,14 +202,14 @@ const Projects = () => {
                     <div className="modern-card overflow-hidden rounded-2xl transition-colors duration-500 hover:border-violet-400/30 hover:shadow-[0_28px_80px_rgba(76,29,149,.22)] h-full flex flex-col">
                     {/* Image Holder */}
                     <div className="aspect-[16/10] overflow-hidden relative">
-                      <img
+                      {project.technologies.includes('Magazine Mockup') ? <MagazineMockup project={project} compact /> : project.technologies.includes('Product Box') ? <BoxMockup project={project} compact /> : project.technologies.includes('Print Mockup') ? <PrintMockup project={project} compact /> : <img
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#050816]/70 via-transparent to-transparent opacity-70 group-hover:opacity-35 transition-opacity duration-500" />
+                      />}
+                      {!project.technologies.includes('Magazine Mockup') && !project.technologies.includes('Product Box') && !project.technologies.includes('Print Mockup') && <div className="absolute inset-0 bg-gradient-to-t from-[#050816]/70 via-transparent to-transparent opacity-70 group-hover:opacity-35 transition-opacity duration-500" />}
                       <div className="absolute top-6 left-6">
                         <span className="px-4 py-1.5 rounded-full glass border-white/50 text-[10px] font-black tracking-widest uppercase text-white shadow-lg">
                           {project.category}

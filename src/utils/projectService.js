@@ -35,22 +35,23 @@ const request = async (action, options = {}) => {
     window.clearTimeout(timeout);
   }
 
-  let data;
-  try {
-    data = await response.json();
-  } catch {
-    if (response.status === 504) {
-      const error = new Error('The PHP backend timed out. Make sure Apache and MySQL are running.');
-      error.status = 504;
-      throw error;
-    }
-    throw new Error('The server returned an invalid response.');
-  }
+  const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    const error = new Error(data.error || 'The request failed.');
+    const apiError = data?.error;
+    const message = [apiError?.message, apiError, data?.message]
+      .find((value) => typeof value === 'string' && value.trim());
+    const fallback = {
+      502: 'The gateway could not reach the PHP backend (HTTP 502).',
+      504: 'The PHP backend timed out (HTTP 504).',
+    };
+    const error = new Error(message || fallback[response.status] || `The request failed (HTTP ${response.status}).`);
     error.status = response.status;
     throw error;
+  }
+
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('The server returned an invalid response.');
   }
 
   if (data.csrfToken) {

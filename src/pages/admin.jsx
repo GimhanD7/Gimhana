@@ -5,6 +5,7 @@ import { authService, projectService } from '../utils/projectService';
 import { useToast } from '../contexts/ToastContext';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import PrintStudio from '../components/PrintStudio';
 const Admin = () => {
   const { showError, showSuccess } = useToast();
 
@@ -502,6 +503,8 @@ const Admin = () => {
                 <h3 className="text-4xl font-black text-slate-900 mt-2 font-heading">{isLoading ? '...' : techStackSize}</h3>
               </div>
             </div>
+
+            <PrintStudio />
 
             {/* Split layout: Form (CRUD Editor) & Projects List */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">

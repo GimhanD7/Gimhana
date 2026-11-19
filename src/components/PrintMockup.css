@@ -1,0 +1,23 @@
+.print-project-mockup{width:100%;height:100%;padding:20px;background:radial-gradient(ellipse at 50% 42%,#d8d8d9,#b2b3b5 68%,#94969a);overflow:hidden}.print-project-stage{height:340px;display:grid;place-items:center;perspective:1200px}.print-project-sheet{position:relative;width:210px;height:297px;transform-style:preserve-3d;transition:transform .18s ease-out;box-shadow:17px 19px 26px #17191d66}.print-project-sheet.handbill{width:190px;height:270px}.print-project-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;background:#f1eee8}.print-project-face img{width:100%;height:100%;object-fit:cover;object-position:center}.print-project-face.back{transform:rotateY(180deg)}.print-project-back-text{height:100%;padding:12%;display:flex;flex-direction:column;justify-content:space-between;color:#292833;background:linear-gradient(145deg,#f9f8f2,#e0dfd9)}.print-project-back-text>span{font:800 8px Arial,sans-serif;letter-spacing:.18em;color:#a47745}.print-project-back-text>b{font:700 20px/1.05 Georgia,serif}.print-project-back-text>p{font:400 9px/1.5 Arial,sans-serif;color:#5b5c64;display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}.print-project-controls{display:flex;align-items:center;justify-content:center;gap:12px}.print-project-controls label{display:flex;align-items:center;gap:8px}.print-project-controls label span,.print-side-label{font:800 8px Arial,sans-serif;letter-spacing:.15em;color:#44474e}.print-project-controls input{width:130px;accent-color:#7654a4}.print-project-mockup.compact{padding:5px 8px 34px;position:relative}.print-project-mockup.compact .print-project-stage{height:100%;min-height:190px;max-height:265px;transform:scale(.7)}.print-project-mockup.compact .print-project-sheet{transform-origin:center}.print-project-mockup.compact .print-project-controls{position:absolute;bottom:5px;left:0;right:0;gap:7px}.print-project-mockup.compact .print-project-controls input{width:75px}.print-project-mockup.compact .print-project-controls label span,.print-project-mockup.compact .print-side-label{font-size:6px}@media(max-width:640px){.print-project-stage{height:300px}.print-project-mockup.compact .print-project-stage{transform:scale(.68)}}
+
+.print-project-sheet.mockup-landscape-poster{width:300px;height:auto;aspect-ratio:420 / 297}.print-project-sheet.mockup-framed-print{border:8px solid #ddd5c8;padding:4px;background:#ddd5c8}.print-project-sheet.mockup-a4-flyer{width:215px;height:305px}.print-project-sheet.mockup-dl-leaflet{width:150px;height:300px}.print-project-sheet.material-glossy-print .print-project-face:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,#fff4 50%,transparent 65%)}
+
+/* A3 uploaded spreads map the left half to the back and the right half to the front. */
+.print-project-sheet.a3-cover-spread{width:min(420px,94%);height:auto;aspect-ratio:420 / 297;display:flex;overflow:visible;background:#eeece7;box-shadow:16px 19px 28px #17191d66}
+.a3-spread-page{position:relative;width:50%;height:100%;overflow:hidden;background:#eeece7}
+.a3-spread-page img{position:absolute;top:0;width:200%;height:100%;max-width:none;object-fit:cover;object-position:center}
+.a3-spread-back img{left:0}
+.a3-spread-front img{left:-100%}
+.a3-spread-fold{position:absolute;z-index:2;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);background:linear-gradient(90deg,#0002,#fff9 45%,#0003);box-shadow:0 0 8px #0004;pointer-events:none}
+
+/* Interactive A3 book fold: closed shows the right-hand front cover; open reveals both halves. */
+.print-project-sheet.a3-cover-spread{width:min(210px,47%);height:auto;aspect-ratio:210 / 297;overflow:visible;transition:width .5s cubic-bezier(.2,.75,.25,1);transform-origin:center}
+.print-project-sheet.a3-cover-spread:before{content:'';position:absolute;z-index:-1;inset:3px -5px -4px 3px;background:repeating-linear-gradient(0deg,#faf9f5 0 2px,#d6d4ce 2px 3px);box-shadow:7px 9px 13px #0005}
+.a3-cover-spread .a3-spread-back{width:0;opacity:0;transition:width .5s,opacity .2s}
+.a3-cover-spread .a3-spread-front{width:100%;flex:0 0 auto;transition:width .5s cubic-bezier(.2,.75,.25,1)}
+.a3-cover-spread.opened{width:min(420px,94%);aspect-ratio:420 / 297}
+.a3-cover-spread.opened .a3-spread-back,.a3-cover-spread.opened .a3-spread-front{width:50%;opacity:1}
+.a3-spread-fold{opacity:0;transition:opacity .25s}
+.a3-cover-spread.opened .a3-spread-fold{opacity:1}
+.a3-project-open-button{border:1px solid #7654a4;background:#7654a4;color:white;border-radius:5px;padding:5px 8px;font:800 8px Arial,sans-serif;letter-spacing:.08em;cursor:pointer}
+.print-project-mockup.compact .a3-project-open-button{font-size:6px;padding:4px 5px}

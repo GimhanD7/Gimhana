@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Background from '../components/Background';
 import { projectService } from '../utils/projectService';
 import SEO from '../components/SEO';
+import MagazineMockup from '../components/MagazineMockup';
+import BoxMockup from '../components/BoxMockup';
+import PrintMockup from '../components/PrintMockup';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -110,7 +113,9 @@ const ProjectDetail = () => {
     );
   }
 
-  const galleryImages = Array.isArray(project.gallery) ? project.gallery.filter(Boolean) : [];
+  const galleryImages = Array.isArray(project.gallery)
+    ? project.gallery.filter((image, index) => image && !((project.technologies.includes('Magazine Back Cover') || project.technologies.includes('Print Back Side')) && index === 0))
+    : [];
 
   return (
     <div className="min-h-screen text-slate-100 selection:bg-violet-500/40 selection:text-white overflow-x-hidden font-main relative">
@@ -153,7 +158,43 @@ const ProjectDetail = () => {
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
         
         {/* Full-width Panoramic Hero Header */}
-        <motion.div
+        {project.technologies.includes('Magazine Mockup') ? <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12 overflow-hidden rounded-2xl shadow-2xl"
+        >
+          <MagazineMockup project={project} />
+          <div className="bg-slate-950 px-6 py-6 sm:px-10 text-white">
+            <span className="text-[10px] font-black tracking-[0.24em] uppercase text-violet-300">{project.category} · {project.period}</span>
+            <h1 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight uppercase">{project.title}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{project.description}</p>
+          </div>
+        </motion.div> : project.technologies.includes('Product Box') ? <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12 overflow-hidden rounded-2xl shadow-2xl"
+        >
+          <BoxMockup project={project} />
+          <div className="bg-slate-950 px-6 py-6 sm:px-10 text-white">
+            <span className="text-[10px] font-black tracking-[0.24em] uppercase text-violet-300">{project.category} · {project.period}</span>
+            <h1 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight uppercase">{project.title}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{project.description}</p>
+          </div>
+        </motion.div> : project.technologies.includes('Print Mockup') ? <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12 overflow-hidden rounded-2xl shadow-2xl"
+        >
+          <PrintMockup project={project} />
+          <div className="bg-slate-950 px-6 py-6 sm:px-10 text-white">
+            <span className="text-[10px] font-black tracking-[0.24em] uppercase text-violet-300">{project.category} · {project.period}</span>
+            <h1 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight uppercase">{project.title}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{project.description}</p>
+          </div>
+        </motion.div> : <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -180,7 +221,7 @@ const ProjectDetail = () => {
               {project.title}
             </h1>
           </div>
-        </motion.div>
+        </motion.div>}
 
         {/* Content Layout Grid split */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-start">

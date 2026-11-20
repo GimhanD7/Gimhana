@@ -52,12 +52,29 @@ jobs:
           DEPLOY_KEY: ${{ secrets.NAMECHEAP_SSH_PRIVATE_KEY }}
           DEPLOY_KNOWN_HOSTS: ${{ secrets.NAMECHEAP_KNOWN_HOSTS }}
         run: |
-          if [[ ! "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ||
-                ! "$DEPLOY_USER" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ||
-                ! "$DEPLOY_ROOT" =~ ^/home[0-9]*/[a-zA-Z0-9_-]+(/[a-zA-Z0-9._-]+)+/?$ ||
-                "$DEPLOY_ROOT/" == *"/../"* || "$DEPLOY_ROOT/" == *"/./"* ||
-                -z "$DEPLOY_KEY" || -z "$DEPLOY_KNOWN_HOSTS" ]]; then
-            echo "::error::Check the Namecheap environment variables and SSH secrets."
+          invalid_settings=0
+          if [[ ! "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]]; then
+            echo "::error::NAMECHEAP_HOST is missing or invalid. Enter the hosting hostname or IP address."
+            invalid_settings=1
+          fi
+          if [[ ! "$DEPLOY_USER" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ]]; then
+            echo "::error::NAMECHEAP_USER is missing or invalid. Enter the cPanel SSH username."
+            invalid_settings=1
+          fi
+          if [[ ! "$DEPLOY_ROOT" =~ ^/home[0-9]*/[a-zA-Z0-9_-]+(/[a-zA-Z0-9._-]+)+/?$ ||
+                "$DEPLOY_ROOT/" == *"/../"* || "$DEPLOY_ROOT/" == *"/./"* ]]; then
+            echo "::error::NAMECHEAP_DOCUMENT_ROOT is missing or invalid. Enter the absolute document root from cPanel."
+            invalid_settings=1
+          fi
+          if [[ -z "$DEPLOY_KEY" ]]; then
+            echo "::error::NAMECHEAP_SSH_PRIVATE_KEY is missing from the namecheap-production environment secrets."
+            invalid_settings=1
+          fi
+          if [[ -z "$DEPLOY_KNOWN_HOSTS" ]]; then
+            echo "::error::NAMECHEAP_KNOWN_HOSTS is missing from the namecheap-production environment secrets."
+            invalid_settings=1
+          fi
+          if (( invalid_settings )); then
             exit 1
           fi
           umask 077

@@ -9,43 +9,47 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: same-origin');
 
-$requestOrigin = rtrim($_SERVER['HTTP_ORIGIN'] ?? '', '/');
-$allowedOrigins = array_values(array_unique(array_merge(
-    $config['allowed_origins'] ?? [],
-    ['https://gimhana-teal.vercel.app']
-)));
-$isAllowedOrigin = $requestOrigin !== '' && in_array($requestOrigin, $allowedOrigins, true);
+if (PHP_SAPI !== 'cli') {
+    $requestOrigin = rtrim($_SERVER['HTTP_ORIGIN'] ?? '', '/');
+    $allowedOrigins = array_values(array_unique(array_merge(
+        $config['allowed_origins'] ?? [],
+        ['https://gimhana-teal.vercel.app']
+    )));
+    $isAllowedOrigin = $requestOrigin !== '' && in_array($requestOrigin, $allowedOrigins, true);
 
-if ($isAllowedOrigin) {
-    header('Access-Control-Allow-Origin: ' . $requestOrigin);
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
-    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Vary: Origin');
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    if (!$isAllowedOrigin) {
-        http_response_code(403);
-    } else {
-        http_response_code(204);
+    if ($isAllowedOrigin) {
+        header('Access-Control-Allow-Origin: ' . $requestOrigin);
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+        header('Vary: Origin');
     }
-    exit;
-}
 
-$forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
-$isSecureRequest = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-    || $forwardedProto === 'https'
-    || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
-session_name($config['session_name']);
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'secure' => $isSecureRequest,
-    'httponly' => true,
-    'samesite' => $isSecureRequest ? 'None' : 'Lax',
-]);
-session_start();
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+        if (!$isAllowedOrigin) {
+            http_response_code(403);
+        } else {
+            http_response_code(204);
+        }
+        exit;
+    }
+
+    $forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
+    $isSecureRequest = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || $forwardedProto === 'https'
+        || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
+    session_name($config['session_name']);
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => $isSecureRequest,
+        'httponly' => true,
+        'samesite' => $isSecureRequest ? 'None' : 'Lax',
+    ]);
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+}
 
 function respond(array $data, int $status = 200): never
 {
@@ -68,6 +72,88 @@ function body(): array
     }
 
     return is_array($value) ? $value : [];
+}
+
+function auto_migrate(PDO $pdo): void
+{
+    static $migrated = false;
+    if ($migrated) {
+        return;
+    }
+
+    $tables = [
+        'admins' => 'CREATE TABLE IF NOT EXISTS admins (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(80) NOT NULL UNIQUE,
+            password_hash VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;',
+
+        'projects' => 'CREATE TABLE IF NOT EXISTS projects (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(180) NOT NULL,
+            period VARCHAR(100) NOT NULL,
+            description TEXT NOT NULL,
+            category VARCHAR(100) NOT NULL,
+            image LONGTEXT NOT NULL,
+            display_order INT NOT NULL DEFAULT 0,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_projects_order (display_order, id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;',
+
+        'project_technologies' => 'CREATE TABLE IF NOT EXISTS project_technologies (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            project_id INT UNSIGNED NOT NULL,
+            technology VARCHAR(80) NOT NULL,
+            sort_order INT NOT NULL DEFAULT 0,
+            CONSTRAINT fk_technology_project FOREIGN KEY (project_id)
+                REFERENCES projects(id) ON DELETE CASCADE,
+            INDEX idx_technology_project (project_id, sort_order)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;',
+
+        'project_links' => 'CREATE TABLE IF NOT EXISTS project_links (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            project_id INT UNSIGNED NOT NULL,
+            label VARCHAR(100) NOT NULL,
+            url TEXT NOT NULL,
+            sort_order INT NOT NULL DEFAULT 0,
+            CONSTRAINT fk_link_project FOREIGN KEY (project_id)
+                REFERENCES projects(id) ON DELETE CASCADE,
+            INDEX idx_link_project (project_id, sort_order)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;',
+
+        'project_gallery' => 'CREATE TABLE IF NOT EXISTS project_gallery (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            project_id INT UNSIGNED NOT NULL,
+            image LONGTEXT NOT NULL,
+            sort_order INT NOT NULL DEFAULT 0,
+            CONSTRAINT fk_gallery_project FOREIGN KEY (project_id)
+                REFERENCES projects(id) ON DELETE CASCADE,
+            INDEX idx_gallery_project (project_id, sort_order)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;',
+    ];
+
+    try {
+        $statement = $pdo->query('SHOW TABLES');
+        $existingTables = array_map('strtolower', $statement->fetchAll(PDO::FETCH_COLUMN));
+        $missing = array_diff(array_keys($tables), $existingTables);
+        if (empty($missing)) {
+            $migrated = true;
+            return;
+        }
+
+        foreach ($missing as $tableName) {
+            $pdo->exec($tables[$tableName]);
+        }
+    } catch (Throwable) {
+        foreach ($tables as $sql) {
+            $pdo->exec($sql);
+        }
+    }
+
+    $migrated = true;
 }
 
 function db(): PDO
@@ -95,9 +181,37 @@ function db(): PDO
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_TIMEOUT => 5,
         ]);
-    } catch (PDOException) {
-        respond(['error' => 'Database connection failed. Check api/config.php and import database.sql.'], 503);
+    } catch (PDOException $e) {
+        if (($e->getCode() === 1049 || str_contains($e->getMessage(), 'Unknown database'))
+            && in_array($database['host'], ['127.0.0.1', 'localhost'], true)
+        ) {
+            try {
+                $serverDsn = sprintf(
+                    'mysql:host=%s;port=%s;charset=%s',
+                    $database['host'],
+                    $database['port'],
+                    $database['charset']
+                );
+                $serverPdo = new PDO($serverDsn, $database['user'], $database['password'], [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ]);
+                $safeDbName = str_replace('`', '``', $database['name']);
+                $serverPdo->exec("CREATE DATABASE IF NOT EXISTS `{$safeDbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+                $pdo = new PDO($dsn, $database['user'], $database['password'], [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                    PDO::ATTR_TIMEOUT => 5,
+                ]);
+            } catch (Throwable) {
+                respond(['error' => 'Database connection failed. Check api/config.php and database credentials.'], 503);
+            }
+        } else {
+            respond(['error' => 'Database connection failed. Check api/config.php and database credentials.'], 503);
+        }
     }
+
+    auto_migrate($pdo);
 
     return $pdo;
 }

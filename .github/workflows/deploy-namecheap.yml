@@ -37,9 +37,10 @@ jobs:
           php -l api/index.php
           php -l api/bootstrap.php
           php -l api/config.php
+          php -l api/migrate.php
           mkdir -p build/api/uploads
           cp deploy/namecheap.htaccess build/.htaccess
-          cp api/{index,bootstrap,config}.php build/api/
+          cp api/{index,bootstrap,config,migrate}.php build/api/
           cp api/uploads/.htaccess build/api/uploads/
           git ls-files -z 'api/uploads/*.jpg' 'api/uploads/*.jpeg' 'api/uploads/*.png' 'api/uploads/*.webp' |
             xargs -0 -r cp -t build/api/uploads/

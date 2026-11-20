@@ -11,6 +11,16 @@ if ($action === 'health') {
     respond(['status' => 'ok']);
 }
 
+if ($action === 'migrate') {
+    require_method('GET', 'POST');
+    $pdo = db();
+    auto_migrate($pdo);
+    respond([
+        'status' => 'ok',
+        'message' => 'Database tables migrated successfully without default data.',
+    ]);
+}
+
 if ($action === 'session') {
     require_method('GET');
     respond([

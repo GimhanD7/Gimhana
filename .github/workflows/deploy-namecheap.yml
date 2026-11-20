@@ -93,7 +93,12 @@ jobs:
       - name: Verify routing and database-backed API
         run: |
           site=https://gimhan.web.lk
+          echo "Checking React projects page"
           curl -fsS --max-time 20 "$site/projects" -o "$RUNNER_TEMP/portfolio.html"
           grep -Fq 'id="root"' "$RUNNER_TEMP/portfolio.html"
-          curl -fsS --max-time 20 "$site/api/index.php?action=health" | jq -e '.status == "ok"'
-          curl -fsS --max-time 20 "$site/api/index.php?action=projects" | jq -e '.projects | type == "array"'
+          echo "Checking PHP API database connection (action=health)"
+          curl -fsS --max-time 20 "$site/api/index.php?action=health" -o "$RUNNER_TEMP/health.json"
+          jq -e '.status == "ok"' "$RUNNER_TEMP/health.json" >/dev/null
+          echo "Checking projects data (action=projects)"
+          curl -fsS --max-time 20 "$site/api/index.php?action=projects" -o "$RUNNER_TEMP/projects.json"
+          jq -e '.projects | type == "array"' "$RUNNER_TEMP/projects.json" >/dev/null

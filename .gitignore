@@ -24,4 +24,3 @@ yarn-error.log*
 
 # Server-only database credentials
 /api/config.local.php
-/api/config.production.php

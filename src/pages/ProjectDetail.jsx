@@ -130,9 +130,9 @@ const ProjectDetail = () => {
           '@type': 'CreativeWork',
           name: project.title,
           description: project.description,
-      url: `https://www.gimhan.web.lk/projects/${project.id}`,
+      url: `https://ginhan.web.lk/projects/${project.id}`,
           image: project.image,
-      creator: { '@id': 'https://www.gimhan.web.lk/#person' },
+      creator: { '@id': 'https://ginhan.web.lk/#person' },
           keywords: project.technologies.join(', '),
         }}
       />

@@ -2,7 +2,11 @@
 declare(strict_types=1);
 
 $requestHost = strtolower(explode(':', $_SERVER['HTTP_HOST'] ?? '')[0]);
-$isProduction = $requestHost === 'sudesh.sudeshmaths.com';
+$isProduction = in_array($requestHost, [
+    'ginhan.web.lk',
+    'www.ginhan.web.lk',
+    'sudesh.sudeshmaths.com',
+], true);
 $databaseConfigPath = __DIR__ . ($isProduction ? '/config.production.php' : '/config.local.php');
 $databaseOverride = is_file($databaseConfigPath) ? require $databaseConfigPath : [];
 
@@ -21,6 +25,8 @@ return [
         explode(',', getenv('PORTFOLIO_ALLOWED_ORIGINS') ?: implode(',', [
             'http://localhost:3000',
             'http://127.0.0.1:3000',
+            'https://ginhan.web.lk',
+            'https://www.ginhan.web.lk',
             'https://gimhan.web.lk',
             'https://www.gimhan.web.lk',
             'https://gimhana-teal.vercel.app',

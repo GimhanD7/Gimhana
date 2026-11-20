@@ -21,7 +21,7 @@ const ContactMe = () => {
         title="Contact Gimhana Deshapriya | Full-Stack Web Development"
         description="Contact Gimhana Deshapriya for full-stack web development, React and PHP systems, MySQL databases, admin portals, automation, and UI/UX design."
         path="/contact"
-        schema={{ '@type': 'ContactPage', name: 'Contact Gimhana Deshapriya', url: 'https://www.gimhan.web.lk/contact' }}
+        schema={{ '@type': 'ContactPage', name: 'Contact Gimhana Deshapriya', url: 'https://ginhan.web.lk/contact' }}
       />
 
       <main className="container mx-auto px-4 py-32 max-w-7xl relative z-10">
@@ -53,7 +53,7 @@ const ContactMe = () => {
               {[
                 { label: 'Direct Email', value: 'gimhandeshapriya567@gmail.com', href: 'mailto:gimhandeshapriya567@gmail.com' },
                 { label: 'Direct Phone', value: '+94 76 8582 057', href: 'tel:+94768582057' },
-                { label: 'Digital Home', value: 'www.gimhan.web.lk', href: 'https://www.gimhan.web.lk' },
+                { label: 'Digital Home', value: 'ginhan.web.lk', href: 'https://ginhan.web.lk' },
                 { label: 'Global HQ', value: '257, Indolamulla, Dompe, Sri Lanka', href: null }
               ].map((item, index) => (
                 <motion.div key={index} variants={reveal} whileHover={{ x: 10, backgroundColor: 'rgba(139,92,246,0.05)' }} className="group rounded-xl p-4 transition-colors">

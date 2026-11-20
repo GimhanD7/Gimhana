@@ -26,10 +26,68 @@ password: (empty)
 For another environment, set `PORTFOLIO_DB_HOST`, `PORTFOLIO_DB_PORT`,
 `PORTFOLIO_DB_NAME`, `PORTFOLIO_DB_USER`, and `PORTFOLIO_DB_PASSWORD`.
 
-On shared hosting, create `api/config.local.php` with the server database
-credentials. This file is loaded automatically and ignored by Git. Upload it
-privately alongside the other API files; never expose it through a public
-repository.
+## Namecheap production deployment
+
+[Deploy portfolio to Namecheap](.github/workflows/deploy-namecheap.yml) builds
+React and publishes it together with the PHP API to the document root of
+`https://ginhan.web.lk`. The frontend uses the same-origin `/api/index.php`
+endpoint. The workflow runs on pushes to `main` and can also be run manually
+from that branch.
+
+1. In Namecheap cPanel, add `ginhan.web.lk` under **Domains** and record its
+   absolute document root. At the authoritative DNS provider for the domain,
+   point the A record to the Namecheap shared hosting IP. Enable HTTPS after
+   DNS resolves, and select PHP 8.1 or newer with `pdo_mysql` and `mbstring`.
+2. In **Database Wizard**, create the database and a database user, and grant
+   the user access to that database. In phpMyAdmin, select the new database.
+   To migrate existing portfolio content, import a data export from the
+   existing database and copy its `api/uploads` files to the new web root.
+   Update stored image URLs that point to the old upload host or path. For
+   a fresh install, use a copy of `database.sql` with the `CREATE DATABASE`
+   and `USE` statements removed. Replace the bundled admin password hash
+   with one for a unique password before importing. Keep the cPanel account
+   prefix in the actual database and user names.
+3. Create `api/config.production.php` under the Namecheap document root
+   using cPanel File Manager. Store the actual database credentials there.
+
+   ```php
+   <?php
+   return [
+       'host' => 'localhost',
+       'port' => '3306',
+       'name' => 'cpaneluser_portfolio',
+       'user' => 'cpaneluser_portfolio',
+       'password' => 'YOUR_DATABASE_PASSWORD',
+   ];
+   ```
+
+4. Enable shell access, authorize a dedicated SSH public key in cPanel, and
+   confirm `rsync` is available on the hosting server. If the document root
+   has an existing `.htaccess`, back it up and incorporate any required
+   cPanel PHP handler or existing directives into `deploy/namecheap.htaccess`
+   before the first deploy. The workflow publishes that file to the root.
+5. In GitHub, open **Settings → Environments** and create
+   `namecheap-production`. Add the following environment settings.
+
+   | Setting | Type | Value |
+   | --- | --- | --- |
+   | `NAMECHEAP_HOST` | Variable | Hosting server hostname from Namecheap |
+   | `NAMECHEAP_USER` | Variable | cPanel SSH username |
+   | `NAMECHEAP_DOCUMENT_ROOT` | Variable | Absolute document root from cPanel, such as `/home/cpaneluser/ginhan.web.lk` |
+   | `NAMECHEAP_SSH_PRIVATE_KEY` | Secret | Private key for the authorized deployment key, usable without a passphrase |
+   | `NAMECHEAP_KNOWN_HOSTS` | Secret | Verified OpenSSH known-hosts entry for `[NAMECHEAP_HOST]:21098`, using the actual hostname |
+
+6. Publish the workflow to `main`, then run **Deploy portfolio to Namecheap**
+   from **Actions** if needed. It checks the React projects route, database
+   connectivity, and the projects JSON endpoint after upload. Deploys retain
+   the server database configuration and existing uploaded images. Database
+   imports are a one-time cPanel operation.
+
+See Namecheap's guides for [domains](https://www.namecheap.com/support/knowledgebase/article/897/29/how-to-create-an-addon-domain/),
+[SSH](https://www.namecheap.com/support/knowledgebase/article.aspx/1016/89/how-to-access-a-hosting-account-via-ssh/),
+and [database imports](https://www.namecheap.com/support/knowledgebase/article.aspx/9143/2180/how-to-import-and-export-a-database-via-phpmyadmin-access-denied-create-database-db_name-error/).
+
+## Existing Vercel setup
 
 For the Vercel frontend, `.env.production` points to the same-origin proxy:
 

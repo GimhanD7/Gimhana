@@ -1,0 +1,11 @@
+DirectoryIndex index.html
+RewriteEngine On
+
+<FilesMatch "^(config\.(local|production)\.php|.*\.(sql|zip))$">
+  Require all denied
+</FilesMatch>
+
+RewriteRule ^(?:api|static|\.well-known)(?:/|$) - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

@@ -1,0 +1,82 @@
+name: Deploy portfolio to Namecheap
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: namecheap-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    environment:
+      name: namecheap-production
+      url: https://ginhan.web.lk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Build and package the site
+        run: |
+          npm ci --legacy-peer-deps
+          CI=false REACT_APP_API_URL=/api/index.php npm run build
+          php -l api/index.php
+          php -l api/bootstrap.php
+          php -l api/config.php
+          mkdir -p build/api/uploads
+          cp deploy/namecheap.htaccess build/.htaccess
+          cp api/{index,bootstrap,config}.php build/api/
+          cp api/uploads/.htaccess build/api/uploads/
+          git ls-files -z 'api/uploads/*.jpg' 'api/uploads/*.jpeg' 'api/uploads/*.png' 'api/uploads/*.webp' |
+            xargs -0 -r cp -t build/api/uploads/
+
+      - name: Deploy over SSH
+        env:
+          DEPLOY_HOST: ${{ vars.NAMECHEAP_HOST }}
+          DEPLOY_USER: ${{ vars.NAMECHEAP_USER }}
+          DEPLOY_ROOT: ${{ vars.NAMECHEAP_DOCUMENT_ROOT }}
+          DEPLOY_KEY: ${{ secrets.NAMECHEAP_SSH_PRIVATE_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.NAMECHEAP_KNOWN_HOSTS }}
+        run: |
+          if [[ ! "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ||
+                ! "$DEPLOY_USER" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ||
+                ! "$DEPLOY_ROOT" =~ ^/home[0-9]*/[a-zA-Z0-9_-]+(/[a-zA-Z0-9._-]+)+/?$ ||
+                "$DEPLOY_ROOT/" == *"/../"* || "$DEPLOY_ROOT/" == *"/./"* ||
+                -z "$DEPLOY_KEY" || -z "$DEPLOY_KNOWN_HOSTS" ]]; then
+            echo "::error::Check the Namecheap environment variables and SSH secrets."
+            exit 1
+          fi
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/namecheap
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh_opts=(-p 21098 -i "$HOME/.ssh/namecheap" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o BatchMode=yes)
+          destination="$DEPLOY_USER@$DEPLOY_HOST"
+          ssh "${ssh_opts[@]}" "$destination" "test -d '$DEPLOY_ROOT' && command -v rsync >/dev/null"
+          export RSYNC_RSH="ssh ${ssh_opts[*]}"
+          rsync -az --delay-updates --include='/api/uploads/.htaccess' --exclude='/api/uploads/*' \
+            build/ "$destination:${DEPLOY_ROOT%/}/"
+          rsync -az --ignore-existing --exclude='.htaccess' \
+            build/api/uploads/ "$destination:${DEPLOY_ROOT%/}/api/uploads/"
+
+      - name: Verify routing and database-backed API
+        run: |
+          site=https://ginhan.web.lk
+          curl -fsS --max-time 20 "$site/projects" -o "$RUNNER_TEMP/portfolio.html"
+          grep -Fq 'id="root"' "$RUNNER_TEMP/portfolio.html"
+          curl -fsS --max-time 20 "$site/api/index.php?action=health" | jq -e '.status == "ok"'
+          curl -fsS --max-time 20 "$site/api/index.php?action=projects" | jq -e '.projects | type == "array"'

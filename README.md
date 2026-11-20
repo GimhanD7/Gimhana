@@ -43,10 +43,9 @@ from that branch.
    To migrate existing portfolio content, import a data export from the
    existing database and copy its `api/uploads` files to the new web root.
    Update stored image URLs that point to the old upload host or path. For
-   a fresh install, use a copy of `database.sql` with the `CREATE DATABASE`
-   and `USE` statements removed. Replace the bundled admin password hash
-   with one for a unique password before importing. Keep the cPanel account
-   prefix in the actual database and user names.
+   a fresh install, import `deploy/namecheap-database.sql`. It creates the
+   tables for an empty portfolio and does not create an admin account.
+   Keep the cPanel account prefix in the actual database and user names.
 3. Create `api/config.production.php` under the Namecheap document root
    using cPanel File Manager. Store the actual database credentials there.
 

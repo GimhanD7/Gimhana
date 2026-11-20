@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://ginhan.web.lk/sitemap.xml
+Sitemap: https://gimhan.web.lk/sitemap.xml

@@ -30,11 +30,11 @@ For another environment, set `PORTFOLIO_DB_HOST`, `PORTFOLIO_DB_PORT`,
 
 [Deploy portfolio to Namecheap](.github/workflows/deploy-namecheap.yml) builds
 React and publishes it together with the PHP API to the document root of
-`https://ginhan.web.lk`. The frontend uses the same-origin `/api/index.php`
+`https://gimhan.web.lk`. The frontend uses the same-origin `/api/index.php`
 endpoint. The workflow runs on pushes to `main` and can also be run manually
 from that branch.
 
-1. In Namecheap cPanel, add `ginhan.web.lk` under **Domains** and record its
+1. In Namecheap cPanel, add `gimhan.web.lk` under **Domains** and record its
    absolute document root. At the authoritative DNS provider for the domain,
    point the A record to the Namecheap shared hosting IP. Enable HTTPS after
    DNS resolves, and select PHP 8.1 or newer with `pdo_mysql` and `mbstring`.
@@ -73,7 +73,7 @@ from that branch.
    | --- | --- | --- |
    | `NAMECHEAP_HOST` | Variable | Hosting server hostname from Namecheap |
    | `NAMECHEAP_USER` | Variable | cPanel SSH username |
-   | `NAMECHEAP_DOCUMENT_ROOT` | Variable | Absolute document root from cPanel, such as `/home/cpaneluser/ginhan.web.lk` |
+   | `NAMECHEAP_DOCUMENT_ROOT` | Variable | Absolute document root from cPanel, such as `/home/cpaneluser/gimhan.web.lk` |
    | `NAMECHEAP_SSH_PRIVATE_KEY` | Secret | Private key for the authorized deployment key, usable without a passphrase |
    | `NAMECHEAP_KNOWN_HOSTS` | Secret | Verified OpenSSH known-hosts entry for `[NAMECHEAP_HOST]:21098`, using the actual hostname |
 

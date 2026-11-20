@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const SITE_URL = 'https://ginhan.web.lk';
+export const SITE_URL = 'https://gimhan.web.lk';
 const DEFAULT_IMAGE = `${SITE_URL}/profile.png`;
 
 const personSchema = {

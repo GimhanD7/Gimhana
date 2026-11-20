@@ -22,7 +22,7 @@ jobs:
         shell: bash
     environment:
       name: namecheap-production
-      url: https://ginhan.web.lk
+      url: https://gimhan.web.lk
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -75,7 +75,7 @@ jobs:
 
       - name: Verify routing and database-backed API
         run: |
-          site=https://ginhan.web.lk
+          site=https://gimhan.web.lk
           curl -fsS --max-time 20 "$site/projects" -o "$RUNNER_TEMP/portfolio.html"
           grep -Fq 'id="root"' "$RUNNER_TEMP/portfolio.html"
           curl -fsS --max-time 20 "$site/api/index.php?action=health" | jq -e '.status == "ok"'

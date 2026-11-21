@@ -169,6 +169,24 @@ const ProjectDetail = () => {
             <span className="text-[10px] font-black tracking-[0.24em] uppercase text-violet-300">{project.category} · {project.period}</span>
             <h1 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight uppercase">{project.title}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{project.description}</p>
+            {project.links && project.links.length > 0 && (
+              <div className="flex flex-wrap gap-2.5 pt-3">
+                {project.links.map((lnk) => (
+                  <a
+                    key={lnk.url}
+                    href={lnk.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black tracking-widest text-[9px] uppercase shadow-md transition-all hover:scale-105"
+                  >
+                    <span>LAUNCH {lnk.label}</span>
+                    <svg className="w-3 h-3 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div> : project.technologies.includes('Product Box') ? <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -181,6 +199,24 @@ const ProjectDetail = () => {
             <span className="text-[10px] font-black tracking-[0.24em] uppercase text-violet-300">{project.category} · {project.period}</span>
             <h1 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight uppercase">{project.title}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{project.description}</p>
+            {project.links && project.links.length > 0 && (
+              <div className="flex flex-wrap gap-2.5 pt-3">
+                {project.links.map((lnk) => (
+                  <a
+                    key={lnk.url}
+                    href={lnk.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black tracking-widest text-[9px] uppercase shadow-md transition-all hover:scale-105"
+                  >
+                    <span>LAUNCH {lnk.label}</span>
+                    <svg className="w-3 h-3 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div> : project.technologies.includes('Print Mockup') ? <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -193,6 +229,24 @@ const ProjectDetail = () => {
             <span className="text-[10px] font-black tracking-[0.24em] uppercase text-violet-300">{project.category} · {project.period}</span>
             <h1 className="mt-2 text-2xl sm:text-4xl font-black tracking-tight uppercase">{project.title}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{project.description}</p>
+            {project.links && project.links.length > 0 && (
+              <div className="flex flex-wrap gap-2.5 pt-3">
+                {project.links.map((lnk) => (
+                  <a
+                    key={lnk.url}
+                    href={lnk.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black tracking-widest text-[9px] uppercase shadow-md transition-all hover:scale-105"
+                  >
+                    <span>LAUNCH {lnk.label}</span>
+                    <svg className="w-3 h-3 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div> : <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -220,6 +274,24 @@ const ProjectDetail = () => {
             <h1 className="text-3xl sm:text-6xl font-black tracking-tighter leading-tight font-heading text-white uppercase max-w-5xl">
               {project.title}
             </h1>
+            {project.links && project.links.length > 0 && (
+              <div className="flex flex-wrap gap-2.5 pt-3">
+                {project.links.map((lnk) => (
+                  <a
+                    key={lnk.url}
+                    href={lnk.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black tracking-widest text-[9px] uppercase shadow-md transition-all hover:scale-105"
+                  >
+                    <span>LAUNCH {lnk.label}</span>
+                    <svg className="w-3 h-3 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>}
 

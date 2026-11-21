@@ -274,7 +274,10 @@ function normalize_url(mixed $value, bool $allowDataImage = false): string
     if ($allowDataImage && preg_match('#^data:image/(jpeg|png|webp);base64,#i', $value)) {
         return $value;
     }
-    if (!filter_var($value, FILTER_VALIDATE_URL) || !preg_match('#^https?://#i', $value)) {
+    if (!preg_match('#^https?://#i', $value)) {
+        $value = 'https://' . $value;
+    }
+    if (!filter_var($value, FILTER_VALIDATE_URL)) {
         respond(['error' => 'Image and project links must be valid HTTP(S) URLs.'], 422);
     }
     return $value;
@@ -292,10 +295,14 @@ function project_payload(array $input): array
         if (!is_array($link)) {
             continue;
         }
-        $links[] = [
-            'label' => clean_string($link['label'] ?? '', 100, true),
-            'url' => normalize_url($link['url'] ?? ''),
-        ];
+        $label = clean_string($link['label'] ?? '', 100);
+        $url = normalize_url($link['url'] ?? '');
+        if ($label !== '' && $url !== '') {
+            $links[] = [
+                'label' => $label,
+                'url' => $url,
+            ];
+        }
     }
 
     $gallery = [];

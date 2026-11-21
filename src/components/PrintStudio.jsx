@@ -44,6 +44,25 @@ export default function PrintStudio() {
   const [isUploading, setIsUploading] = useState(false);
   const [publishedProjects, setPublishedProjects] = useState([]);
   const [editingProjectId, setEditingProjectId] = useState(null);
+  const [isMinimized, setIsMinimized] = useState(() => {
+    try {
+      return localStorage.getItem('gimhana-print-studio-minimized') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [paperScaleMode, setPaperScaleMode] = useState('normal'); // 'normal' | 'minimized'
+
+  const toggleMinimized = () => {
+    setIsMinimized((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('gimhana-print-studio-minimized', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
   const design = useMemo(() => ({ preset, image, mockupStyle, material }), [preset, image, mockupStyle, material]);
   const mockupStyleClass = mockupStyle.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const materialClass = material.toLowerCase().replace(/\s+/g, '-');
@@ -156,8 +175,51 @@ export default function PrintStudio() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); setSaved(next);
   };
 
+  if (isMinimized) {
+    return (
+      <section className="print-studio print-studio-minimized" aria-labelledby="print-studio-title">
+        <div className="print-studio-heading" style={{ margin: 0, alignItems: 'center' }}>
+          <div>
+            <span className="print-studio-eyebrow">PRINT &amp; PACKAGING WORKSPACE</span>
+            <h2 id="print-studio-title" style={{ fontSize: '24px', margin: '4px 0 2px' }}>
+              Print <em>Studio.</em>
+            </h2>
+            <p style={{ fontSize: '12px', margin: 0 }}>Workspace is minimized. Click &ldquo;Normal Mode&rdquo; to expand.</p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span className="print-studio-count">{saved.length} SAVED</span>
+            <button
+              type="button"
+              className="print-studio-toggle-btn"
+              onClick={toggleMinimized}
+            >
+              + Normal Mode
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return <section className="print-studio" aria-labelledby="print-studio-title">
-    <div className="print-studio-heading"><div><span className="print-studio-eyebrow">PRINT & PACKAGING WORKSPACE</span><h2 id="print-studio-title">Print <em>Studio.</em></h2><p>Create artwork and preview it on realistic print and packaging mockups.</p></div><span className="print-studio-count">{saved.length} SAVED</span></div>
+    <div className="print-studio-heading">
+      <div>
+        <span className="print-studio-eyebrow">PRINT & PACKAGING WORKSPACE</span>
+        <h2 id="print-studio-title">Print <em>Studio.</em></h2>
+        <p>Create artwork and preview it on realistic print and packaging mockups.</p>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <span className="print-studio-count">{saved.length} SAVED</span>
+        <button
+          type="button"
+          className="print-studio-toggle-btn"
+          onClick={toggleMinimized}
+          title="Minimize Print Studio"
+        >
+          – Minimize
+        </button>
+      </div>
+    </div>
     <div className="print-studio-tabs" role="tablist" aria-label="Design type">
       {Object.entries(PRESETS).map(([key, value]) => <button key={key} type="button" role="tab" aria-selected={preset === key} disabled={Boolean(editingProjectId)} className={`${preset === key ? 'active' : ''} ${editingProjectId ? 'disabled' : ''}`} onClick={() => selectPreset(key)}>{value.label}</button>)}
     </div>
@@ -179,8 +241,28 @@ export default function PrintStudio() {
         {message && <p className="print-message" role="status">{message}</p>}
       </div>
         <div className="print-preview-panel">
-        <div className="print-preview-toolbar"><div><span>02</span><b>Live mockup</b></div><label className="print-scene-select">Scene<select value={scene} onChange={(event) => setScene(event.target.value)}>{Object.keys(MOCKUP_SCENES).map((name) => <option key={name}>{name}</option>)}</select></label><span className="print-live"><i /> LIVE</span></div>
-        <div className={`print-mockup-stage ${preset === 'box' ? 'box-stage' : ''}`} style={{ background: MOCKUP_SCENES[scene] }}>
+        <div className="print-preview-toolbar">
+          <div><span>02</span><b>Live mockup</b></div>
+          <div className="print-preview-scale-toggle" title="Toggle Paper Preview Mode">
+            <button
+              type="button"
+              className={paperScaleMode === 'normal' ? 'active' : ''}
+              onClick={() => setPaperScaleMode('normal')}
+            >
+              Normal mode
+            </button>
+            <button
+              type="button"
+              className={paperScaleMode === 'minimized' ? 'active' : ''}
+              onClick={() => setPaperScaleMode('minimized')}
+            >
+              Minimize paper
+            </button>
+          </div>
+          <label className="print-scene-select">Scene<select value={scene} onChange={(event) => setScene(event.target.value)}>{Object.keys(MOCKUP_SCENES).map((name) => <option key={name}>{name}</option>)}</select></label>
+          <span className="print-live"><i /> LIVE</span>
+        </div>
+        <div className={`print-mockup-stage ${preset === 'box' ? 'box-stage' : ''} ${paperScaleMode === 'minimized' ? 'paper-minimized' : ''}`} style={{ background: MOCKUP_SCENES[scene] }}>
           {preset === 'a3' ? <div className={`a3-cover-mockup ${isA3Open ? 'opened' : ''} mockup-${mockupStyleClass}`} style={{ transform: `perspective(1000px) rotateY(${rotation}deg) rotateX(3deg)` }} aria-label={isA3Open ? 'Open A3 book: left half is the back cover and right half is the front cover' : 'Closed A3 book showing the front cover'}>
             <div className="a3-cover-panel a3-back-cover">{image ? <img src={image} alt="Back cover artwork, left half of the A3 design" /> : <span>BACK COVER · LEFT</span>}</div>
             <div className="a3-cover-panel a3-front-cover">{image ? <img src={image} alt="Front cover artwork, right half of the A3 design" /> : <span>FRONT COVER · RIGHT</span>}</div>

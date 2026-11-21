@@ -220,15 +220,21 @@ const Admin = () => {
   };
 
   const handleAddLink = () => {
-    if (!linkInput.label || !linkInput.url) {
+    const label = linkInput.label.trim();
+    let url = linkInput.url.trim();
+    if (!label || !url) {
       showError('Fill both Label and Link URL.');
       return;
     }
+    if (!/^https?:\/\//i.test(url)) {
+      url = 'https://' + url;
+    }
     setFormData(prev => ({
       ...prev,
-      links: [...prev.links, { ...linkInput }]
+      links: [...(prev.links || []), { label, url }]
     }));
     setLinkInput({ label: '', url: '' });
+    showSuccess(`Link "${label}" staged.`);
   };
 
   const handleRemoveLink = (idx) => {
@@ -250,23 +256,25 @@ const Admin = () => {
       description: project.description,
       category: project.category,
       image: project.image,
-      technologiesText: project.technologies.join(', '),
+      technologiesText: (project.technologies || []).join(', '),
       gallery: [], // Loaded asynchronously below
-      links: project.links || []
+      links: Array.isArray(project.links) ? [...project.links] : []
     });
+    setLinkInput({ label: '', url: '' });
 
     try {
-      showSuccess('Loading project screenshots...');
+      showSuccess('Loading project details...');
       const fullProject = await projectService.getProject(project.id);
       if (fullProject) {
         setFormData(prev => ({
           ...prev,
-          gallery: fullProject.gallery || []
+          gallery: fullProject.gallery || [],
+          links: Array.isArray(fullProject.links) && fullProject.links.length > 0 ? fullProject.links : prev.links,
         }));
-        showSuccess('Screenshots loaded successfully!');
+        showSuccess('Project parameters loaded successfully!');
       }
     } catch (err) {
-      console.error('Failed to load screenshots:', err);
+      console.error('Failed to load project details:', err);
       showError('Failed to load screenshots for editing.');
     }
 
@@ -324,6 +332,27 @@ const Admin = () => {
         .map(t => t.trim())
         .filter(t => t.length > 0);
 
+      // Auto-capture link if typed in link input fields without clicking '+ ADD ACTION LINK'
+      let resolvedLinks = [...(formData.links || [])];
+      if (linkInput.label.trim() && linkInput.url.trim()) {
+        resolvedLinks.push({
+          label: linkInput.label.trim(),
+          url: linkInput.url.trim(),
+        });
+      }
+
+      // Auto-format and normalize links
+      resolvedLinks = resolvedLinks.map(lnk => {
+        let url = (lnk.url || '').trim();
+        if (url && !/^https?:\/\//i.test(url)) {
+          url = 'https://' + url;
+        }
+        return {
+          label: (lnk.label || '').trim(),
+          url,
+        };
+      }).filter(lnk => lnk.label && lnk.url);
+
       const payload = {
         title: formData.title,
         period: formData.period,
@@ -332,7 +361,7 @@ const Admin = () => {
         image: formData.image || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
         gallery: formData.gallery || [],
         technologies,
-        links: formData.links
+        links: resolvedLinks
       };
 
       if (isEditing) {
@@ -351,7 +380,7 @@ const Admin = () => {
 
       handleCancel();
     } catch (err) {
-      showError('Failed to save project.');
+      showError(err.message || 'Failed to save project.');
     } finally {
       setIsSaving(false);
     }
@@ -903,6 +932,22 @@ const Admin = () => {
                               </span>
                             )}
                           </div>
+                          {project.links && project.links.length > 0 && (
+                            <div className="flex gap-1.5 flex-wrap mt-2">
+                              {project.links.map(lnk => (
+                                <a
+                                  key={lnk.url}
+                                  href={lnk.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-[8px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded transition-colors"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <span>🔗 {lnk.label}</span>
+                                </a>
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         {/* Actions controls */}
